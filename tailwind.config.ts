@@ -21,8 +21,12 @@ const config: Config = {
       },
       colors: {
         "light-grey": "#FAFAFA",
+        "dark-grey": "#262626",
         "light-grey-hover": "#EFEFED",
-        dark: "#202020",
+        "dark-side": "#262626",
+        "dark-main": "#1E1E1E",
+        "white-main": "#FFFFFF",
+        "blue-accent": "#00B8FF"
       },
     },
   },
