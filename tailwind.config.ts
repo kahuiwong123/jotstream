@@ -26,7 +26,8 @@ const config: Config = {
         "dark-side": "#262626",
         "dark-main": "#1E1E1E",
         "white-main": "#FFFFFF",
-        "blue-accent": "#00B8FF"
+        "blue-accent": "#00B8FF",
+        "text-grey": "#666666"
       },
     },
   },

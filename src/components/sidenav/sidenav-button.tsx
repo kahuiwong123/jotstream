@@ -1,6 +1,6 @@
 import React, { FC, useContext, useState } from "react";
 import { SideNavContext } from "@/app/dashboard/layout";
-import { Button } from "./button";
+import { Button } from "../ui/button";
 import {
   Tooltip,
   TooltipContent,

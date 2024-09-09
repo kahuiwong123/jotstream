@@ -1,6 +1,6 @@
 import React from "react";
 import { MdOutlineAddToPhotos } from "react-icons/md";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 const AddSectionBar = () => {
   return (
     <Button variant="ghost" className="mt-4 border border-light-grey shadow-lg">

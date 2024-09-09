@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, createContext, useEffect } from "react";
-import SideNav from "@/components/sidenav";
+import SideNav from "@/components/sidenav/sidenav";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { useWindowSize } from "@/lib/useWindowSize";
 import { clsx } from "clsx";

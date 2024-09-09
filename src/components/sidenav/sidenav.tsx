@@ -11,14 +11,25 @@ import {
   IoSettings,
   IoLogOut,
 } from "react-icons/io5";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { LuDot } from "react-icons/lu";
 import { FiChevronsLeft, FiChevronRight } from "react-icons/fi";
-import SideNavButton from "./ui/sidenav-button";
+import SideNavButton from "./sidenav-button";
 import { SideNavContext } from "@/app/dashboard/layout";
-
+import { TooltipItem } from "../ui/tooltip-item";
 const SideNav = ({ toggleSideNav }: { toggleSideNav: () => void }) => {
   const { collapsed } = useContext(SideNavContext);
+
+  const sidenavToggleButton = (
+    <Button
+      variant="outline"
+      size="icon"
+      className={clsx("transform border-none text-2xl dark:bg-dark-side")}
+      onClick={toggleSideNav}
+    >
+      {collapsed ? <FiChevronRight /> : <FiChevronsLeft />}
+    </Button>
+  );
 
   return (
     <aside
@@ -38,14 +49,10 @@ const SideNav = ({ toggleSideNav }: { toggleSideNav: () => void }) => {
         >
           Menu
         </h1>
-        <Button
-          variant="outline"
-          size="icon"
-          className={clsx("transform border-none text-2xl dark:bg-dark-side")}
-          onClick={toggleSideNav}
-        >
-          {collapsed ? <FiChevronRight /> : <FiChevronsLeft />}
-        </Button>
+        <TooltipItem
+          tooltipTrigger={sidenavToggleButton}
+          tooltipString={`${collapsed ? "Open" : "Close"} sidebar`}
+        />
       </section>
       <section>
         <SideNavButton icon={IoAddCircle} label="Add Task" />

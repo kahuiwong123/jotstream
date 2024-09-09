@@ -1,7 +1,7 @@
 "use client";
 import React, { useContext } from "react";
-import SectionCard from "@/components/sectioncard";
-import AddSectionBar from "@/components/add-section-bar";
+import SectionCard from "@/components/dashboard/section-card";
+import AddSectionBar from "@/components/dashboard/add-section-bar";
 import { SideNavContext } from "./layout";
 import { clsx } from "clsx";
 const Dashboard = () => {
@@ -16,8 +16,6 @@ const Dashboard = () => {
         <SectionCard name="Homework" />
         <SectionCard name="Chores" />
         <SectionCard name="Activities" />
-        <SectionCard name="Others" />
-        <SectionCard name="Others" />
         <SectionCard name="Others" />
         <AddSectionBar />
       </div>
