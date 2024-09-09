@@ -19,18 +19,6 @@ import { SideNavContext } from "@/app/dashboard/layout";
 import { TooltipItem } from "../ui/tooltip-item";
 const SideNav = ({ toggleSideNav }: { toggleSideNav: () => void }) => {
   const { collapsed } = useContext(SideNavContext);
-
-  const sidenavToggleButton = (
-    <Button
-      variant="outline"
-      size="icon"
-      className={clsx("transform border-none text-2xl dark:bg-dark-side")}
-      onClick={toggleSideNav}
-    >
-      {collapsed ? <FiChevronRight /> : <FiChevronsLeft />}
-    </Button>
-  );
-
   return (
     <aside
       className={clsx(
@@ -49,10 +37,14 @@ const SideNav = ({ toggleSideNav }: { toggleSideNav: () => void }) => {
         >
           Menu
         </h1>
-        <TooltipItem
-          tooltipTrigger={sidenavToggleButton}
-          tooltipString={`${collapsed ? "Open" : "Close"} sidebar`}
-        />
+        <Button
+          variant="outline"
+          size="icon"
+          className={clsx("transform border-none text-2xl dark:bg-dark-side")}
+          onClick={toggleSideNav}
+        >
+          {collapsed ? <FiChevronRight /> : <FiChevronsLeft />}
+        </Button>
       </section>
       <section>
         <SideNavButton icon={IoAddCircle} label="Add Task" />

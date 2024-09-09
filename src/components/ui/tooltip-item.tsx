@@ -12,13 +12,11 @@ type tooltipProps = {
 
 export function TooltipItem({ tooltipTrigger, tooltipString }: tooltipProps) {
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>{tooltipTrigger}</TooltipTrigger>
-        <TooltipContent>
-          <p>{tooltipString}</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <Tooltip>
+      <TooltipTrigger asChild>{tooltipTrigger}</TooltipTrigger>
+      <TooltipContent>
+        <p>{tooltipString}</p>
+      </TooltipContent>
+    </Tooltip>
   );
 }
