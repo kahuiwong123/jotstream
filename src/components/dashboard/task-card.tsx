@@ -2,9 +2,8 @@ import React from "react";
 import { CiCalendar } from "react-icons/ci";
 import { getMonthDayFromDate } from "@/lib/date";
 import { FaCheck } from "react-icons/fa6";
-import { IoIosMore } from "react-icons/io";
 import { Button } from "../ui/button";
-import { TooltipItem } from "../ui/tooltip-item";
+import { TaskCardDropDown } from "./task-card-dropdown";
 type TaskProp = {
   section: string;
   title: string;
@@ -14,16 +13,6 @@ type TaskProp = {
 };
 
 const TaskCard = ({ task }: { task: TaskProp }) => {
-  const taskCardEllipsis = (
-    <Button
-      variant="ghost"
-      size="icon"
-      className="h-fit w-fit opacity-0 group-hover:opacity-100"
-    >
-      <IoIosMore className="h-6 w-6" />
-    </Button>
-  );
-
   return (
     <div className="transtion-all group flex w-full max-w-full items-start gap-2 rounded-lg border border-gray-200 p-2 shadow-sm hover:border-gray-300 hover:shadow-md">
       <Button
@@ -36,10 +25,7 @@ const TaskCard = ({ task }: { task: TaskProp }) => {
       <div className="flex flex-1 flex-col justify-center overflow-hidden">
         <div className="flex items-center justify-between">
           <h3>{task.title}</h3>
-          <TooltipItem
-            tooltipTrigger={taskCardEllipsis}
-            tooltipString="Task actions"
-          />
+          <TaskCardDropDown />
         </div>
         <p className="truncate text-sm text-text-grey">{task.description}</p>
         <div className="flex">

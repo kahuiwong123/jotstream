@@ -43,7 +43,7 @@ export const SectionCardDropDown = ({
       <IoEllipsisHorizontalOutline className="h-5 w-5" />
     </Button>
   );
-  const Dropdown = (
+  return (
     <DropdownMenu>
       <Tooltip>
         <DropdownMenuTrigger asChild>
@@ -54,7 +54,7 @@ export const SectionCardDropDown = ({
           onCloseAutoFocus={(e) => e.preventDefault()}
         >
           <DropdownMenuGroup>
-            <DropdownMenuItem onClick={()=> setIsEditing(true)}>
+            <DropdownMenuItem onClick={() => setIsEditing(true)}>
               <IoPencilOutline className="mr-2 h-4 w-4" />
               <span>Edit</span>
             </DropdownMenuItem>
@@ -77,6 +77,4 @@ export const SectionCardDropDown = ({
       </Tooltip>
     </DropdownMenu>
   );
-
-  return Dropdown;
 };

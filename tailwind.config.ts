@@ -27,7 +27,10 @@ const config: Config = {
         "dark-main": "#1E1E1E",
         "white-main": "#FFFFFF",
         "blue-accent": "#00B8FF",
-        "text-grey": "#666666"
+        "text-grey": "#666666",
+        "red-flag": "#D1453B",
+        "orange-flag": "#EB8909",
+        "blue-flag": "#246FE0",
       },
     },
   },
