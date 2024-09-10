@@ -1,7 +1,7 @@
 import React from "react";
-import { Button } from "../ui/button";
-import { TooltipItem } from "../ui/tooltip-item";
-import { DatePicker } from "../ui/date-picker";
+import { Button } from "../../ui/button";
+import { TooltipItem } from "../../ui/tooltip-item";
+import { DatePicker } from "../../ui/date-picker";
 import {
   IoEllipsisHorizontalOutline,
   IoDuplicateOutline,
@@ -131,8 +131,12 @@ export const TaskCardDropDown = () => {
             <DatePicker />
             <TooltipItem
               tooltipTrigger={
-                <Button variant="ghost" size="icon" className="h-fit w-fit p-2">
-                  <IoRemoveCircleOutline className="h-6 w-6" />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-fit w-fit px-3 py-3"
+                >
+                  <IoRemoveCircleOutline className="size-5" />
                 </Button>
               }
               tooltipString="Remove due date"

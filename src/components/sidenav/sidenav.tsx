@@ -29,7 +29,7 @@ const SideNav = ({ toggleSideNav }: { toggleSideNav: () => void }) => {
       <section
         className={clsx(
           "flex items-center text-2xl",
-          collapsed ? "justify-center" : "justify-between",
+          collapsed ? "justify-center" : "justify-around",
         )}
       >
         <h1

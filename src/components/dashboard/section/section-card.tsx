@@ -2,13 +2,13 @@
 
 import React, { useState } from "react";
 import { IoEllipsisHorizontalOutline } from "react-icons/io5";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { IoAdd } from "react-icons/io5";
-import TaskCard from "./task-card";
+import TaskCard from "../task/task-card";
 import { stringToDate } from "@/lib/date";
 import { SectionCardEdit } from "./section-card-edit";
 import { SectionCardDropDown } from "./section-card-dropdown";
-import { TooltipItem } from "../ui/tooltip-item";
+import { TooltipItem } from "../../ui/tooltip-item";
 
 const task1 = {
   section: "Homework",
@@ -38,7 +38,7 @@ const SectionCard = ({ name }: { name: string }) => {
   const [sectionName, setSectionName] = useState(name);
 
   return (
-    <section className="flex w-72 flex-col gap-4 rounded-md border border-transparent p-4 hover:shadow-lg dark:hover:border-light-grey-hover">
+    <section className="flex h-fit w-72 flex-col gap-4 rounded-md border border-transparent bg-[#fcfcfc] p-4 shadow-md duration-300 hover:shadow-lg dark:bg-[#202020] dark:hover:border-light-grey-hover">
       {isEditing ? (
         <SectionCardEdit
           originalName={name}

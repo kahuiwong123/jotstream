@@ -2,7 +2,7 @@ import React from "react";
 import { CiCalendar } from "react-icons/ci";
 import { getMonthDayFromDate } from "@/lib/date";
 import { FaCheck } from "react-icons/fa6";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { TaskCardDropDown } from "./task-card-dropdown";
 type TaskProp = {
   section: string;
@@ -14,7 +14,7 @@ type TaskProp = {
 
 const TaskCard = ({ task }: { task: TaskProp }) => {
   return (
-    <div className="transtion-all group flex w-full max-w-full items-start gap-2 rounded-lg border border-gray-200 p-2 shadow-sm hover:border-gray-300 hover:shadow-md">
+    <div className="transtion-all group flex w-full max-w-full items-start gap-2 rounded-lg border border-transparent p-2 shadow-sm duration-300 hover:border-gray-300 hover:shadow-md">
       <Button
         variant="ghost"
         size="icon"

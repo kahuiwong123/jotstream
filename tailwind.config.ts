@@ -23,6 +23,7 @@ const config: Config = {
         "light-grey": "#FAFAFA",
         "dark-grey": "#262626",
         "light-grey-hover": "#EFEFED",
+        "dark-hover": "#322F2A",
         "dark-side": "#262626",
         "dark-main": "#1E1E1E",
         "white-main": "#FFFFFF",

@@ -1,6 +1,6 @@
 import React from "react";
-import { TooltipItem } from "../ui/tooltip-item";
-import { Button } from "../ui/button";
+import { TooltipItem } from "../../ui/tooltip-item";
+import { Button } from "../../ui/button";
 import {
   IoEllipsisHorizontalOutline,
   IoDuplicateOutline,
@@ -38,7 +38,7 @@ export const SectionCardDropDown = ({
     <Button
       variant="outline"
       size="icon"
-      className="border-none focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-dark-main"
+      className="border-none bg-[#fcfcfc] focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-[#202020]"
     >
       <IoEllipsisHorizontalOutline className="h-5 w-5" />
     </Button>

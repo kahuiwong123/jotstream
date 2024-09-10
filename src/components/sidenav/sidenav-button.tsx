@@ -25,7 +25,7 @@ const SideNavButton: FC<IconbuttonProps> = ({ icon: Icon, label }) => {
           onMouseLeave={() => setHovered(false)}
         >
           <Button
-            className="flex w-full items-center justify-start hover:bg-light-grey-hover"
+            className="flex w-full items-center justify-start hover:bg-light-grey-hover dark:hover:bg-dark-hover"
             variant="ghost"
           >
             <Icon className="flex flex-shrink-0 text-lg" />

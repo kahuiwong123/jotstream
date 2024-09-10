@@ -1,7 +1,7 @@
 "use client";
 import React, { createContext } from "react";
-import SectionCard from "@/components/dashboard/section-card";
-import AddSectionBar from "@/components/dashboard/add-section-bar";
+import SectionCard from "@/components/dashboard/section/section-card";
+import AddSectionBar from "@/components/dashboard/section/add-section-bar";
 import { SideNavContext } from "./layout";
 import { clsx } from "clsx";
 const Dashboard = () => {
