@@ -59,6 +59,7 @@ type SectionStore = {
   addSection: (section: SectionProp) => void;
   setSections: (sections: SectionProp[]) => void;
   removeSection: (sectionName: string) => void;
+  duplicateSection: (sectionName: string) => void;
 };
 
 export const useSectionStore = create<SectionStore>((set) => ({
@@ -72,4 +73,23 @@ export const useSectionStore = create<SectionStore>((set) => ({
         (section) => section.name !== sectionName,
       ),
     })),
+  duplicateSection: (name: string) =>
+    set((state) => {
+      const index = state.sections.findIndex(
+        (section) => section.name === name,
+      );
+      if (index !== -1) {
+        const newSection = {
+          ...state.sections[index],
+          name: `Copy of ${name}`,
+        };
+        const newSections = [
+          ...state.sections.slice(0, index + 1),
+          newSection,
+          ...state.sections.slice(index + 1),
+        ];
+        return { sections: newSections };
+      }
+      return state;
+    }),
 }));

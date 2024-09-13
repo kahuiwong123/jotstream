@@ -51,6 +51,7 @@ export const SectionCardDropDown = ({
   section: SectionProp;
 }) => {
   const removeSection = useSectionStore((state) => state.removeSection);
+  const duplicateSection = useSectionStore((state) => state.duplicateSection);
 
   const EllipsisButton = (
     <Button
@@ -77,7 +78,7 @@ export const SectionCardDropDown = ({
                 <IoPencilOutline className="mr-2 h-4 w-4" />
                 <span>Edit</span>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => duplicateSection(section.name)}>
                 <IoDuplicateOutline className="mr-2 h-4 w-4" />
                 <span>Duplicate</span>
               </DropdownMenuItem>
@@ -99,8 +100,8 @@ export const SectionCardDropDown = ({
             <AlertDialogHeader>
               <AlertDialogTitle>Delete section?</AlertDialogTitle>
               <AlertDialogDescription>
-                The <span className="font-bold">{section.name}</span>{" "}
-                section will be permanently deleted.
+                The <span className="font-bold">{section.name}</span> section
+                will be permanently deleted.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
