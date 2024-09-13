@@ -2,6 +2,8 @@ import React from "react";
 import { Button } from "../../ui/button";
 import { TooltipItem } from "../../ui/tooltip-item";
 import { DatePicker } from "../../ui/date-picker";
+import { PrioritySelect } from "./priority-select";
+import { useSectionStore } from "@/data/sectionStore";
 import {
   IoEllipsisHorizontalOutline,
   IoDuplicateOutline,
@@ -34,8 +36,11 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { TaskProp } from "@/data/types";
 
-export const TaskCardDropDown = () => {
+export const TaskCardDropDown = ({ task }: { task: TaskProp }) => {
+  const sections = useSectionStore((state) => state.sections);
+
   const EllipsisButton = (
     <Button
       variant="ghost"
@@ -65,6 +70,7 @@ export const TaskCardDropDown = () => {
               <IoDuplicateOutline className="mr-2 h-4 w-4" />
               <span>Duplicate</span>
             </DropdownMenuItem>
+
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>
                 <IoSwapHorizontalOutline className="mr-2 h-4 w-4" />
@@ -72,63 +78,31 @@ export const TaskCardDropDown = () => {
               </DropdownMenuSubTrigger>
               <DropdownMenuPortal>
                 <DropdownMenuSubContent>
-                  <DropdownMenuItem>
-                    <IoCaretForwardOutline className="mr-2 h-4 w-4" />
-                    <span>Chores</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <IoCaretForwardOutline className="mr-2 h-4 w-4" />
-                    <span>Activites</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <IoCaretForwardOutline className="mr-2 h-4 w-4" />
-                    <span>Others</span>
-                  </DropdownMenuItem>
+                  {sections
+                    .filter((section) => section.name !== task.sectionName)
+                    .map((section, index) => (
+                      <DropdownMenuItem key={index}>
+                        <IoCaretForwardOutline className="mr-2 h-4 w-4" />
+                        <span>{section.name}</span>
+                      </DropdownMenuItem>
+                    ))}
                 </DropdownMenuSubContent>
               </DropdownMenuPortal>
             </DropdownMenuSub>
+
           </DropdownMenuGroup>
+
           <DropdownMenuSeparator />
+
           <DropdownMenuLabel>Priority</DropdownMenuLabel>
           <DropdownMenuGroup className="flex">
-            <TooltipItem
-              tooltipTrigger={
-                <Button variant="ghost" size="icon" className="h-fit w-fit p-2">
-                  <IoFlag className="h-4 w-4 text-red-flag" />
-                </Button>
-              }
-              tooltipString="Priority 1"
-            />
-            <TooltipItem
-              tooltipTrigger={
-                <Button variant="ghost" size="icon" className="h-fit w-fit p-2">
-                  <IoFlag className="h-4 w-4 text-orange-flag" />
-                </Button>
-              }
-              tooltipString="Priority 2"
-            />
-            <TooltipItem
-              tooltipTrigger={
-                <Button variant="ghost" size="icon" className="h-fit w-fit p-2">
-                  <IoFlag className="h-4 w-4 text-blue-flag" />
-                </Button>
-              }
-              tooltipString="Priority 3"
-            />
-            <TooltipItem
-              tooltipTrigger={
-                <Button variant="ghost" size="icon" className="h-fit w-fit p-2">
-                  <IoFlagOutline className="h-4 w-4" />
-                </Button>
-              }
-              tooltipString="Priority 4"
-            />
+            <PrioritySelect variant="list" />
           </DropdownMenuGroup>
 
           <DropdownMenuSeparator />
 
           <DropdownMenuGroup className="flex items-center">
-            <DatePicker />
+            <DatePicker variant="text" dueDate={task.dueDate} />
             <TooltipItem
               tooltipTrigger={
                 <Button
@@ -144,6 +118,7 @@ export const TaskCardDropDown = () => {
           </DropdownMenuGroup>
 
           <DropdownMenuSeparator />
+
           <DropdownMenuGroup>
             <DropdownMenuItem>
               <IoTrashOutline className="mr-2 h-4 w-4 text-red-500" />

@@ -4,13 +4,7 @@ import { getMonthDayFromDate } from "@/lib/date";
 import { FaCheck } from "react-icons/fa6";
 import { Button } from "../../ui/button";
 import { TaskCardDropDown } from "./task-card-dropdown";
-type TaskProp = {
-  section: string;
-  title: string;
-  description?: string;
-  priority?: number;
-  dueDate?: Date | null;
-};
+import { TaskProp } from "@/data/types";
 
 const TaskCard = ({ task }: { task: TaskProp }) => {
   return (
@@ -25,7 +19,7 @@ const TaskCard = ({ task }: { task: TaskProp }) => {
       <div className="flex flex-1 flex-col justify-center overflow-hidden">
         <div className="flex items-center justify-between">
           <h3>{task.title}</h3>
-          <TaskCardDropDown />
+          <TaskCardDropDown task={task}/>
         </div>
         <p className="truncate text-sm text-text-grey">{task.description}</p>
         <div className="flex">

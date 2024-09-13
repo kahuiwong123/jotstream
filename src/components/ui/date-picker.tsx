@@ -3,7 +3,6 @@
 import * as React from "react";
 import { addDays, format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -20,8 +19,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export function DatePicker() {
-  const [date, setDate] = React.useState<Date>();
+export function DatePicker({
+  variant,
+  dueDate,
+}: {
+  variant: "icon" | "text";
+  dueDate?: Date;
+}) {
+  const [date, setDate] = React.useState<Date | undefined>(dueDate);
 
   return (
     <Popover>
@@ -29,12 +34,17 @@ export function DatePicker() {
         <Button
           variant={"outline"}
           className={cn(
-            "w-full justify-start border-none p-2 text-left font-normal",
+            "justify-start border-none p-2 text-left font-normal",
             !date && "text-muted-foreground",
+            variant == "text" ? "w-full" : "size-fit",
           )}
         >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, "PPP") : <span>Pick a date</span>}
+          <CalendarIcon
+            className={cn("size-4", (variant == "text" || date) && "mr-2")}
+          />
+          {date
+            ? format(date, "PPP")
+            : variant == "text" && <span>Pick a date</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="flex w-auto flex-col space-y-2 p-2 focus-visible:ring-0 focus-visible:ring-offset-0">

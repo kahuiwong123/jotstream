@@ -1,47 +1,24 @@
 "use client";
 
 import React, { useState } from "react";
-import { IoEllipsisHorizontalOutline } from "react-icons/io5";
 import { Button } from "../../ui/button";
 import { IoAdd } from "react-icons/io5";
 import TaskCard from "../task/task-card";
-import { stringToDate } from "@/lib/date";
 import { SectionCardEdit } from "./section-card-edit";
 import { SectionCardDropDown } from "./section-card-dropdown";
 import { TooltipItem } from "../../ui/tooltip-item";
-
-const task1 = {
-  section: "Homework",
-  title: "Homework 1",
-  description:
-    "Vestibulum et nisl molestie, aliquet urna eu, dictum libero. Vestibulum maximus ornare lorem, a malesuada ligula placerat sit amet. Nullam tincidunt porta mollis. Nulla lobortis leo ut tellus sagittis malesuada. Integer laoreet purus arcu, eget ornare turpis auctor a. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam fringilla enim et ornare posuere. Morbi diam velit, maximus quis elit id, dignissim sagittis sapien. Nulla egestas, ex vel ornare tincidunt, tortor nulla consequat urna, ac rhoncus ex turpis sed purus. Duis massa lorem, hendrerit sed maximus vitae, bibendum et urna. Donec blandit, mauris finibus tincidunt facilisis, tellus odio euismod metus, nec interdum sem erat sit amet mauris. Aenean lorem purus, aliquam id sollicitudin id, auctor eget lorem.",
-  priority: 1,
-  dueDate: stringToDate("10-31-2024"),
-};
-
-const task2 = {
-  section: "Homework",
-  title: "Homework 2",
-  description: "This is HW2",
-  priority: 2,
-};
-
-const task3 = {
-  section: "Homework",
-  title: "Homework 3",
-};
-
-const sampleTasks = [task1, task2, task3];
-
-const SectionCard = ({ name }: { name: string }) => {
+import { AddTaskButton } from "../task/add-task-button";
+import { SectionProp } from "@/data/types";
+const SectionCard = ({ section }: { section: SectionProp }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [sectionName, setSectionName] = useState(name);
+  const [isAddingTask, setIsAddingTask] = useState(false);
+  const [sectionName, setSectionName] = useState(section.name);
 
   return (
     <section className="flex h-fit w-72 flex-col gap-4 rounded-md border border-transparent bg-[#fcfcfc] p-4 shadow-md duration-300 hover:shadow-lg dark:bg-[#202020] dark:hover:border-light-grey-hover">
       {isEditing ? (
         <SectionCardEdit
-          originalName={name}
+          originalName={section.name}
           sectionName={sectionName}
           setIsEditing={setIsEditing}
           setSectionName={setSectionName}
@@ -51,21 +28,30 @@ const SectionCard = ({ name }: { name: string }) => {
           <TooltipItem
             tooltipTrigger={
               <h2 className="font-semibold" onClick={() => setIsEditing(true)}>
-                {name}
+                {section.name}
               </h2>
             }
-            tooltipString={name}
+            tooltipString={section.name}
           />
           <SectionCardDropDown setIsEditing={setIsEditing} />
         </div>
       )}
 
-      {name == "Homework" &&
-        sampleTasks.map((task, index) => <TaskCard key={index} task={task} />)}
-      <Button variant="ghost" className="flex justify-start gap-2 px-2">
-        <IoAdd className="h-6 w-6" />
-        <p>Add Task</p>
-      </Button>
+      {section.tasks.map((task, index) => (
+        <TaskCard key={index} task={task} />
+      ))}
+      {isAddingTask ? (
+        <AddTaskButton setIsAddingTask={setIsAddingTask} />
+      ) : (
+        <Button
+          variant="ghost"
+          className="flex justify-start gap-2 px-2"
+          onClick={() => setIsAddingTask(true)}
+        >
+          <IoAdd className="h-6 w-6" />
+          <p>Add Task</p>
+        </Button>
+      )}
     </section>
   );
 };
