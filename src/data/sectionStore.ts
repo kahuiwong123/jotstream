@@ -97,7 +97,7 @@ export const useSectionStore = create<SectionStore>((set) => ({
       }
       return state;
     }),
-    
+
   addTaskToSection: (sectionName, task) =>
     set((state) => {
       const newSectons = state.sections.map((section) => {

@@ -108,7 +108,12 @@ export const TaskCardDropDown = ({ task }: { task: TaskProp }) => {
           <DropdownMenuSeparator />
 
           <DropdownMenuGroup className="flex items-center">
-            <DatePicker variant="text" value={date} onChange={setDate} />
+            <DatePicker
+              variant="text"
+              value={date}
+              onChange={setDate}
+              className="border-none"
+            />
             <TooltipItem
               tooltipTrigger={
                 <Button

@@ -52,41 +52,51 @@ export const AddTaskButton = ({
   });
 
   const onSubmit: SubmitHandler<taskFields> = (data) => {
-    console.log(data)
+    console.log(data);
     addTaskToSection(data.sectionName, data);
-    setIsAddingTask(false)
+    setIsAddingTask(false);
   };
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="rounded-lg border border-red-500 p-2"
+        className="divide-y rounded-lg border border-transparent transition-all duration-300 dark:border-light-grey-hover"
       >
-        <FormField
-          name="title"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input placeholder="Task name" {...field} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
+        <div>
+          {" "}
+          <FormField
+            name="title"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    placeholder="Task name"
+                    {...field}
+                    className="border-none text-base dark:bg-transparent"
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            name="description"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    placeholder="Description"
+                    {...field}
+                    className="border-none dark:bg-transparent"
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        </div>
 
-        <FormField
-          name="description"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input placeholder="Description" {...field} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 p-2">
           <FormField
             name="dueDate"
             control={form.control}
@@ -97,6 +107,7 @@ export const AddTaskButton = ({
                     variant="icon"
                     value={field.value}
                     onChange={field.onChange}
+                    className="border dark:border-[#3D3D3D] dark:bg-transparent"
                   />
                 </FormControl>
               </FormItem>
@@ -113,6 +124,7 @@ export const AddTaskButton = ({
                     variant="dropdown"
                     onValueChange={(val) => field.onChange(Number(val))}
                     value={field.value}
+                    className="size-fit dark:border-[#3D3D3D] dark:bg-transparent"
                   />
                 </FormControl>
               </FormItem>
@@ -120,7 +132,7 @@ export const AddTaskButton = ({
           />
         </div>
 
-        <div className="flex items-center justify-around gap-1">
+        <div className="flex items-center justify-around gap-1 p-2">
           <FormField
             name="sectionName"
             control={form.control}
@@ -130,6 +142,7 @@ export const AddTaskButton = ({
                   <SectionSelect
                     onValueChange={field.onChange}
                     defaultValue={field.value}
+                    className="border-none dark:bg-transparent"
                   />
                 </FormControl>
               </FormItem>
@@ -144,6 +157,7 @@ export const AddTaskButton = ({
                   variant={"outline"}
                   size={"icon"}
                   onClick={() => setIsAddingTask(false)}
+                  className="dark:bg-dark-main"
                 >
                   <IoCloseOutline className="size-6" />
                 </Button>
@@ -152,7 +166,12 @@ export const AddTaskButton = ({
             />
             <TooltipItem
               tooltipTrigger={
-                <Button type="submit" variant={"outline"} size={"icon"}>
+                <Button
+                  type="submit"
+                  variant={"outline"}
+                  size={"icon"}
+                  className="bg-red-flag hover:bg-[#d6584f] dark:bg-red-flag dark:hover:bg-[#d6584f]"
+                >
                   <IoChevronForwardOutline className="size-6" />
                 </Button>
               }

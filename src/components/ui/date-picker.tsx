@@ -18,30 +18,38 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { getStringFromDate } from "@/lib/date";
 
 type DatePickerProps = {
   variant: "icon" | "text";
   value?: Date | undefined;
   onChange: (...event: any[]) => void;
+  className?: string;
 };
 
-export function DatePicker({ variant, value, onChange }: DatePickerProps) {
+export function DatePicker({
+  variant,
+  value,
+  onChange,
+  className,
+}: DatePickerProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
           variant={"outline"}
           className={cn(
-            "justify-start border-none p-2 text-left font-normal",
+            "justify-start p-[0.6rem] text-left font-normal",
             value && "text-muted-foreground",
             variant == "text" ? "w-full" : "size-fit",
+            className,
           )}
         >
           <CalendarIcon
             className={cn("size-4", (variant == "text" || value) && "mr-2")}
           />
           {value
-            ? format(value, "PPP")
+            ? getStringFromDate(value, true)
             : variant == "text" && <span>Pick a date</span>}
         </Button>
       </PopoverTrigger>

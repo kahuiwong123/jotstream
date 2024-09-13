@@ -8,7 +8,7 @@ const stringToDate = (dateString: string): Date => {
   return date;
 };
 
-const getMonthDayFromDate = (date: Date): string => {
+const getStringFromDate = (date: Date, showYear?: boolean): string => {
   const monthNames = [
     "Jan.",
     "Feb.",
@@ -26,8 +26,8 @@ const getMonthDayFromDate = (date: Date): string => {
 
   const month = monthNames[date.getMonth()];
   const day = date.getDate();
-
-  return `${month} ${day}`;
+  const year = date.getFullYear();
+  return `${month} ${day} ${showYear ? year : ""}`;
 };
 
-export { stringToDate, getMonthDayFromDate };
+export { stringToDate, getStringFromDate };

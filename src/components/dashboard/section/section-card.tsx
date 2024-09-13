@@ -33,7 +33,7 @@ const SectionCard = ({ section }: { section: SectionProp }) => {
             }
             tooltipString={section.name}
           />
-          <SectionCardDropDown setIsEditing={setIsEditing} section={section}/>
+          <SectionCardDropDown setIsEditing={setIsEditing} section={section} />
         </div>
       )}
 
@@ -41,7 +41,10 @@ const SectionCard = ({ section }: { section: SectionProp }) => {
         <TaskCard key={index} task={task} />
       ))}
       {isAddingTask ? (
-        <AddTaskButton setIsAddingTask={setIsAddingTask} sectionName={section.name} />
+        <AddTaskButton
+          setIsAddingTask={setIsAddingTask}
+          sectionName={section.name}
+        />
       ) : (
         <Button
           variant="ghost"

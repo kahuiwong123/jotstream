@@ -2,6 +2,7 @@ import { TooltipItem } from "@/components/ui/tooltip-item";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { IoFlag, IoFlagOutline } from "react-icons/io5";
+import clsx from "clsx";
 import {
   Select,
   SelectContent,
@@ -29,12 +30,14 @@ type PrioritySelectProps = {
   variant: "dropdown" | "list";
   onValueChange: (...event: any[]) => void;
   value: number;
+  className?: string;
 };
 
 export const PrioritySelect = ({
   variant,
   onValueChange,
   value,
+  className,
 }: PrioritySelectProps) => {
   let trigger: React.JSX.Element;
   if (variant == "dropdown") {
@@ -43,7 +46,7 @@ export const PrioritySelect = ({
         onValueChange={(val) => onValueChange(Number(val))}
         defaultValue={String(value)}
       >
-        <SelectTrigger className="size-fit" isArrow={false}>
+        <SelectTrigger className={className} isArrow={false}>
           <SelectValue
             placeholder={
               <Button variant="ghost" size="icon" className="flex size-fit">
@@ -51,7 +54,7 @@ export const PrioritySelect = ({
               </Button>
             }
           >
-            <div className="flex grow-0 items-center gap-1">
+            <div className="flex items-center gap-1">
               {flags[value - 1].icon}
               <span>{value}</span>
             </div>

@@ -1,6 +1,6 @@
 import React from "react";
 import { CiCalendar } from "react-icons/ci";
-import { getMonthDayFromDate } from "@/lib/date";
+import { getStringFromDate } from "@/lib/date";
 import { FaCheck } from "react-icons/fa6";
 import { Button } from "../../ui/button";
 import { TaskCardDropDown } from "./task-card-dropdown";
@@ -19,7 +19,7 @@ const TaskCard = ({ task }: { task: TaskProp }) => {
       <div className="flex flex-1 flex-col justify-center overflow-hidden">
         <div className="flex items-center justify-between">
           <h3>{task.title}</h3>
-          <TaskCardDropDown task={task}/>
+          <TaskCardDropDown task={task} />
         </div>
         <p className="truncate text-sm text-text-grey">{task.description}</p>
         <div className="flex">
@@ -29,7 +29,7 @@ const TaskCard = ({ task }: { task: TaskProp }) => {
               className="flex h-fit items-center gap-1 p-0 text-sm text-text-grey"
             >
               <CiCalendar />
-              {getMonthDayFromDate(task.dueDate)}
+              {getStringFromDate(task.dueDate)}
             </Button>
           )}
         </div>

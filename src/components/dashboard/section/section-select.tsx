@@ -9,22 +9,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { IoCaretForwardOutline } from "react-icons/io5";
+
 import { useSectionStore } from "@/data/sectionStore";
 
 type SectionSelectProps = {
   onValueChange: (...event: any[]) => void;
   defaultValue: string;
+  className?: string;
 };
 
 export function SectionSelect({
   onValueChange,
   defaultValue,
+  className,
 }: SectionSelectProps) {
   const sections = useSectionStore((state) => state.sections);
   return (
     <Select onValueChange={onValueChange} defaultValue={defaultValue}>
-      <SelectTrigger>
+      <SelectTrigger className={className}>
         <SelectValue placeholder="Select a section" />
       </SelectTrigger>
       <SelectContent>
