@@ -1,7 +1,5 @@
-"use client";
-
 import { TooltipItem } from "@/components/ui/tooltip-item";
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { IoFlag, IoFlagOutline } from "react-icons/io5";
 import {
@@ -27,17 +25,24 @@ const flags = [
   { icon: <IoFlagOutline className="h-4 w-4" />, tooltip: "Priority 4" },
 ];
 
+type PrioritySelectProps = {
+  variant: "dropdown" | "list";
+  onValueChange: (...event: any[]) => void;
+  value: number;
+};
+
 export const PrioritySelect = ({
   variant,
-}: {
-  variant: "dropdown" | "list";
-}) => {
-  const [priority, setPriority] = useState(4);
-
+  onValueChange,
+  value,
+}: PrioritySelectProps) => {
   let trigger: React.JSX.Element;
   if (variant == "dropdown") {
     trigger = (
-      <Select onValueChange={(value) => setPriority(Number(value))}>
+      <Select
+        onValueChange={(val) => onValueChange(Number(val))}
+        defaultValue={String(value)}
+      >
         <SelectTrigger className="size-fit" isArrow={false}>
           <SelectValue
             placeholder={
@@ -46,9 +51,9 @@ export const PrioritySelect = ({
               </Button>
             }
           >
-            <div className="flex items-center gap-1 grow-0">
-              {flags[priority - 1].icon}
-              <span>{priority}</span>
+            <div className="flex grow-0 items-center gap-1">
+              {flags[value - 1].icon}
+              <span>{value}</span>
             </div>
           </SelectValue>
         </SelectTrigger>
@@ -76,7 +81,7 @@ export const PrioritySelect = ({
               <Button
                 variant={"ghost"}
                 size={"icon"}
-                onClick={() => setPriority(index + 1)}
+                onClick={() => onValueChange(index + 1)}
               >
                 {flag.icon}
               </Button>

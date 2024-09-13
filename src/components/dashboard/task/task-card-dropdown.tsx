@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import { Button } from "../../ui/button";
 import { TooltipItem } from "../../ui/tooltip-item";
 import { DatePicker } from "../../ui/date-picker";
@@ -40,7 +42,8 @@ import { TaskProp } from "@/data/types";
 
 export const TaskCardDropDown = ({ task }: { task: TaskProp }) => {
   const sections = useSectionStore((state) => state.sections);
-
+  const [date, setDate] = useState<Date>();
+  const [priority, setPriority] = useState(4);
   const EllipsisButton = (
     <Button
       variant="ghost"
@@ -89,20 +92,23 @@ export const TaskCardDropDown = ({ task }: { task: TaskProp }) => {
                 </DropdownMenuSubContent>
               </DropdownMenuPortal>
             </DropdownMenuSub>
-
           </DropdownMenuGroup>
 
           <DropdownMenuSeparator />
 
           <DropdownMenuLabel>Priority</DropdownMenuLabel>
           <DropdownMenuGroup className="flex">
-            <PrioritySelect variant="list" />
+            <PrioritySelect
+              variant="list"
+              value={priority}
+              onValueChange={(value) => setPriority(Number(value))}
+            />
           </DropdownMenuGroup>
 
           <DropdownMenuSeparator />
 
           <DropdownMenuGroup className="flex items-center">
-            <DatePicker variant="text" dueDate={task.dueDate} />
+            <DatePicker variant="text" value={date} onChange={setDate} />
             <TooltipItem
               tooltipTrigger={
                 <Button

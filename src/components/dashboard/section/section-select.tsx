@@ -10,39 +10,31 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { IoCaretForwardOutline } from "react-icons/io5";
-export function SectionSelect() {
+import { useSectionStore } from "@/data/sectionStore";
+
+type SectionSelectProps = {
+  onValueChange: (...event: any[]) => void;
+  defaultValue: string;
+};
+
+export function SectionSelect({
+  onValueChange,
+  defaultValue,
+}: SectionSelectProps) {
+  const sections = useSectionStore((state) => state.sections);
   return (
-    <Select>
+    <Select onValueChange={onValueChange} defaultValue={defaultValue}>
       <SelectTrigger>
         <SelectValue placeholder="Select a section" />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
           <SelectLabel>Sections</SelectLabel>
-          <SelectItem value="homework">
-            <div className="flex items-center">
-              <IoCaretForwardOutline className="mr-2 h-4 w-4" />
-              <span>Homework</span>
-            </div>
-          </SelectItem>
-          <SelectItem value="chores">
-            <div className="flex items-center">
-              <IoCaretForwardOutline className="mr-2 h-4 w-4" />
-              <span>Chores</span>
-            </div>
-          </SelectItem>
-          <SelectItem value="activities">
-            <div className="flex items-center">
-              <IoCaretForwardOutline className="mr-2 h-4 w-4" />
-              <span>Activities</span>
-            </div>
-          </SelectItem>
-          <SelectItem value="others">
-            <div className="flex items-center">
-              <IoCaretForwardOutline className="mr-2 h-4 w-4" />
-              <span>Others</span>
-            </div>
-          </SelectItem>
+          {sections.map((section, index) => (
+            <SelectItem key={index} value={section.name}>
+              <span>{section.name}</span>
+            </SelectItem>
+          ))}
         </SelectGroup>
       </SelectContent>
     </Select>

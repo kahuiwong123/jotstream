@@ -20,37 +20,47 @@ import { DatePicker } from "@/components/ui/date-picker";
 import { PrioritySelect } from "./priority-select";
 import { IoChevronForwardOutline, IoCloseOutline } from "react-icons/io5";
 import { TooltipItem } from "@/components/ui/tooltip-item";
+import { useSectionStore } from "@/data/sectionStore";
 
 const taskSchema = z.object({
-  section: z.string().min(1),
+  sectionName: z.string().min(1),
   title: z.string().min(1),
   description: z.string().optional(),
-  priority: z.number().gte(1).lte(4).optional(),
+  priority: z.number().gte(1).lte(4),
   dueDate: z.date().optional(),
 });
 
 type taskFields = z.infer<typeof taskSchema>;
 
+type AddTaskButtonProps = {
+  setIsAddingTask: (bool: boolean) => void;
+  sectionName: string;
+};
+
 export const AddTaskButton = ({
   setIsAddingTask,
-}: {
-  setIsAddingTask: (bool: boolean) => void;
-}) => {
+  sectionName,
+}: AddTaskButtonProps) => {
+  const addTaskToSection = useSectionStore((state) => state.addTaskToSection);
+
   const form = useForm<taskFields>({
     resolver: zodResolver(taskSchema),
     defaultValues: {
-      section: "Homework",
+      sectionName: "Homework",
+      priority: 4,
     },
   });
 
   const onSubmit: SubmitHandler<taskFields> = (data) => {
-    console.log(data);
+    console.log(data)
+    addTaskToSection(data.sectionName, data);
+    setIsAddingTask(false)
   };
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="border border-red-500 p-2 rounded-lg"
+        className="rounded-lg border border-red-500 p-2"
       >
         <FormField
           name="title"
@@ -83,7 +93,11 @@ export const AddTaskButton = ({
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <DatePicker variant="icon" {...field} />
+                  <DatePicker
+                    variant="icon"
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
                 </FormControl>
               </FormItem>
             )}
@@ -95,7 +109,11 @@ export const AddTaskButton = ({
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <PrioritySelect variant="dropdown" {...field} />
+                  <PrioritySelect
+                    variant="dropdown"
+                    onValueChange={(val) => field.onChange(Number(val))}
+                    value={field.value}
+                  />
                 </FormControl>
               </FormItem>
             )}
@@ -104,12 +122,15 @@ export const AddTaskButton = ({
 
         <div className="flex items-center justify-around gap-1">
           <FormField
-            name="section"
+            name="sectionName"
             control={form.control}
             render={({ field }) => (
               <FormItem className="grow">
                 <FormControl>
-                  <SectionSelect />
+                  <SectionSelect
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  />
                 </FormControl>
               </FormItem>
             )}

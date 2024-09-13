@@ -19,15 +19,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export function DatePicker({
-  variant,
-  dueDate,
-}: {
+type DatePickerProps = {
   variant: "icon" | "text";
-  dueDate?: Date;
-}) {
-  const [date, setDate] = React.useState<Date | undefined>(dueDate);
+  value?: Date | undefined;
+  onChange: (...event: any[]) => void;
+};
 
+export function DatePicker({ variant, value, onChange }: DatePickerProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -35,22 +33,22 @@ export function DatePicker({
           variant={"outline"}
           className={cn(
             "justify-start border-none p-2 text-left font-normal",
-            !date && "text-muted-foreground",
+            value && "text-muted-foreground",
             variant == "text" ? "w-full" : "size-fit",
           )}
         >
           <CalendarIcon
-            className={cn("size-4", (variant == "text" || date) && "mr-2")}
+            className={cn("size-4", (variant == "text" || value) && "mr-2")}
           />
-          {date
-            ? format(date, "PPP")
+          {value
+            ? format(value, "PPP")
             : variant == "text" && <span>Pick a date</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="flex w-auto flex-col space-y-2 p-2 focus-visible:ring-0 focus-visible:ring-offset-0">
         <Select
           onValueChange={(value) =>
-            setDate(addDays(new Date(), parseInt(value)))
+            onChange(addDays(new Date(), parseInt(value)))
           }
         >
           <SelectTrigger>
@@ -64,7 +62,7 @@ export function DatePicker({
           </SelectContent>
         </Select>
         <div className="rounded-md border">
-          <Calendar mode="single" selected={date} onSelect={setDate} />
+          <Calendar mode="single" selected={value} onSelect={onChange} />
         </div>
       </PopoverContent>
     </Popover>

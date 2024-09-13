@@ -41,7 +41,7 @@ const SectionCard = ({ section }: { section: SectionProp }) => {
         <TaskCard key={index} task={task} />
       ))}
       {isAddingTask ? (
-        <AddTaskButton setIsAddingTask={setIsAddingTask} />
+        <AddTaskButton setIsAddingTask={setIsAddingTask} sectionName={section.name} />
       ) : (
         <Button
           variant="ghost"

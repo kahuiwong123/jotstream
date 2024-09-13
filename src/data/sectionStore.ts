@@ -60,19 +60,24 @@ type SectionStore = {
   setSections: (sections: SectionProp[]) => void;
   removeSection: (sectionName: string) => void;
   duplicateSection: (sectionName: string) => void;
+  addTaskToSection: (sectionName: string, task: TaskProp) => void;
 };
 
 export const useSectionStore = create<SectionStore>((set) => ({
   sections: [section1, section2, section3, section4],
+
   addSection: (section) =>
     set((state) => ({ sections: [...state.sections, section] })),
+
   setSections: (sections) => set({ sections: sections }),
+
   removeSection: (sectionName) =>
     set((state) => ({
       sections: state.sections.filter(
         (section) => section.name !== sectionName,
       ),
     })),
+
   duplicateSection: (name: string) =>
     set((state) => {
       const index = state.sections.findIndex(
@@ -91,5 +96,19 @@ export const useSectionStore = create<SectionStore>((set) => ({
         return { sections: newSections };
       }
       return state;
+    }),
+    
+  addTaskToSection: (sectionName, task) =>
+    set((state) => {
+      const newSectons = state.sections.map((section) => {
+        if (section.name === sectionName) {
+          return {
+            ...section,
+            tasks: [...section.tasks, task],
+          };
+        }
+        return section;
+      });
+      return { sections: newSectons };
     }),
 }));
