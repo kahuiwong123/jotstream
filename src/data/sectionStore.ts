@@ -58,6 +58,7 @@ type SectionStore = {
   sections: SectionProp[];
   addSection: (section: SectionProp) => void;
   setSections: (sections: SectionProp[]) => void;
+  removeSection: (sectionName: string) => void;
 };
 
 export const useSectionStore = create<SectionStore>((set) => ({
@@ -65,4 +66,10 @@ export const useSectionStore = create<SectionStore>((set) => ({
   addSection: (section) =>
     set((state) => ({ sections: [...state.sections, section] })),
   setSections: (sections) => set({ sections: sections }),
+  removeSection: (sectionName) =>
+    set((state) => ({
+      sections: state.sections.filter(
+        (section) => section.name !== sectionName,
+      ),
+    })),
 }));

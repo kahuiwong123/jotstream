@@ -33,7 +33,7 @@ const SectionCard = ({ section }: { section: SectionProp }) => {
             }
             tooltipString={section.name}
           />
-          <SectionCardDropDown setIsEditing={setIsEditing} />
+          <SectionCardDropDown setIsEditing={setIsEditing} section={section}/>
         </div>
       )}
 

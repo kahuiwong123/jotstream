@@ -1,5 +1,4 @@
 import React from "react";
-import { TooltipItem } from "../../ui/tooltip-item";
 import { Button } from "../../ui/button";
 import {
   IoEllipsisHorizontalOutline,
@@ -16,6 +15,18 @@ import {
 } from "@/components/ui/tooltip";
 
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -29,11 +40,18 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+import { SectionProp } from "@/data/types";
+import { useSectionStore } from "@/data/sectionStore";
 export const SectionCardDropDown = ({
   setIsEditing,
+  section,
 }: {
   setIsEditing: (bool: boolean) => void;
+  section: SectionProp;
 }) => {
+  const removeSection = useSectionStore((state) => state.removeSection);
+
   const EllipsisButton = (
     <Button
       variant="outline"
@@ -44,37 +62,60 @@ export const SectionCardDropDown = ({
     </Button>
   );
   return (
-    <DropdownMenu>
-      <Tooltip>
-        <DropdownMenuTrigger asChild>
-          <TooltipTrigger asChild>{EllipsisButton}</TooltipTrigger>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent
-          className="w-56"
-          onCloseAutoFocus={(e) => e.preventDefault()}
-        >
-          <DropdownMenuGroup>
-            <DropdownMenuItem onClick={() => setIsEditing(true)}>
-              <IoPencilOutline className="mr-2 h-4 w-4" />
-              <span>Edit</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <IoDuplicateOutline className="mr-2 h-4 w-4" />
-              <span>Duplicate</span>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <IoTrashOutline className="mr-2 h-4 w-4 text-red-500" />
-              <span className="text-red-500">Delete</span>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-        </DropdownMenuContent>
-        <TooltipContent>
-          <p>Section options</p>
-        </TooltipContent>
-      </Tooltip>
-    </DropdownMenu>
+    <AlertDialog>
+      <DropdownMenu>
+        <Tooltip>
+          <DropdownMenuTrigger asChild>
+            <TooltipTrigger asChild>{EllipsisButton}</TooltipTrigger>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            className="w-56"
+            onCloseAutoFocus={(e) => e.preventDefault()}
+          >
+            <DropdownMenuGroup>
+              <DropdownMenuItem onClick={() => setIsEditing(true)}>
+                <IoPencilOutline className="mr-2 h-4 w-4" />
+                <span>Edit</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <IoDuplicateOutline className="mr-2 h-4 w-4" />
+                <span>Duplicate</span>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+
+            <DropdownMenuSeparator />
+
+            <DropdownMenuGroup>
+              <AlertDialogTrigger asChild>
+                <DropdownMenuItem>
+                  <IoTrashOutline className="mr-2 h-4 w-4 text-red-500" />
+                  <span className="text-red-500">Delete</span>
+                </DropdownMenuItem>
+              </AlertDialogTrigger>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete section?</AlertDialogTitle>
+              <AlertDialogDescription>
+                The <span className="font-bold">{section.name}</span>{" "}
+                section will be permanently deleted.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={() => removeSection(section.name)}>
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+
+          <TooltipContent>
+            <p>Section options</p>
+          </TooltipContent>
+        </Tooltip>
+      </DropdownMenu>
+    </AlertDialog>
   );
 };

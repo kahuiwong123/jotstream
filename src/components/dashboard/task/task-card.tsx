@@ -14,7 +14,7 @@ const TaskCard = ({ task }: { task: TaskProp }) => {
         size="icon"
         className="group mt-0.5 h-fit w-fit rounded-full border-2 border-red-500 bg-transparent"
       >
-        <FaCheck className="h-4 w-4 rounded-full border border-transparent text-red-500 opacity-0 transition-opacity duration-200 hover:opacity-100" />
+        <FaCheck className="h-4 w-4 rounded-full border border-transparent text-red-flag opacity-0 transition-opacity duration-200 hover:opacity-100" />
       </Button>
       <div className="flex flex-1 flex-col justify-center overflow-hidden">
         <div className="flex items-center justify-between">
