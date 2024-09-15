@@ -60,10 +60,9 @@ export const AddTaskButton = ({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="divide-y rounded-lg border border-transparent transition-all duration-300 dark:border-light-grey-hover"
+        className="divide-y rounded-lg border border-[#E6E6E6] border-transparent transition-all duration-300 dark:border-[#707070]"
       >
         <div>
-          {" "}
           <FormField
             name="title"
             control={form.control}
@@ -96,7 +95,7 @@ export const AddTaskButton = ({
           />
         </div>
 
-        <div className="flex items-center gap-3 p-2">
+        <div className="flex grow-0 items-center gap-3 p-2">
           <FormField
             name="dueDate"
             control={form.control}
