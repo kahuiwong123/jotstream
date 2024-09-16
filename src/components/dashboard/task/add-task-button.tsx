@@ -41,7 +41,7 @@ export const AddTaskButton = ({
   setIsAddingTask,
   sectionName,
 }: AddTaskButtonProps) => {
-  const addTaskToSection = useSectionStore((state) => state.addTaskToSection);
+  // const addTaskToSection = useSectionStore((state) => state.addTaskToSection);
 
   const form = useForm<taskFields>({
     resolver: zodResolver(taskSchema),
@@ -53,7 +53,7 @@ export const AddTaskButton = ({
 
   const onSubmit: SubmitHandler<taskFields> = (data) => {
     console.log(data);
-    addTaskToSection(data.sectionName, data);
+    // addTaskToSection(data.sectionName, data);
     setIsAddingTask(false);
   };
   return (

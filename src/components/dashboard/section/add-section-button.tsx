@@ -45,7 +45,7 @@ const AddSectionButton = () => {
   });
 
   const onSubmit = (data: SectionProp) => {
-    addSection(data);
+    // addSection(data);
     setIsAdding(false);
   };
 

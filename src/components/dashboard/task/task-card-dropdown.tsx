@@ -38,9 +38,9 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { TaskProp } from "@/data/types";
+import { Task } from "@prisma/client";
 
-export const TaskCardDropDown = ({ task }: { task: TaskProp }) => {
+export const TaskCardDropDown = ({ task }: { task: Task }) => {
   const sections = useSectionStore((state) => state.sections);
   const [date, setDate] = useState<Date>();
   const [priority, setPriority] = useState(4);
@@ -82,7 +82,7 @@ export const TaskCardDropDown = ({ task }: { task: TaskProp }) => {
               <DropdownMenuPortal>
                 <DropdownMenuSubContent>
                   {sections
-                    .filter((section) => section.name !== task.sectionName)
+                    .filter((section) => section.id !== task.sectionId)
                     .map((section, index) => (
                       <DropdownMenuItem key={index}>
                         <IoCaretForwardOutline className="mr-2 h-4 w-4" />

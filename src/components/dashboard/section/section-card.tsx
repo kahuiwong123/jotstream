@@ -8,8 +8,8 @@ import { SectionCardEdit } from "./section-card-edit";
 import { SectionCardDropDown } from "./section-card-dropdown";
 import { TooltipItem } from "../../ui/tooltip-item";
 import { AddTaskButton } from "../task/add-task-button";
-import { SectionProp } from "@/data/types";
-const SectionCard = ({ section }: { section: SectionProp }) => {
+import { Section, Task } from "@prisma/client";
+const SectionCard = ({ section }: { section: Section & {tasks: Task[]} }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isAddingTask, setIsAddingTask] = useState(false);
   const [sectionName, setSectionName] = useState(section.name);

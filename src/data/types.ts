@@ -1,14 +1,6 @@
-type SectionProp = {
-  name: string;
-  tasks: TaskProp[];
-};
+import { Section, Task } from "@prisma/client";
 
-type TaskProp = {
-  sectionName: string;
-  title: string;
-  description?: string;
-  priority?: number;
-  dueDate?: Date;
-};
+type sectionProps = Section & { tasks: Task[] };
+type taskProps = Task;
 
-export type { SectionProp, TaskProp };
+export type { sectionProps, taskProps };

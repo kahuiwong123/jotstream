@@ -41,14 +41,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { SectionProp } from "@/data/types";
+import { Section } from "@prisma/client";
 import { useSectionStore } from "@/data/sectionStore";
 export const SectionCardDropDown = ({
   setIsEditing,
   section,
 }: {
   setIsEditing: (bool: boolean) => void;
-  section: SectionProp;
+  section: Section;
 }) => {
   const removeSection = useSectionStore((state) => state.removeSection);
   const duplicateSection = useSectionStore((state) => state.duplicateSection);
