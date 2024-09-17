@@ -1,6 +1,7 @@
 import prisma from "../../../db/db";
-import { DashboardClient } from "./dashboard-client";
-
+import AddSectionButton from "@/components/dashboard/section/add-section-button";
+import SectionCard from "@/components/dashboard/section/section-card";
+import { Suspense } from "react";
 const Dashboard = async () => {
   const sections = await prisma.section.findMany({
     where: {
@@ -10,9 +11,18 @@ const Dashboard = async () => {
       tasks: true,
     },
   });
-  return <DashboardClient sectionsData={sections} />;
+  return (
+    <Suspense fallback={<p>Loading sections...</p>}>
+      <div className="flex h-full grow gap-8 bg-white-main dark:bg-dark-main">
+        <div className="flex grow gap-8">
+          {sections.map((section, index) => (
+            <SectionCard key={index} section={section} />
+          ))}
+          <AddSectionButton />
+        </div>
+      </div>
+    </Suspense>
+  );
 };
 
-export default Dashboard
-
-
+export default Dashboard;

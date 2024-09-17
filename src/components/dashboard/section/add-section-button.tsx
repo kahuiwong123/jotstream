@@ -1,66 +1,61 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdOutlineAddToPhotos } from "react-icons/md";
 import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { addSection, FormState } from "@/data/actions";
+import { useFormState } from "react-dom";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useSectionStore } from "@/data/sectionStore";
 
-const taskSchema = z.object({
-  sectionName: z.string().min(1),
-  title: z.string().min(1),
-  description: z.string().optional(),
-  priority: z.number().gte(1).lte(4).optional(),
-  dueDate: z.date().optional(),
-});
+// const taskSchema = z.object({
+//   sectionName: z.string().min(1),
+//   title: z.string().min(1),
+//   description: z.string().optional(),
+//   priority: z.number().gte(1).lte(4).optional(),
+//   dueDate: z.date().optional(),
+// });
 
 const sectionSchema = z.object({
-  name: z.string(),
-  tasks: z.array(taskSchema),
+  name: z.string().min(1, {message: "section name cannot be empty"}),
 });
 
 type SectionProp = z.infer<typeof sectionSchema>;
 
 const AddSectionButton = () => {
-  const [isAdding, setIsAdding] = useState<boolean>(false);
-  const addSection = useSectionStore((state) => state.addSection);
+  const [isAdding, setIsAdding] = useState(false);
+  const [state, formAction] = useFormState<FormState, FormData>(addSection, {
+    message: "",
+  });
 
   const form = useForm<SectionProp>({
     resolver: zodResolver(sectionSchema),
-    defaultValues: {
-      tasks: [],
-    },
   });
 
-  const onSubmit = (data: SectionProp) => {
-    // addSection(data);
+  const handleCancel = () => {
+    form.reset()
     setIsAdding(false);
   };
 
-  const handleCancel = () => {
-    setIsAdding(false);
-  };
+  useEffect(() => {
+    form.reset()
+    setIsAdding((prev) => !prev);
+  }, [state, form]);
 
   return (
     <div className="mr-16">
       {isAdding ? (
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex w-48 flex-col"
-          >
+          <form action={formAction} className="flex w-48 flex-col">
             <FormField
               control={form.control}
               name="name"
