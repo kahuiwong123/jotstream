@@ -67,6 +67,7 @@ export const AddTaskButton = ({ sectionId }: AddTaskButtonProps) => {
                 <FormControl>
                   <Input
                     placeholder="Task name"
+                    autoComplete="off"
                     {...field}
                     className="border-none text-base dark:bg-transparent"
                   />

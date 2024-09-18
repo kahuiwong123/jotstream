@@ -16,7 +16,6 @@ import { useShallow } from "zustand/react/shallow";
 const SectionCard = memo(
   ({ section }: { section: Section & { tasks: Task[] } }) => {
     const [isEditing, setIsEditing] = useState(false);
-    const [sectionName, setSectionName] = useState(section.name);
     const { activeSectionId, setActiveSectionId } = useSectionStore(
       useShallow((state) => ({
         activeSectionId: state.activeSectionId,
@@ -28,10 +27,8 @@ const SectionCard = memo(
       <section className="flex h-fit w-72 flex-col gap-4 rounded-md border border-transparent bg-[#fcfcfc] p-4 shadow-md duration-300 hover:shadow-lg dark:bg-[#202020] dark:hover:border-light-grey-hover">
         {isEditing ? (
           <SectionCardEdit
-            originalName={section.name}
-            sectionName={sectionName}
+            section={section}
             setIsEditing={setIsEditing}
-            setSectionName={setSectionName}
           />
         ) : (
           <div className="flex items-center justify-between">

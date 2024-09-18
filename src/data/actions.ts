@@ -3,7 +3,8 @@
 import { revalidatePath } from "next/cache";
 import prisma from "../../db/db";
 import { z } from "zod";
-import { taskProps } from "./types";
+
+import { Section, Task } from "@prisma/client";
 
 const sectionSchema = z.object({
   name: z.string().min(1),
@@ -21,7 +22,7 @@ export type FormState = {
   message: string;
 };
 
-export type Section = {
+export type TaskModified = {
   sectionId: string;
   title: string;
   description?: string;
@@ -64,7 +65,25 @@ export const removeSection = async (id: string): Promise<FormState> => {
   };
 };
 
-export const addTask = async (data: Section): Promise<FormState> => {
+export const updateSection = async (
+  data: Omit<Section, "createdAt">,
+): Promise<FormState> => {
+  await prisma.section.update({
+    where: {
+      id: data.id,
+    },
+
+    data: {
+      name: data.name,
+    },
+  });
+  revalidatePath("/dashboard");
+  return {
+    message: "section updated!",
+  };
+};
+
+export const addTask = async (data: TaskModified): Promise<FormState> => {
   const validate = taskSchema.safeParse(data);
   if (!validate.success) {
     return {

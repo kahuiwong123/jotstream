@@ -54,7 +54,11 @@ const AddSectionButton = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input placeholder="Name this section" {...field} />
+                    <Input
+                      placeholder="Name this section"
+                      {...field}
+                      autoComplete="off"
+                    />
                   </FormControl>
                 </FormItem>
               )}
@@ -62,7 +66,7 @@ const AddSectionButton = () => {
             <div className="mt-2 flex gap-2">
               <Button
                 type="submit"
-                className="h-fit w-fit rounded-md bg-red-flag px-4 py-1 hover:bg-[#d6584f] dark:bg-red-flag dark:hover:bg-[#d6584f] dark:text-white"
+                className="h-fit w-fit rounded-md bg-red-flag px-4 py-1 hover:bg-[#d6584f] dark:bg-red-flag dark:text-white dark:hover:bg-[#d6584f]"
                 disabled={!form.formState.isValid}
               >
                 Save

@@ -6,10 +6,13 @@ import { DashboardClient } from "./dashboard-client";
 const Dashboard = async () => {
   const sections = await prisma.section.findMany({
     where: {
-      userId: "392dc2c9-4ddd-45a2-83bb-a5171e1ef04b",
+      userId: "392dc2c9-4ddd-45a2-83bb-a5171e1ef04b", //placeholder
     },
     include: {
       tasks: true,
+    },
+    orderBy: {
+      createdAt: "asc",
     },
   });
   return (
