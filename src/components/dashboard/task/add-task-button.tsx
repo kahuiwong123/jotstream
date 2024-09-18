@@ -18,7 +18,8 @@ import { DatePicker } from "@/components/ui/date-picker";
 import { PrioritySelect } from "./priority-select";
 import { IoChevronForwardOutline, IoCloseOutline } from "react-icons/io5";
 import { TooltipItem } from "@/components/ui/tooltip-item";
-import { addTask, FormState } from "@/data/actions";
+import { addTask } from "@/data/actions";
+import { useSectionStore } from "@/data/sectionStore";
 
 const taskSchema = z.object({
   sectionId: z.string(),
@@ -31,14 +32,10 @@ const taskSchema = z.object({
 type taskFields = z.infer<typeof taskSchema>;
 
 type AddTaskButtonProps = {
-  setIsAddingTask: (bool: boolean) => void;
   sectionId: string;
 };
 
-export const AddTaskButton = ({
-  setIsAddingTask,
-  sectionId,
-}: AddTaskButtonProps) => {
+export const AddTaskButton = ({ sectionId }: AddTaskButtonProps) => {
   const form = useForm<taskFields>({
     resolver: zodResolver(taskSchema),
     defaultValues: {
@@ -48,8 +45,12 @@ export const AddTaskButton = ({
   });
 
   const action: () => void = form.handleSubmit(async (data) => {
-    await addTask(data)
-  })
+    await addTask(data);
+  });
+
+  const setActiveSectionId = useSectionStore(
+    (state) => state.setActiveSectionId,
+  );
 
   return (
     <Form {...form}>
@@ -150,8 +151,8 @@ export const AddTaskButton = ({
                   type="reset"
                   variant={"outline"}
                   size={"icon"}
-                  onClick={() => setIsAddingTask(false)}
                   className="dark:bg-dark-main"
+                  onClick={() => setActiveSectionId(null)}
                 >
                   <IoCloseOutline className="size-6" />
                 </Button>
