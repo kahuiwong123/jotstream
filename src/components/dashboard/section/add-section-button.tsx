@@ -17,14 +17,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-// const taskSchema = z.object({
-//   sectionName: z.string().min(1),
-//   title: z.string().min(1),
-//   description: z.string().optional(),
-//   priority: z.number().gte(1).lte(4).optional(),
-//   dueDate: z.date().optional(),
-// });
-
 const sectionSchema = z.object({
   name: z.string().min(1, { message: "section name cannot be empty" }),
 });

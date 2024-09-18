@@ -3,13 +3,30 @@
 import { revalidatePath } from "next/cache";
 import prisma from "../../db/db";
 import { z } from "zod";
+import { taskProps } from "./types";
 
 const sectionSchema = z.object({
   name: z.string().min(1),
 });
 
+const taskSchema = z.object({
+  sectionId: z.string(),
+  title: z.string().min(1),
+  description: z.string().optional(),
+  priority: z.number().gte(1).lte(4),
+  dueDate: z.date().optional(),
+});
+
 export type FormState = {
   message: string;
+};
+
+export type Section = {
+  sectionId: string;
+  title: string;
+  description?: string;
+  priority: number;
+  dueDate?: Date;
 };
 
 export const addSection = async (
@@ -35,7 +52,7 @@ export const addSection = async (
   };
 };
 
-export const removeSection = async (id: string) => {
+export const removeSection = async (id: string): Promise<FormState> => {
   await prisma.section.delete({
     where: {
       id: id,
@@ -44,5 +61,21 @@ export const removeSection = async (id: string) => {
   revalidatePath("/dashboard");
   return {
     message: "section removed!",
+  };
+};
+
+export const addTask = async (data: Section): Promise<FormState> => {
+  const validate = taskSchema.safeParse(data);
+  if (!validate.success) {
+    return {
+      message: "task name cannot be empty.",
+    };
+  }
+  await prisma.task.create({
+    data: data,
+  });
+  revalidatePath("/dashboard");
+  return {
+    message: "task added!",
   };
 };

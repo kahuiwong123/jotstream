@@ -10,6 +10,7 @@ import { SectionCardDropDown } from "./section-card-dropdown";
 import { TooltipItem } from "../../ui/tooltip-item";
 import { AddTaskButton } from "../task/add-task-button";
 import { Section, Task } from "@prisma/client";
+
 const SectionCard = memo(
   ({ section }: { section: Section & { tasks: Task[] } }) => {
     const [isEditing, setIsEditing] = useState(false);

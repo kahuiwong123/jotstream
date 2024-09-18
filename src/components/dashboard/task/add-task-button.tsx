@@ -13,11 +13,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { DatePicker } from "@/components/ui/date-picker";
 import { PrioritySelect } from "./priority-select";
 import { IoChevronForwardOutline, IoCloseOutline } from "react-icons/io5";
 import { TooltipItem } from "@/components/ui/tooltip-item";
+import { addTask, FormState } from "@/data/actions";
 
 const taskSchema = z.object({
   sectionId: z.string(),
@@ -34,23 +35,27 @@ type AddTaskButtonProps = {
   sectionId: string;
 };
 
-export const AddTaskButton = ({ setIsAddingTask, sectionId }: AddTaskButtonProps) => {
+export const AddTaskButton = ({
+  setIsAddingTask,
+  sectionId,
+}: AddTaskButtonProps) => {
   const form = useForm<taskFields>({
     resolver: zodResolver(taskSchema),
     defaultValues: {
+      sectionId: sectionId,
       priority: 4,
     },
   });
 
-  const onSubmit: SubmitHandler<taskFields> = (data) => {
-    console.log(data);
-    setIsAddingTask(false);
-  };
+  const action: () => void = form.handleSubmit(async (data) => {
+    await addTask(data)
+  })
 
   return (
     <Form {...form}>
       <form
         className="divide-y rounded-lg border border-[#E6E6E6] border-transparent transition-all duration-300 dark:border-[#707070]"
+        action={action}
       >
         <div>
           <FormField
@@ -131,7 +136,6 @@ export const AddTaskButton = ({ setIsAddingTask, sectionId }: AddTaskButtonProps
                   <SectionSelect
                     onValueChange={field.onChange}
                     value={field.value}
-                    sectionId={sectionId}
                     className="border-none dark:bg-transparent"
                   />
                 </FormControl>
