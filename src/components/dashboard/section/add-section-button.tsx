@@ -26,7 +26,7 @@ import {
 // });
 
 const sectionSchema = z.object({
-  name: z.string().min(1, {message: "section name cannot be empty"}),
+  name: z.string().min(1, { message: "section name cannot be empty" }),
 });
 
 type SectionProp = z.infer<typeof sectionSchema>;
@@ -42,12 +42,12 @@ const AddSectionButton = () => {
   });
 
   const handleCancel = () => {
-    form.reset()
+    form.reset();
     setIsAdding(false);
   };
 
   useEffect(() => {
-    form.reset()
+    form.reset();
     setIsAdding((prev) => !prev);
   }, [state, form]);
 
@@ -70,7 +70,8 @@ const AddSectionButton = () => {
             <div className="mt-2 flex gap-2">
               <Button
                 type="submit"
-                className="h-fit w-fit rounded-md px-4 py-1"
+                className="h-fit w-fit rounded-md bg-red-flag px-4 py-1 hover:bg-[#d6584f] dark:bg-red-flag dark:hover:bg-[#d6584f] dark:text-white"
+                disabled={!form.formState.isValid}
               >
                 Save
               </Button>

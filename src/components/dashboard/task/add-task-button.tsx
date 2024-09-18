@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { SectionSelect } from "../section/section-select";
@@ -20,10 +18,9 @@ import { DatePicker } from "@/components/ui/date-picker";
 import { PrioritySelect } from "./priority-select";
 import { IoChevronForwardOutline, IoCloseOutline } from "react-icons/io5";
 import { TooltipItem } from "@/components/ui/tooltip-item";
-import { useSectionStore } from "@/data/sectionStore";
 
 const taskSchema = z.object({
-  sectionName: z.string().min(1),
+  sectionId: z.string(),
   title: z.string().min(1),
   description: z.string().optional(),
   priority: z.number().gte(1).lte(4),
@@ -34,32 +31,25 @@ type taskFields = z.infer<typeof taskSchema>;
 
 type AddTaskButtonProps = {
   setIsAddingTask: (bool: boolean) => void;
-  sectionName: string;
+  sectionId: string;
 };
 
-export const AddTaskButton = ({
-  setIsAddingTask,
-  sectionName,
-}: AddTaskButtonProps) => {
-  // const addTaskToSection = useSectionStore((state) => state.addTaskToSection);
-
+export const AddTaskButton = ({ setIsAddingTask, sectionId }: AddTaskButtonProps) => {
   const form = useForm<taskFields>({
     resolver: zodResolver(taskSchema),
     defaultValues: {
-      sectionName: "Homework",
       priority: 4,
     },
   });
 
   const onSubmit: SubmitHandler<taskFields> = (data) => {
     console.log(data);
-    // addTaskToSection(data.sectionName, data);
     setIsAddingTask(false);
   };
+
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
         className="divide-y rounded-lg border border-[#E6E6E6] border-transparent transition-all duration-300 dark:border-[#707070]"
       >
         <div>
@@ -133,14 +123,15 @@ export const AddTaskButton = ({
 
         <div className="flex items-center justify-around gap-1 p-2">
           <FormField
-            name="sectionName"
+            name="sectionId"
             control={form.control}
             render={({ field }) => (
               <FormItem className="grow">
                 <FormControl>
                   <SectionSelect
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    value={field.value}
+                    sectionId={sectionId}
                     className="border-none dark:bg-transparent"
                   />
                 </FormControl>
@@ -169,6 +160,7 @@ export const AddTaskButton = ({
                   type="submit"
                   variant={"outline"}
                   size={"icon"}
+                  disabled={!form.formState.isValid}
                   className="bg-red-flag hover:bg-[#d6584f] dark:bg-red-flag dark:hover:bg-[#d6584f]"
                 >
                   <IoChevronForwardOutline className="size-6" />

@@ -1,32 +1,34 @@
+/* eslint-disable react/display-name */
 "use client";
 
 import AddSectionButton from "@/components/dashboard/section/add-section-button";
 import SectionCard from "@/components/dashboard/section/section-card";
 import { useSectionStore } from "@/data/sectionStore";
 import { sectionProps } from "@/data/types";
-import { useEffect } from "react";
-export const DashboardClient = ({
-  sectionsData,
-}: {
-  sectionsData: sectionProps[];
-}) => {
-  const sections = useSectionStore((state) => state.sections);
-  const setSections = useSectionStore((state) => state.setSections);
+import { memo, useEffect } from "react";
+import { useShallow } from "zustand/react/shallow";
+export const DashboardClient = memo(
+  ({ sectionsData }: { sectionsData: sectionProps[] }) => {
+    const { sections, setSections } = useSectionStore(
+      useShallow((state) => ({
+        sections: state.sections,
+        setSections: state.setSections,
+      })),
+    );
 
-  useEffect(() => {
-    setSections(sectionsData);
-  }, [sectionsData, setSections]);
+    useEffect(() => {
+      setSections(sectionsData);
+    }, [sectionsData, setSections]);
 
-  return (
-    <div
-      className="flex h-full grow gap-8 bg-white-main dark:bg-dark-main"
-    >
-      <div className="flex grow gap-8">
-        {sections.map((section, index) => (
-          <SectionCard key={index} section={section} />
-        ))}
-        <AddSectionButton />
+    return (
+      <div className="flex h-full grow gap-8 bg-white-main dark:bg-dark-main">
+        <div className="flex grow gap-8">
+          {sections.map((section) => (
+            <SectionCard key={section.id} section={section} />
+          ))}
+          <AddSectionButton />
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  },
+);

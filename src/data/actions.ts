@@ -2,6 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 import prisma from "../../db/db";
+import { z } from "zod";
+
+const sectionSchema = z.object({
+  name: z.string().min(1),
+});
 
 export type FormState = {
   message: string;
@@ -11,6 +16,12 @@ export const addSection = async (
   prevState: FormState,
   data: FormData,
 ): Promise<FormState> => {
+  const validate = sectionSchema.safeParse(Object.fromEntries(data));
+  if (!validate.success) {
+    return {
+      message: "section name cannot be empty.",
+    };
+  }
   const name = data.get("name") as string;
   await prisma.section.create({
     data: {
@@ -20,6 +31,18 @@ export const addSection = async (
   });
   revalidatePath("/dashboard");
   return {
-    message: "success",
+    message: "section added!",
+  };
+};
+
+export const removeSection = async (id: string) => {
+  await prisma.section.delete({
+    where: {
+      id: id,
+    },
+  });
+  revalidatePath("/dashboard");
+  return {
+    message: "section removed!",
   };
 };

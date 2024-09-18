@@ -31,18 +31,12 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
 import { Section } from "@prisma/client";
-import { useSectionStore } from "@/data/sectionStore";
+import { removeSection } from "@/data/actions";
 export const SectionCardDropDown = ({
   setIsEditing,
   section,
@@ -50,9 +44,6 @@ export const SectionCardDropDown = ({
   setIsEditing: (bool: boolean) => void;
   section: Section;
 }) => {
-  const removeSection = useSectionStore((state) => state.removeSection);
-  const duplicateSection = useSectionStore((state) => state.duplicateSection);
-
   const EllipsisButton = (
     <Button
       variant="outline"
@@ -78,7 +69,7 @@ export const SectionCardDropDown = ({
                 <IoPencilOutline className="mr-2 h-4 w-4" />
                 <span>Edit</span>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => duplicateSection(section.name)}>
+              <DropdownMenuItem>
                 <IoDuplicateOutline className="mr-2 h-4 w-4" />
                 <span>Duplicate</span>
               </DropdownMenuItem>
@@ -106,7 +97,10 @@ export const SectionCardDropDown = ({
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={() => removeSection(section.name)}>
+              <AlertDialogAction
+                onClick={() => removeSection(section.id)}
+                className="bg-red-flag hover:bg-[#d6584f] dark:bg-red-flag dark:text-white dark:hover:bg-[#d6584f]"
+              >
                 Delete
               </AlertDialogAction>
             </AlertDialogFooter>
