@@ -38,7 +38,21 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
 import { Task } from "@prisma/client";
+import { removeTask } from "@/data/actions";
 
 export const TaskCardDropDown = ({ task }: { task: Task }) => {
   const sections = useSectionStore((state) => state.sections);
@@ -55,92 +69,115 @@ export const TaskCardDropDown = ({ task }: { task: Task }) => {
   );
 
   return (
-    <DropdownMenu>
-      <Tooltip>
-        <DropdownMenuTrigger asChild>
-          <TooltipTrigger asChild>{EllipsisButton}</TooltipTrigger>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent
-          className="w-56"
-          onCloseAutoFocus={(e) => e.preventDefault()}
-        >
-          <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <IoPencilOutline className="mr-2 h-4 w-4" />
-              <span>Edit</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <IoDuplicateOutline className="mr-2 h-4 w-4" />
-              <span>Duplicate</span>
-            </DropdownMenuItem>
+    <AlertDialog>
+      <DropdownMenu>
+        <Tooltip>
+          <DropdownMenuTrigger asChild>
+            <TooltipTrigger asChild>{EllipsisButton}</TooltipTrigger>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            className="w-56"
+            onCloseAutoFocus={(e) => e.preventDefault()}
+          >
+            <DropdownMenuGroup>
+              <DropdownMenuItem>
+                <IoPencilOutline className="mr-2 h-4 w-4" />
+                <span>Edit</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <IoDuplicateOutline className="mr-2 h-4 w-4" />
+                <span>Duplicate</span>
+              </DropdownMenuItem>
 
-            <DropdownMenuSub>
-              <DropdownMenuSubTrigger>
-                <IoSwapHorizontalOutline className="mr-2 h-4 w-4" />
-                <span>Move to...</span>
-              </DropdownMenuSubTrigger>
-              <DropdownMenuPortal>
-                <DropdownMenuSubContent>
-                  {sections
-                    .filter((section) => section.id !== task.sectionId)
-                    .map((section, index) => (
-                      <DropdownMenuItem key={index}>
-                        <IoCaretForwardOutline className="mr-2 h-4 w-4" />
-                        <span>{section.name}</span>
-                      </DropdownMenuItem>
-                    ))}
-                </DropdownMenuSubContent>
-              </DropdownMenuPortal>
-            </DropdownMenuSub>
-          </DropdownMenuGroup>
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
+                  <IoSwapHorizontalOutline className="mr-2 h-4 w-4" />
+                  <span>Move to...</span>
+                </DropdownMenuSubTrigger>
+                <DropdownMenuPortal>
+                  <DropdownMenuSubContent>
+                    {sections
+                      .filter((section) => section.id !== task.sectionId)
+                      .map((section, index) => (
+                        <DropdownMenuItem key={index}>
+                          <IoCaretForwardOutline className="mr-2 h-4 w-4" />
+                          <span>{section.name}</span>
+                        </DropdownMenuItem>
+                      ))}
+                  </DropdownMenuSubContent>
+                </DropdownMenuPortal>
+              </DropdownMenuSub>
+            </DropdownMenuGroup>
 
-          <DropdownMenuSeparator />
+            <DropdownMenuSeparator />
 
-          <DropdownMenuLabel>Priority</DropdownMenuLabel>
-          <DropdownMenuGroup className="flex">
-            <PrioritySelect
-              variant="list"
-              value={priority}
-              onValueChange={(value) => setPriority(Number(value))}
-            />
-          </DropdownMenuGroup>
+            <DropdownMenuLabel>Priority</DropdownMenuLabel>
+            <DropdownMenuGroup className="flex">
+              <PrioritySelect
+                variant="list"
+                value={priority}
+                onValueChange={(value) => setPriority(Number(value))}
+              />
+            </DropdownMenuGroup>
 
-          <DropdownMenuSeparator />
+            <DropdownMenuSeparator />
 
-          <DropdownMenuGroup className="flex items-center">
-            <DatePicker
-              variant="text"
-              value={date}
-              onChange={setDate}
-              className="border-none"
-            />
-            <TooltipItem
-              tooltipTrigger={
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-fit w-fit px-3 py-3"
-                >
-                  <IoRemoveCircleOutline className="size-5" />
-                </Button>
-              }
-              tooltipString="Remove due date"
-            />
-          </DropdownMenuGroup>
+            <DropdownMenuGroup className="flex items-center">
+              <DatePicker
+                variant="text"
+                value={date}
+                onChange={setDate}
+                className="border-none"
+              />
+              <TooltipItem
+                tooltipTrigger={
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-fit w-fit px-3 py-3"
+                  >
+                    <IoRemoveCircleOutline className="size-5" />
+                  </Button>
+                }
+                tooltipString="Remove due date"
+              />
+            </DropdownMenuGroup>
 
-          <DropdownMenuSeparator />
+            <DropdownMenuSeparator />
 
-          <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <IoTrashOutline className="mr-2 h-4 w-4 text-red-500" />
-              <span className="text-red-500">Delete</span>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-        </DropdownMenuContent>
-        <TooltipContent>
-          <p>Task options</p>
-        </TooltipContent>
-      </Tooltip>
-    </DropdownMenu>
+            <DropdownMenuGroup>
+              <AlertDialogTrigger asChild>
+                <DropdownMenuItem>
+                  <IoTrashOutline className="mr-2 size-4 text-red-500" />
+                  <span className="text-red-500">Delete</span>
+                </DropdownMenuItem>
+              </AlertDialogTrigger>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete task?</AlertDialogTitle>
+              <AlertDialogDescription>
+                The <span className="font-bold">{task.title}</span> task will
+                be permanently deleted.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => removeTask(task.id)}
+                className="bg-red-flag hover:bg-[#d6584f] dark:bg-red-flag dark:text-white dark:hover:bg-[#d6584f]"
+              >
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+          <TooltipContent>
+            <p>Task options</p>
+          </TooltipContent>
+        </Tooltip>
+      </DropdownMenu>
+    </AlertDialog>
   );
 };

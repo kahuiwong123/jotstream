@@ -79,3 +79,15 @@ export const addTask = async (data: Section): Promise<FormState> => {
     message: "task added!",
   };
 };
+
+export const removeTask = async (id: string): Promise<FormState> => {
+  await prisma.task.delete({
+    where: {
+      id: id,
+    },
+  });
+  revalidatePath("/dashboard");
+  return {
+    message: "task removed!",
+  };
+};
