@@ -30,6 +30,11 @@ export type TaskModified = {
   dueDate?: Date;
 };
 
+type taskUpdateProps = {
+  dueDate?: Date | null;
+  priority?: number;
+};
+
 export const addSection = async (
   prevState: FormState,
   data: FormData,
@@ -180,5 +185,21 @@ export const moveTask = async (
   revalidatePath("/dashboard");
   return {
     message: "task duplicated!",
+  };
+};
+
+export const updateTask = async (
+  taskId: string,
+  updates: taskUpdateProps,
+): Promise<FormState> => {
+  await prisma.task.update({
+    where: {
+      id: taskId,
+    },
+    data: updates,
+  });
+  revalidatePath("/dashboard");
+  return {
+    message: "task updated!",
   };
 };

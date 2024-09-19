@@ -85,6 +85,9 @@ export const PrioritySelect = ({
                 variant={"ghost"}
                 size={"icon"}
                 onClick={() => onValueChange(index + 1)}
+                className={clsx({
+                  "border border-gray-300": value == index + 1,
+                })}
               >
                 {flag.icon}
               </Button>

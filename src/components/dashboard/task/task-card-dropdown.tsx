@@ -52,7 +52,12 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { Task } from "@prisma/client";
-import { duplicateTask, moveTask, removeTask } from "@/data/actions";
+import {
+  duplicateTask,
+  moveTask,
+  removeTask,
+  updateTask,
+} from "@/data/actions";
 
 export const TaskCardDropDown = ({ task }: { task: Task }) => {
   const sections = useSectionStore((state) => state.sections);
@@ -119,8 +124,10 @@ export const TaskCardDropDown = ({ task }: { task: Task }) => {
             <DropdownMenuGroup className="flex">
               <PrioritySelect
                 variant="list"
-                value={priority}
-                onValueChange={(value) => setPriority(Number(value))}
+                value={task.priority}
+                onValueChange={(value: number) =>
+                  updateTask(task.id, { priority: value })
+                }
               />
             </DropdownMenuGroup>
 
