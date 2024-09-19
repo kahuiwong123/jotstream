@@ -5,10 +5,12 @@ import AddSectionButton from "@/components/dashboard/section/add-section-button"
 import SectionCard from "@/components/dashboard/section/section-card";
 import { useSectionStore } from "@/data/sectionStore";
 import { sectionProps } from "@/data/types";
-import { memo, useEffect } from "react";
+import { memo, useState, useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
 export const DashboardClient = memo(
   ({ sectionsData }: { sectionsData: sectionProps[] }) => {
+    const [isLoading, setIsLoading] = useState(true);
+
     const { sections, setSections } = useSectionStore(
       useShallow((state) => ({
         sections: state.sections,
@@ -18,6 +20,7 @@ export const DashboardClient = memo(
 
     useEffect(() => {
       setSections(sectionsData);
+      setIsLoading(false);
     }, [sectionsData, setSections]);
 
     return (
@@ -26,7 +29,7 @@ export const DashboardClient = memo(
           {sections.map((section) => (
             <SectionCard key={section.id} section={section} />
           ))}
-          <AddSectionButton />
+          {!isLoading && <AddSectionButton />}
         </div>
       </div>
     );

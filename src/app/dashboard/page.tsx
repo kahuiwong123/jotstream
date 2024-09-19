@@ -3,6 +3,7 @@ import AddSectionButton from "@/components/dashboard/section/add-section-button"
 import SectionCard from "@/components/dashboard/section/section-card";
 import { Suspense } from "react";
 import { DashboardClient } from "./dashboard-client";
+import { SectionSkeleton } from "@/components/dashboard/section/section-skeleton";
 const Dashboard = async () => {
   const sections = await prisma.section.findMany({
     where: {
@@ -16,7 +17,7 @@ const Dashboard = async () => {
     },
   });
   return (
-    <Suspense fallback={<p>Loading sections...</p>}>
+    <Suspense fallback={<SectionSkeleton />}>
       <DashboardClient sectionsData={sections} />
     </Suspense>
   );

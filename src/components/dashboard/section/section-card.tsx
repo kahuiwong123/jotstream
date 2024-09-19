@@ -26,10 +26,7 @@ const SectionCard = memo(
     return (
       <section className="flex h-fit w-72 flex-col gap-4 rounded-md border border-transparent bg-[#fcfcfc] p-4 shadow-md duration-300 hover:shadow-lg dark:bg-[#202020] dark:hover:border-light-grey-hover">
         {isEditing ? (
-          <SectionCardEdit
-            section={section}
-            setIsEditing={setIsEditing}
-          />
+          <SectionCardEdit section={section} setIsEditing={setIsEditing} />
         ) : (
           <div className="flex items-center justify-between">
             <TooltipItem
@@ -54,9 +51,7 @@ const SectionCard = memo(
           <TaskCard key={task.id} task={task} />
         ))}
         {activeSectionId === section.id ? (
-          <AddTaskButton
-            sectionId={section.id}
-          />
+          <AddTaskButton sectionId={section.id} />
         ) : (
           <Button
             variant="ghost"
