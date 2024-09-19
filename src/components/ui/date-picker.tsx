@@ -22,7 +22,7 @@ import { getStringFromDate } from "@/lib/date";
 
 type DatePickerProps = {
   variant: "icon" | "text";
-  value?: Date | undefined;
+  value: Date | null;
   onChange: (...event: any[]) => void;
   className?: string;
 };
@@ -70,7 +70,11 @@ export function DatePicker({
           </SelectContent>
         </Select>
         <div className="rounded-md border">
-          <Calendar mode="single" selected={value} onSelect={onChange} />
+          <Calendar
+            mode="single"
+            selected={value || undefined}
+            onSelect={onChange}
+          />
         </div>
       </PopoverContent>
     </Popover>

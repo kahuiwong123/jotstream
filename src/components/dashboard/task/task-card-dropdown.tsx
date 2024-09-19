@@ -136,8 +136,8 @@ export const TaskCardDropDown = ({ task }: { task: Task }) => {
             <DropdownMenuGroup className="flex items-center">
               <DatePicker
                 variant="text"
-                value={date}
-                onChange={setDate}
+                value={task.dueDate}
+                onChange={(val) => updateTask(task.id, { dueDate: val })}
                 className="border-none"
               />
               <TooltipItem
@@ -146,6 +146,7 @@ export const TaskCardDropDown = ({ task }: { task: Task }) => {
                     variant="ghost"
                     size="icon"
                     className="h-fit w-fit px-3 py-3"
+                    onClick={() => updateTask(task.id, { dueDate: null })}
                   >
                     <IoRemoveCircleOutline className="size-5" />
                   </Button>
