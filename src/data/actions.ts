@@ -145,3 +145,20 @@ export const removeTask = async (id: string): Promise<FormState> => {
     message: "task removed!",
   };
 };
+
+export const duplicateTask = async (task: Task): Promise<FormState> => {
+  await prisma.task.create({
+    data: {
+      sectionId: task.sectionId,
+      title: task.title,
+      description: task.description,
+      priority: task.priority,
+      dueDate: task.dueDate,
+      createdAt: new Date(task.createdAt.getTime() + 1),
+    },
+  });
+  revalidatePath("/dashboard")
+  return {
+    message: "task duplicated!",
+  };
+};

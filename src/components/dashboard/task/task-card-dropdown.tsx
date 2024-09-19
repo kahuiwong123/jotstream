@@ -52,7 +52,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { Task } from "@prisma/client";
-import { removeTask } from "@/data/actions";
+import { duplicateTask, removeTask } from "@/data/actions";
 
 export const TaskCardDropDown = ({ task }: { task: Task }) => {
   const sections = useSectionStore((state) => state.sections);
@@ -84,7 +84,7 @@ export const TaskCardDropDown = ({ task }: { task: Task }) => {
                 <IoPencilOutline className="mr-2 h-4 w-4" />
                 <span>Edit</span>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => duplicateTask(task)}>
                 <IoDuplicateOutline className="mr-2 h-4 w-4" />
                 <span>Duplicate</span>
               </DropdownMenuItem>

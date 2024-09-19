@@ -30,7 +30,7 @@ export const DashboardClient = memo(
             <SectionCard key={section.id} section={section} />
           ))}
           {!isLoading && <AddSectionButton />}
-        </div>
+        </div> 
       </div>
     );
   },

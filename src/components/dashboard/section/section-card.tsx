@@ -29,6 +29,7 @@ const SectionCard = memo(
           <SectionCardEdit section={section} setIsEditing={setIsEditing} />
         ) : (
           <div className="flex items-center justify-between">
+            <div className="flex gap-2 items-center">
             <TooltipItem
               tooltipTrigger={
                 <h2
@@ -40,6 +41,8 @@ const SectionCard = memo(
               }
               tooltipString={section.name}
             />
+            <span className="text-sm font-extralight">{section.tasks.length}</span>
+            </div>
             <SectionCardDropDown
               setIsEditing={setIsEditing}
               section={section}
