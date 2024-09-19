@@ -36,7 +36,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { Section } from "@prisma/client";
-import { removeSection } from "@/data/actions";
+import { duplicateSection, removeSection } from "@/data/actions";
 export const SectionCardDropDown = ({
   setIsEditing,
   section,
@@ -69,7 +69,7 @@ export const SectionCardDropDown = ({
                 <IoPencilOutline className="mr-2 h-4 w-4" />
                 <span>Edit</span>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => duplicateSection(section)}>
                 <IoDuplicateOutline className="mr-2 h-4 w-4" />
                 <span>Duplicate</span>
               </DropdownMenuItem>

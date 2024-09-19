@@ -10,7 +10,11 @@ const Dashboard = async () => {
       userId: "392dc2c9-4ddd-45a2-83bb-a5171e1ef04b", //placeholder
     },
     include: {
-      tasks: true,
+      tasks: {
+        orderBy: {
+          createdAt: "asc",
+        },
+      },
     },
     orderBy: {
       createdAt: "asc",

@@ -65,6 +65,41 @@ export const removeSection = async (id: string): Promise<FormState> => {
   };
 };
 
+export const duplicateSection = async (
+  section: Section,
+): Promise<FormState> => {
+  const tasks = await prisma.task.findMany({
+    where: {
+      sectionId: section.id,
+    },
+  });
+
+  const newSection = await prisma.section.create({
+    data: {
+      name: `Copy of ${section.name}`,
+      userId: section.userId,
+      createdAt: new Date(section.createdAt.getTime() + 1),
+    },
+  });
+
+  for (const task of tasks) {
+    await prisma.task.create({
+      data: {
+        title: task.title,
+        description: task.description,
+        sectionId: newSection.id,
+        dueDate: task.dueDate,
+        priority: task.priority,
+      },
+    });
+  }
+
+  revalidatePath("/dashboard");
+  return {
+    message: "section duplicated!",
+  };
+};
+
 export const updateSection = async (
   data: Omit<Section, "createdAt">,
 ): Promise<FormState> => {
