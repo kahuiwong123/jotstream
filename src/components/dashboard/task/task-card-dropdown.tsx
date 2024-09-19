@@ -52,7 +52,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { Task } from "@prisma/client";
-import { duplicateTask, removeTask } from "@/data/actions";
+import { duplicateTask, moveTask, removeTask } from "@/data/actions";
 
 export const TaskCardDropDown = ({ task }: { task: Task }) => {
   const sections = useSectionStore((state) => state.sections);
@@ -96,15 +96,18 @@ export const TaskCardDropDown = ({ task }: { task: Task }) => {
                 </DropdownMenuSubTrigger>
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent>
-                    {sections.map((section, index) => (
-                      <DropdownMenuItem
-                        key={index}
-                        disabled={section.id === task.sectionId}
-                      >
-                        <IoCaretForwardOutline className="mr-2 size-4" />
-                        <span>{section.name}</span>
-                      </DropdownMenuItem>
-                    ))}
+                    {sections
+                      .sort((a, b) => (a.id === task.sectionId ? -1 : 1))
+                      .map((section, index) => (
+                        <DropdownMenuItem
+                          key={index}
+                          disabled={section.id === task.sectionId}
+                          onClick={() => moveTask(task, section.id)}
+                        >
+                          <IoCaretForwardOutline className="mr-2 size-4" />
+                          <span>{section.name}</span>
+                        </DropdownMenuItem>
+                      ))}
                   </DropdownMenuSubContent>
                 </DropdownMenuPortal>
               </DropdownMenuSub>

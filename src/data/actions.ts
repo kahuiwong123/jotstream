@@ -157,7 +157,27 @@ export const duplicateTask = async (task: Task): Promise<FormState> => {
       createdAt: new Date(task.createdAt.getTime() + 1),
     },
   });
-  revalidatePath("/dashboard")
+  revalidatePath("/dashboard");
+  return {
+    message: "task duplicated!",
+  };
+};
+
+export const moveTask = async (
+  task: Task,
+  newSectionId: string,
+): Promise<FormState> => {
+  await prisma.task.update({
+    where: {
+      id: task.id,
+    },
+
+    data: {
+      sectionId: newSectionId,
+      createdAt: new Date(),
+    },
+  });
+  revalidatePath("/dashboard");
   return {
     message: "task duplicated!",
   };
