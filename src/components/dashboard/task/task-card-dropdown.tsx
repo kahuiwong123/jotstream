@@ -96,14 +96,15 @@ export const TaskCardDropDown = ({ task }: { task: Task }) => {
                 </DropdownMenuSubTrigger>
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent>
-                    {sections
-                      .filter((section) => section.id !== task.sectionId)
-                      .map((section, index) => (
-                        <DropdownMenuItem key={index}>
-                          <IoCaretForwardOutline className="mr-2 h-4 w-4" />
-                          <span>{section.name}</span>
-                        </DropdownMenuItem>
-                      ))}
+                    {sections.map((section, index) => (
+                      <DropdownMenuItem
+                        key={index}
+                        disabled={section.id === task.sectionId}
+                      >
+                        <IoCaretForwardOutline className="mr-2 size-4" />
+                        <span>{section.name}</span>
+                      </DropdownMenuItem>
+                    ))}
                   </DropdownMenuSubContent>
                 </DropdownMenuPortal>
               </DropdownMenuSub>
@@ -159,8 +160,8 @@ export const TaskCardDropDown = ({ task }: { task: Task }) => {
             <AlertDialogHeader>
               <AlertDialogTitle>Delete task?</AlertDialogTitle>
               <AlertDialogDescription>
-                The <span className="font-bold">{task.title}</span> task will
-                be permanently deleted.
+                The <span className="font-bold">{task.title}</span> task will be
+                permanently deleted.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
