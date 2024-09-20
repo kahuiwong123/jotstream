@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { addDays, format } from "date-fns";
+import { addDays } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -18,8 +18,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getStringFromDate } from "@/lib/date";
-
+import { DateString } from "../dashboard/task/date-string";
+import dayjs from "dayjs";
 type DatePickerProps = {
   variant: "icon" | "text";
   value: Date | null;
@@ -48,9 +48,11 @@ export function DatePicker({
           <CalendarIcon
             className={cn("size-4", (variant == "text" || value) && "mr-2")}
           />
-          {value
-            ? getStringFromDate(value, true)
-            : variant == "text" && <span>Pick a date</span>}
+          {value ? (
+            <span>{dayjs(value).format("MMMM D YYYY")}</span>
+          ) : (
+            variant == "text" && <span>Pick a date</span>
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="flex w-auto flex-col space-y-2 p-2 focus-visible:ring-0 focus-visible:ring-offset-0">
@@ -74,6 +76,7 @@ export function DatePicker({
             mode="single"
             selected={value || undefined}
             onSelect={onChange}
+            fromDate={new Date()}
           />
         </div>
       </PopoverContent>

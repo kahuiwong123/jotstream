@@ -1,8 +1,6 @@
 import React from "react";
 import { CiCalendar } from "react-icons/ci";
-import { getStringFromDate } from "@/lib/date";
-import { FaCheck } from "react-icons/fa6";
-import { Button } from "../../ui/button";
+import { DateString } from "./date-string";
 import { TaskCardDropDown } from "./task-card-dropdown";
 import { Task } from "@prisma/client";
 import { PriorityButton } from "./priority-button";
@@ -22,12 +20,7 @@ const TaskCard = ({ task }: { task: Task }) => {
         </div>
         <p className="truncate text-sm text-text-grey">{task.description}</p>
         <div className="flex">
-          {task.dueDate && (
-            <p className="flex h-fit items-center gap-1 p-0 text-sm text-text-grey">
-              <CiCalendar />
-              {getStringFromDate(task.dueDate)}
-            </p>
-          )}
+          {task.dueDate && <DateString date={task.dueDate} />}
         </div>
       </div>
     </div>

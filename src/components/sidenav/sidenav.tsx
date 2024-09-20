@@ -40,7 +40,7 @@ const SideNav = ({ toggleSideNav }: { toggleSideNav: () => void }) => {
         <Button
           variant="outline"
           size="icon"
-          className={clsx("transform border-none text-2xl dark:bg-dark-side")}
+          className={clsx("transform border-none text-2xl dark:bg-dark-side bg-transparent")}
           onClick={toggleSideNav}
         >
           {collapsed ? <FiChevronRight /> : <FiChevronsLeft />}
