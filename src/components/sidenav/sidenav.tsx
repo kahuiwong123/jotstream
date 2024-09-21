@@ -22,7 +22,7 @@ const SideNav = ({ toggleSideNav }: { toggleSideNav: () => void }) => {
   return (
     <aside
       className={clsx(
-        "fixed left-0 top-0 z-10 flex h-full shrink-0 flex-col justify-around overflow-x-hidden overflow-y-scroll bg-light-grey py-4 shadow-sm transition-all duration-300 ease-out dark:bg-dark-side",
+        "fixed left-0 top-0 z-10 flex h-full shrink-0 flex-col justify-around overflow-hidden bg-light-grey py-4 shadow-sm transition-all duration-300 ease-out dark:bg-dark-side",
         collapsed ? "w-16 px-2" : "w-60 px-4",
       )}
     >

@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, createContext, useEffect } from "react";
+import { useState, createContext, useEffect, Suspense } from "react";
 import SideNav from "@/components/sidenav/sidenav";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { useWindowSize } from "@/lib/useWindowSize";
 import { clsx } from "clsx";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
+import { SectionSkeleton } from "@/components/dashboard/section/section-skeleton";
 const SideNavContext = createContext({ collapsed: false });
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -39,7 +40,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               collapsed ? "col-span-2 pl-24" : "col-span-1 col-start-2 pl-8",
             )}
           >
-            {children}
+            <Suspense fallback={<SectionSkeleton />}>{children}</Suspense>
           </main>
         </div>
       </SideNavContext.Provider>

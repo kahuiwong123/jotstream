@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import prisma from "../../db/db";
 import { z } from "zod";
+import { LexoRank } from "lexorank";
 
 import { Section, Task } from "@prisma/client";
 
@@ -45,11 +46,26 @@ export const addSection = async (
       message: "section name cannot be empty.",
     };
   }
+
+  const lastSection = await prisma.section.findFirst({
+    where: {
+      userId: "392dc2c9-4ddd-45a2-83bb-a5171e1ef04b",
+    },
+
+    orderBy: {
+      rank: "desc",
+    },
+  });
+
   const name = data.get("name") as string;
+  const rank = lastSection
+    ? LexoRank.parse(lastSection.rank).genNext().toString()
+    : LexoRank.middle().toString();
   await prisma.section.create({
     data: {
       name: name,
       userId: "392dc2c9-4ddd-45a2-83bb-a5171e1ef04b",
+      rank: rank,
     },
   });
   revalidatePath("/dashboard");
@@ -73,35 +89,62 @@ export const removeSection = async (id: string): Promise<FormState> => {
 export const duplicateSection = async (
   section: Section,
 ): Promise<FormState> => {
-  const tasks = await prisma.task.findMany({
-    where: {
-      sectionId: section.id,
-    },
-  });
+  const [nextSection, tasks] = await prisma.$transaction([
+    prisma.section.findFirst({
+      where: {
+        userId: section.userId,
+        rank: { gt: section.rank },
+      },
 
-  const newSection = await prisma.section.create({
-    data: {
-      name: `Copy of ${section.name}`,
-      userId: section.userId,
-      createdAt: new Date(section.createdAt.getTime() + 1),
-    },
-  });
+      orderBy: {
+        rank: "asc",
+      },
+    }),
 
-  for (const task of tasks) {
-    await prisma.task.create({
+    prisma.task.findMany({
+      where: {
+        sectionId: section.id,
+      },
+    }),
+  ]);
+
+  let newRank: string;
+  if (nextSection) {
+    newRank = LexoRank.parse(section.rank)
+      .between(LexoRank.parse(nextSection.rank))
+      .toString();
+  } else {
+    newRank = LexoRank.parse(section.rank).genNext().toString();
+  }
+
+  const newSection = await prisma.$transaction(async (tx) => {
+    const createdSection = await prisma.section.create({
       data: {
-        title: task.title,
-        description: task.description,
-        sectionId: newSection.id,
-        dueDate: task.dueDate,
-        priority: task.priority,
+        name: `Copy of ${section.name}`,
+        userId: section.userId,
+        rank: newRank,
       },
     });
-  }
+
+    const taskData = tasks.map((task) => ({
+      title: task.title,
+      description: task.description,
+      sectionId: createdSection.id,
+      dueDate: task.dueDate,
+      priority: task.priority,
+      rank: task.rank,
+    }));
+
+    await tx.task.createMany({
+      data: taskData,
+    });
+
+    return createdSection;
+  });
 
   revalidatePath("/dashboard");
   return {
-    message: "section duplicated!",
+    message: `section ${section.name} duplicated!`,
   };
 };
 
@@ -123,15 +166,57 @@ export const updateSection = async (
   };
 };
 
+export const moveSection = async (
+  oldId: string,
+  newId: string,
+): Promise<FormState> => {
+  const [oldSection, newSection] = await prisma.$transaction([
+    prisma.section.findUnique({
+      where: {
+        id: oldId,
+      },
+    }),
+
+    prisma.section.findUnique({
+      where: {
+        id: newId,
+      },
+    }),
+  ]);
+
+  if (!oldSection || !newSection) {
+    return {
+      message: "one or both sections not found!",
+    };
+  }
+
+  await prisma.$transaction([
+    prisma.section.update({
+      where: { id: oldSection.id },
+      data: { rank: newSection.rank },
+    }),
+    prisma.section.update({
+      where: { id: newSection.id },
+      data: { rank: oldSection.rank },
+    }),
+  ]);
+
+  revalidatePath("/dashboard");
+  return {
+    message: `${oldSection.name} moved!`,
+  };
+};
+
 export const addTask = async (data: TaskModified): Promise<FormState> => {
   const validate = taskSchema.safeParse(data);
+  const lexorank = LexoRank.middle();
   if (!validate.success) {
     return {
       message: "task name cannot be empty.",
     };
   }
   await prisma.task.create({
-    data: data,
+    data: { ...data, rank: lexorank.genNext().toString() },
   });
   revalidatePath("/dashboard");
   return {
@@ -160,6 +245,7 @@ export const duplicateTask = async (task: Task): Promise<FormState> => {
       priority: task.priority,
       dueDate: task.dueDate,
       createdAt: new Date(task.createdAt.getTime() + 1),
+      rank: task.rank,
     },
   });
   revalidatePath("/dashboard");

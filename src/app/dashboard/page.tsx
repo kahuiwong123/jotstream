@@ -1,9 +1,5 @@
 import prisma from "../../../db/db";
-import AddSectionButton from "@/components/dashboard/section/add-section-button";
-import SectionCard from "@/components/dashboard/section/section-card";
-import { Suspense } from "react";
-import { DashboardClient } from "./dashboard-client";
-import { SectionSkeleton } from "@/components/dashboard/section/section-skeleton";
+import { DashboardClient } from "../../components/dashboard/dashboard-client";
 const Dashboard = async () => {
   const sections = await prisma.section.findMany({
     where: {
@@ -12,19 +8,15 @@ const Dashboard = async () => {
     include: {
       tasks: {
         orderBy: {
-          createdAt: "asc",
+          rank: "asc",
         },
       },
     },
     orderBy: {
-      createdAt: "asc",
+      rank: "asc",
     },
   });
-  return (
-    <Suspense fallback={<SectionSkeleton />}>
-      <DashboardClient sectionsData={sections} />
-    </Suspense>
-  );
+  return <DashboardClient sectionsData={sections} />;
 };
 
 export default Dashboard;
