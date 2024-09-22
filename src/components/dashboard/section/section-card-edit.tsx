@@ -60,7 +60,12 @@ export const SectionCardEdit = ({
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="Name this section" autoFocus autoComplete="off" {...field} />
+                <Input
+                  placeholder="Name this section"
+                  autoFocus
+                  autoComplete="off"
+                  {...field}
+                />
               </FormControl>
             </FormItem>
           )}

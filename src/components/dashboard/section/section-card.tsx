@@ -18,7 +18,9 @@ import { CSS } from "@dnd-kit/utilities";
 const SectionCard = memo(
   ({ section }: { section: Section & { tasks: Task[] } }) => {
     const { attributes, listeners, setNodeRef, transform, transition } =
-      useSortable({ id: section.id });
+      useSortable({
+        id: section.id,
+      });
 
     const [isEditing, setIsEditing] = useState(false);
 

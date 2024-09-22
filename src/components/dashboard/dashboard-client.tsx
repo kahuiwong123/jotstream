@@ -3,6 +3,7 @@
 import {
   DndContext,
   DragEndEvent,
+  DragStartEvent,
   KeyboardSensor,
   PointerSensor,
   TouchSensor,
@@ -21,12 +22,16 @@ import AddSectionButton from "@/components/dashboard/section/add-section-button"
 import SectionCard from "@/components/dashboard/section/section-card";
 import { useSectionStore } from "@/data/sectionStore";
 import { sectionProps } from "@/data/types";
-import { memo, useState, useEffect } from "react";
+import { memo, useState, useEffect, useOptimistic } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { moveSection } from "@/data/actions";
 export const DashboardClient = memo(
   ({ sectionsData }: { sectionsData: sectionProps[] }) => {
-    const [isLoading, setIsLoading] = useState(true);
+    const [optimisticSections, setOptimisticSections] = useOptimistic(
+      sectionsData,
+      (prevSections: sectionProps[], updatedSections: sectionProps[]) =>
+        updatedSections,
+    );
 
     const { sections, setSections } = useSectionStore(
       useShallow((state) => ({
@@ -35,11 +40,19 @@ export const DashboardClient = memo(
       })),
     );
 
-    const handleDragEnd = async (event: DragEndEvent) => {
-      const { active, over } = event;
+    const handleDragEnd = async ({ active, over }: DragEndEvent) => {
       if (over && active.id !== over.id) {
-        const res = await moveSection(active.id.toString(), over.id.toString());
-        console.log(res.message);
+        const activeIndex = optimisticSections.findIndex(
+          (section) => section.id === active.id.toString(),
+        );
+        const overIndex = optimisticSections.findIndex(
+          (section) => section.id === over.id.toString(),
+        );
+        setOptimisticSections(
+          arrayMove(optimisticSections, activeIndex, overIndex),
+        );
+
+        await moveSection(active.id.toString(), over.id.toString());
       }
     };
 
@@ -58,7 +71,6 @@ export const DashboardClient = memo(
 
     useEffect(() => {
       setSections(sectionsData);
-      setIsLoading(false);
     }, [sectionsData, setSections]);
 
     return (
@@ -70,14 +82,14 @@ export const DashboardClient = memo(
         >
           <div className="flex grow gap-8">
             <SortableContext
-              items={sections.map((section) => section.id)}
+              items={optimisticSections}
               strategy={horizontalListSortingStrategy}
             >
-              {sections.map((section) => (
+              {optimisticSections.map((section) => (
                 <SectionCard key={section.id} section={section} />
               ))}
             </SortableContext>
-            {!isLoading && <AddSectionButton />}
+            <AddSectionButton />
           </div>
         </DndContext>
       </div>

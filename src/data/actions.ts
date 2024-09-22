@@ -48,6 +48,9 @@ export const addSection = async (
   }
 
   const lastSection = await prisma.section.findFirst({
+    select: {
+      rank: true,
+    },
     where: {
       userId: "392dc2c9-4ddd-45a2-83bb-a5171e1ef04b",
     },
@@ -149,7 +152,7 @@ export const duplicateSection = async (
 };
 
 export const updateSection = async (
-  data: Omit<Section, "createdAt">,
+  data: Omit<Section, "createdAt" | "rank">,
 ): Promise<FormState> => {
   await prisma.section.update({
     where: {
@@ -190,16 +193,52 @@ export const moveSection = async (
     };
   }
 
-  await prisma.$transaction([
-    prisma.section.update({
-      where: { id: oldSection.id },
-      data: { rank: newSection.rank },
+  let [prevSection, nextSection] = await prisma.$transaction([
+    prisma.section.findFirst({
+      select: {
+        rank: true,
+      },
+      where: {
+        rank: { lt: newSection.rank },
+      },
+      orderBy: { rank: "desc" },
     }),
-    prisma.section.update({
-      where: { id: newSection.id },
-      data: { rank: oldSection.rank },
+
+    prisma.section.findFirst({
+      select: {
+        rank: true,
+      },
+      where: { rank: { gt: newSection.rank } },
+      orderBy: { rank: "asc" },
     }),
   ]);
+
+  let newRank;
+  // console.log("active section: " + oldSection.name);
+  // console.log("over section: " + newSection.name);
+
+  prevSection = oldSection.rank < newSection.rank ? newSection : prevSection;
+  nextSection = oldSection.rank > newSection.rank ? newSection : nextSection;
+
+  // console.log(prevSection?.name);
+  // console.log(nextSection?.name);
+
+  if (prevSection && nextSection) {
+    newRank = LexoRank.parse(prevSection.rank)
+      .between(LexoRank.parse(nextSection.rank))
+      .toString();
+  } else if (prevSection) {
+    newRank = LexoRank.parse(prevSection.rank).genNext().toString();
+  } else if (nextSection) {
+    newRank = LexoRank.parse(nextSection.rank).genPrev().toString();
+  } else {
+    newRank = LexoRank.middle().toString();
+  }
+
+  await prisma.section.update({
+    where: { id: oldSection.id },
+    data: { rank: newRank },
+  });
 
   revalidatePath("/dashboard");
   return {

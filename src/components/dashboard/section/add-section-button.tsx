@@ -16,6 +16,8 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { useSectionStore } from "@/data/sectionStore";
+import { useShallow } from "zustand/react/shallow";
 
 const sectionSchema = z.object({
   name: z.string().min(1, { message: "section name cannot be empty" }),
@@ -24,7 +26,13 @@ const sectionSchema = z.object({
 type SectionProp = z.infer<typeof sectionSchema>;
 
 const AddSectionButton = () => {
-  const [isAdding, setIsAdding] = useState(false);
+  const { isAdding, setIsAdding } = useSectionStore(
+    useShallow((state) => ({
+      isAdding: state.isAdding,
+      setIsAdding: state.setIsAdding,
+    })),
+  );
+
   const [state, formAction] = useFormState<FormState, FormData>(addSection, {
     message: "",
   });
@@ -35,12 +43,11 @@ const AddSectionButton = () => {
 
   const handleCancel = () => {
     form.reset();
-    setIsAdding(false);
+    setIsAdding()
   };
 
   useEffect(() => {
     form.reset();
-    setIsAdding((prev) => !prev);
   }, [state, form]);
 
   return (
@@ -58,6 +65,7 @@ const AddSectionButton = () => {
                       placeholder="Name this section"
                       {...field}
                       autoComplete="off"
+                      autoFocus
                     />
                   </FormControl>
                 </FormItem>
@@ -86,7 +94,7 @@ const AddSectionButton = () => {
         <Button
           variant="ghost"
           className="h-12 w-48 border border-transparent shadow-lg hover:border-light-grey"
-          onClick={() => setIsAdding(true)}
+          onClick={() => setIsAdding()}
         >
           <MdOutlineAddToPhotos className="mr-2 size-6" />
           <p>Add Section</p>
