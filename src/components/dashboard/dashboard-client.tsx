@@ -33,12 +33,7 @@ export const DashboardClient = memo(
         updatedSections,
     );
 
-    const { sections, setSections } = useSectionStore(
-      useShallow((state) => ({
-        sections: state.sections,
-        setSections: state.setSections,
-      })),
-    );
+    const setSections = useSectionStore((state) => state.setSections);
 
     const handleDragEnd = async ({ active, over }: DragEndEvent) => {
       if (over && active.id !== over.id) {

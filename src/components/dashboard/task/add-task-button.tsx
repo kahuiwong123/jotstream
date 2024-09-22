@@ -68,6 +68,7 @@ export const AddTaskButton = ({ sectionId }: AddTaskButtonProps) => {
                   <Input
                     placeholder="Task name"
                     autoComplete="off"
+                    autoFocus
                     {...field}
                     className="border-none text-base dark:bg-transparent"
                   />

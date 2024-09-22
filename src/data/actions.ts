@@ -293,7 +293,7 @@ export const duplicateTask = async (task: Task): Promise<FormState> => {
   };
 };
 
-export const moveTask = async (
+export const changeTaskSection = async (
   task: Task,
   newSectionId: string,
 ): Promise<FormState> => {
@@ -309,7 +309,7 @@ export const moveTask = async (
   });
   revalidatePath("/dashboard");
   return {
-    message: "task duplicated!",
+    message: `task ${task.title} section updated!`,
   };
 };
 
@@ -326,5 +326,76 @@ export const updateTask = async (
   revalidatePath("/dashboard");
   return {
     message: "task updated!",
+  };
+};
+
+export const moveTask = async (
+  oldId: string,
+  newId: string,
+): Promise<FormState> => {
+  const [oldTask, newTask] = await prisma.$transaction([
+    prisma.task.findUnique({
+      where: {
+        id: oldId,
+      },
+    }),
+
+    prisma.task.findUnique({
+      where: {
+        id: newId,
+      },
+    }),
+  ]);
+
+  if (!oldTask || !newTask) {
+    return {
+      message: "one or both tasks not found!",
+    };
+  }
+
+  let [prevTask, nextTask] = await prisma.$transaction([
+    prisma.task.findFirst({
+      select: {
+        rank: true,
+      },
+      where: {
+        rank: { lt: newTask.rank },
+      },
+      orderBy: { rank: "desc" },
+    }),
+
+    prisma.task.findFirst({
+      select: {
+        rank: true,
+      },
+      where: { rank: { gt: newTask.rank } },
+      orderBy: { rank: "asc" },
+    }),
+  ]);
+
+  let newRank;
+  prevTask = oldTask.rank < newTask.rank ? newTask : prevTask;
+  nextTask = oldTask.rank > newTask.rank ? newTask : nextTask;
+
+  if (prevTask && nextTask) {
+    newRank = LexoRank.parse(prevTask.rank)
+      .between(LexoRank.parse(nextTask.rank))
+      .toString();
+  } else if (prevTask) {
+    newRank = LexoRank.parse(prevTask.rank).genNext().toString();
+  } else if (nextTask) {
+    newRank = LexoRank.parse(nextTask.rank).genPrev().toString();
+  } else {
+    newRank = LexoRank.middle().toString();
+  }
+
+  await prisma.task.update({
+    where: { id: oldTask.id },
+    data: { rank: newRank },
+  });
+
+  revalidatePath("/dashboard");
+  return {
+    message: `${oldTask.title} moved!`,
   };
 };

@@ -22,7 +22,7 @@ import { DateString } from "../dashboard/task/date-string";
 import dayjs from "dayjs";
 type DatePickerProps = {
   variant: "icon" | "text";
-  value: Date | null;
+  value?: Date | null;
   onChange: (...event: any[]) => void;
   className?: string;
 };

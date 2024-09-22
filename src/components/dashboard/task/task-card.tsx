@@ -5,10 +5,28 @@ import { TaskCardDropDown } from "./task-card-dropdown";
 import { Task } from "@prisma/client";
 import { PriorityButton } from "./priority-button";
 import { removeTask } from "@/data/actions";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 const TaskCard = ({ task }: { task: Task }) => {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({
+      id: task.id,
+    });
+
+  const style = {
+    transition,
+    transform: CSS.Translate.toString(transform),
+  };
+
   return (
-    <div className="transtion-all group flex w-full max-w-full items-start gap-2 rounded-lg border border-transparent p-2 shadow-sm duration-300 hover:border-gray-300 hover:shadow-md">
+    <div
+      className="transtion-all group flex w-full max-w-full items-start gap-2 rounded-lg border border-transparent p-2 shadow-sm hover:border-gray-300 hover:shadow-md"
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
+      style={style}
+    >
       <PriorityButton
         priority={task.priority}
         onClick={() => removeTask(task.id)}

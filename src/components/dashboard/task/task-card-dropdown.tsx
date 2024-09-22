@@ -54,15 +54,13 @@ import {
 import { Task } from "@prisma/client";
 import {
   duplicateTask,
-  moveTask,
+  changeTaskSection,
   removeTask,
   updateTask,
 } from "@/data/actions";
 
 export const TaskCardDropDown = ({ task }: { task: Task }) => {
   const sections = useSectionStore((state) => state.sections);
-  const [date, setDate] = useState<Date>();
-  const [priority, setPriority] = useState(4);
   const EllipsisButton = (
     <Button
       variant="ghost"
@@ -107,7 +105,7 @@ export const TaskCardDropDown = ({ task }: { task: Task }) => {
                         <DropdownMenuItem
                           key={index}
                           disabled={section.id === task.sectionId}
-                          onClick={() => moveTask(task, section.id)}
+                          onClick={() => changeTaskSection(task, section.id)}
                         >
                           <IoCaretForwardOutline className="mr-2 size-4" />
                           <span>{section.name}</span>
