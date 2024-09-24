@@ -294,6 +294,26 @@ export const removeTask = async (id: string): Promise<FormState> => {
 };
 
 export const duplicateTask = async (task: Task): Promise<FormState> => {
+  const nextTask = await prisma.task.findFirst({
+    where: {
+      sectionId: task.sectionId,
+      rank: { gt: task.rank },
+    },
+
+    orderBy: {
+      rank: "asc",
+    },
+  });
+
+  let newRank: string;
+  if (nextTask) {
+    newRank = LexoRank.parse(task.rank)
+      .between(LexoRank.parse(nextTask.rank))
+      .toString();
+  } else {
+    newRank = LexoRank.parse(task.rank).genNext().toString();
+  }
+
   await prisma.task.create({
     data: {
       sectionId: task.sectionId,
@@ -301,13 +321,13 @@ export const duplicateTask = async (task: Task): Promise<FormState> => {
       description: task.description,
       priority: task.priority,
       dueDate: task.dueDate,
-      createdAt: new Date(task.createdAt.getTime() + 1),
-      rank: task.rank,
+      rank: newRank,
     },
   });
+
   revalidatePath("/dashboard");
   return {
-    message: "task duplicated!",
+    message: `${task.title} duplicated!`,
   };
 };
 
@@ -322,7 +342,6 @@ export const changeTaskSection = async (
 
     data: {
       sectionId: newSectionId,
-      createdAt: new Date(),
     },
   });
   revalidatePath("/dashboard");
