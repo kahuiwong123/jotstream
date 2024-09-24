@@ -254,12 +254,30 @@ export const addTask = async (data: TaskModified): Promise<FormState> => {
       message: "task name cannot be empty.",
     };
   }
+
+  const lastTask = await prisma.task.findFirst({
+    select: {
+      rank: true,
+    },
+    where: {
+      sectionId: data.sectionId,
+    },
+
+    orderBy: {
+      rank: "desc",
+    },
+  });
+
+  const rank = lastTask
+    ? LexoRank.parse(lastTask.rank).genNext().toString()
+    : LexoRank.middle().toString();
+
   await prisma.task.create({
-    data: { ...data, rank: lexorank.genNext().toString() },
+    data: { ...data, rank: rank },
   });
   revalidatePath("/dashboard");
   return {
-    message: "task added!",
+    message: `task ${data.title} added!`,
   };
 };
 
@@ -355,9 +373,6 @@ export const moveTask = async (
 
   let [prevTask, nextTask] = await prisma.$transaction([
     prisma.task.findFirst({
-      select: {
-        rank: true,
-      },
       where: {
         rank: { lt: newTask.rank },
       },
@@ -365,9 +380,6 @@ export const moveTask = async (
     }),
 
     prisma.task.findFirst({
-      select: {
-        rank: true,
-      },
       where: { rank: { gt: newTask.rank } },
       orderBy: { rank: "asc" },
     }),

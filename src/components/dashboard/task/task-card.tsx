@@ -1,4 +1,5 @@
-import React from "react";
+/* eslint-disable react/display-name */
+import React, { memo } from "react";
 import { CiCalendar } from "react-icons/ci";
 import { DateString } from "./date-string";
 import { TaskCardDropDown } from "./task-card-dropdown";
@@ -8,16 +9,14 @@ import { removeTask } from "@/data/actions";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-const TaskCard = ({ task }: { task: Task }) => {
+const TaskCard = memo(({ task }: { task: Task }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
       id: task.id,
+      data: {
+        type: "task",
+      },
     });
-
-  const style = {
-    transition,
-    transform: CSS.Translate.toString(transform),
-  };
 
   return (
     <div
@@ -25,7 +24,10 @@ const TaskCard = ({ task }: { task: Task }) => {
       ref={setNodeRef}
       {...attributes}
       {...listeners}
-      style={style}
+      style={{
+        transition,
+        transform: CSS.Translate.toString(transform),
+      }}
     >
       <PriorityButton
         priority={task.priority}
@@ -43,6 +45,6 @@ const TaskCard = ({ task }: { task: Task }) => {
       </div>
     </div>
   );
-};
+});
 
 export default TaskCard;
