@@ -344,7 +344,11 @@ export const updateTask = async (
   });
 
   let newRank = currentTask?.rank;
-  if (currentTask?.sectionId !== updates.sectionId) {
+  if (
+    currentTask &&
+    updates.sectionId &&
+    currentTask.sectionId !== updates.sectionId
+  ) {
     const lastTask = await prisma.task.findFirst({
       select: {
         rank: true,

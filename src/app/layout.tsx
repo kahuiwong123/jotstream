@@ -18,12 +18,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${roboto.className} antialiased dark:bg-dark-main`}
+        className={`${roboto.className} bg-white-main antialiased dark:bg-dark-main`}
         suppressHydrationWarning
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >
