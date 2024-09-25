@@ -4,7 +4,6 @@ import { revalidatePath } from "next/cache";
 import prisma from "../../db/db";
 import { z } from "zod";
 import { LexoRank } from "lexorank";
-
 import { Section, Task } from "@prisma/client";
 
 const sectionSchema = z.object({
@@ -32,8 +31,11 @@ export type TaskModified = {
 };
 
 type taskUpdateProps = {
+  sectionId?: string;
   dueDate?: Date | null;
   priority?: number;
+  title?: string;
+  description?: string | null;
 };
 
 export const addSection = async (
@@ -331,38 +333,45 @@ export const duplicateTask = async (task: Task): Promise<FormState> => {
   };
 };
 
-export const changeTaskSection = async (
-  task: Task,
-  newSectionId: string,
-): Promise<FormState> => {
-  await prisma.task.update({
-    where: {
-      id: task.id,
-    },
-
-    data: {
-      sectionId: newSectionId,
-    },
-  });
-  revalidatePath("/dashboard");
-  return {
-    message: `task ${task.title} section updated!`,
-  };
-};
-
 export const updateTask = async (
   taskId: string,
   updates: taskUpdateProps,
 ): Promise<FormState> => {
+  const currentTask = await prisma.task.findUnique({
+    where: {
+      id: taskId,
+    },
+  });
+
+  let newRank = currentTask?.rank;
+  if (currentTask?.sectionId !== updates.sectionId) {
+    const lastTask = await prisma.task.findFirst({
+      select: {
+        rank: true,
+      },
+      where: {
+        sectionId: updates.sectionId,
+      },
+
+      orderBy: {
+        rank: "desc",
+      },
+    });
+
+    newRank = lastTask
+      ? LexoRank.parse(lastTask.rank).genNext().toString()
+      : LexoRank.middle().toString();
+  }
+
   await prisma.task.update({
     where: {
       id: taskId,
     },
-    data: updates,
+    data: { ...updates, rank: newRank },
   });
   revalidatePath("/dashboard");
   return {
-    message: "task updated!",
+    message: `${currentTask?.title} updated!`,
   };
 };
 

@@ -3,8 +3,9 @@
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
-
+import { IoChevronUpOutline, IoChevronDownOutline } from "react-icons/io5";
 import { cn } from "@/lib/utils";
+import { Button } from "./button";
 
 const Dialog = DialogPrimitive.Root;
 
@@ -29,10 +30,15 @@ const DialogOverlay = React.forwardRef<
 ));
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
+interface DialogContentProps
+  extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> {
+  isTaskEditing?: boolean;
+}
+
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
->(({ className, children, ...props }, ref) => (
+  DialogContentProps
+>(({ className, children, isTaskEditing, ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay />
     <DialogPrimitive.Content
@@ -45,8 +51,30 @@ const DialogContent = React.forwardRef<
     >
       {children}
       <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-neutral-950 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-neutral-100 data-[state=open]:text-neutral-500 dark:ring-offset-neutral-950 dark:focus:ring-neutral-300 dark:data-[state=open]:bg-neutral-800 dark:data-[state=open]:text-neutral-400">
-        <X className="h-4 w-4" />
-        <span className="sr-only">Close</span>
+        <div className="flex items-center gap-2">
+          {/* {isTaskEditing && (
+            <Button
+              variant={"ghost"}
+              size={"icon"}
+              className="size-fit p-1"
+              onClick={(e) => e.preventDefault()}
+            >
+              <IoChevronUpOutline className="size-4" />
+            </Button>
+          )}
+          {isTaskEditing && (
+            <Button
+              variant={"ghost"}
+              size={"icon"}
+              className="size-fit p-1"
+              onClick={(e) => e.preventDefault()}
+            >
+              <IoChevronDownOutline className="size-4" />
+            </Button>
+          )} */}
+          <X className="size-4" />
+          <span className="sr-only">Close</span>
+        </div>
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
   </DialogPortal>

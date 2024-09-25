@@ -52,12 +52,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { Task } from "@prisma/client";
-import {
-  duplicateTask,
-  changeTaskSection,
-  removeTask,
-  updateTask,
-} from "@/data/actions";
+import { duplicateTask, removeTask, updateTask } from "@/data/actions";
 
 export const TaskCardDropDown = ({ task }: { task: Task }) => {
   const sections = useSectionStore((state) => state.sections);
@@ -81,13 +76,19 @@ export const TaskCardDropDown = ({ task }: { task: Task }) => {
           <DropdownMenuContent
             className="w-56"
             onCloseAutoFocus={(e) => e.preventDefault()}
+            onClick={(e) => e.stopPropagation()}
           >
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <IoPencilOutline className="mr-2 h-4 w-4" />
                 <span>Edit</span>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => duplicateTask(task)}>
+              <DropdownMenuItem
+                onClick={(e) => {
+                  e.stopPropagation();
+                  duplicateTask(task);
+                }}
+              >
                 <IoDuplicateOutline className="mr-2 h-4 w-4" />
                 <span>Duplicate</span>
               </DropdownMenuItem>
@@ -105,7 +106,10 @@ export const TaskCardDropDown = ({ task }: { task: Task }) => {
                         <DropdownMenuItem
                           key={index}
                           disabled={section.id === task.sectionId}
-                          onClick={() => changeTaskSection(task, section.id)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            updateTask(task.id, { sectionId: section.id });
+                          }}
                         >
                           <IoCaretForwardOutline className="mr-2 size-4" />
                           <span>{section.name}</span>
@@ -120,31 +124,38 @@ export const TaskCardDropDown = ({ task }: { task: Task }) => {
 
             <DropdownMenuLabel>Priority</DropdownMenuLabel>
             <DropdownMenuGroup className="flex">
-              <PrioritySelect
-                variant="list"
-                value={task.priority}
-                onValueChange={(value: number) =>
-                  updateTask(task.id, { priority: value })
-                }
-              />
+              <div onClick={(e) => e.stopPropagation()}>
+                <PrioritySelect
+                  variant="list"
+                  value={task.priority}
+                  onValueChange={(value: number) =>
+                    updateTask(task.id, { priority: value })
+                  }
+                />
+              </div>
             </DropdownMenuGroup>
 
             <DropdownMenuSeparator />
 
-            <DropdownMenuGroup className="flex items-center">
-              <DatePicker
-                variant="text"
-                value={task.dueDate}
-                onChange={(val) => updateTask(task.id, { dueDate: val })}
-                className="border-none"
-              />
+            <DropdownMenuGroup className="flex items-center justify-between">
+              <div onClick={(e) => e.stopPropagation()}>
+                <DatePicker
+                  variant="text"
+                  value={task.dueDate}
+                  onChange={(val) => updateTask(task.id, { dueDate: val })}
+                  className="border-none"
+                />
+              </div>
               <TooltipItem
                 tooltipTrigger={
                   <Button
                     variant="ghost"
                     size="icon"
                     className="h-fit w-fit px-3 py-3"
-                    onClick={() => updateTask(task.id, { dueDate: null })}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      updateTask(task.id, { dueDate: null });
+                    }}
                   >
                     <IoRemoveCircleOutline className="size-5" />
                   </Button>
@@ -165,7 +176,7 @@ export const TaskCardDropDown = ({ task }: { task: Task }) => {
             </DropdownMenuGroup>
           </DropdownMenuContent>
 
-          <AlertDialogContent>
+          <AlertDialogContent onClick={(e) => e.stopPropagation()}>
             <AlertDialogHeader>
               <AlertDialogTitle>Delete task?</AlertDialogTitle>
               <AlertDialogDescription>
@@ -174,9 +185,14 @@ export const TaskCardDropDown = ({ task }: { task: Task }) => {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel onClick={(e) => e.stopPropagation()}>
+                Cancel
+              </AlertDialogCancel>
               <AlertDialogAction
-                onClick={() => removeTask(task.id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  removeTask(task.id);
+                }}
                 className="bg-red-flag hover:bg-[#d6584f] dark:bg-red-flag dark:text-white dark:hover:bg-[#d6584f]"
               >
                 Delete

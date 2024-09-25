@@ -149,9 +149,9 @@ export const DashboardClient = memo(
           distance: 10,
         },
       }),
-      useSensor(KeyboardSensor, {
-        coordinateGetter: sortableKeyboardCoordinates,
-      }),
+      // useSensor(KeyboardSensor, {
+      //   coordinateGetter: sortableKeyboardCoordinates,
+      // }),
     );
 
     useEffect(() => {
