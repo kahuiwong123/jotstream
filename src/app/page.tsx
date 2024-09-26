@@ -20,10 +20,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useFormState } from "react-dom";
 import { authenticate } from "@/data/authActions";
+import clsx from "clsx";
 
 const formSchema = z.object({
-  email: z.string().min(1),
-  password: z.string().min(1),
+  email: z.string().email({ message: "Please enter a valid email address." }),
+  password: z
+    .string()
+    .min(8, { message: "Passwords must be at least 8 characters long." }),
 });
 
 export default function LoginPage() {
@@ -36,16 +39,24 @@ export default function LoginPage() {
     undefined,
   );
 
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    if (formSchema.safeParse(data).success) {
+      const formData = new FormData();
+      formData.append("email", data.email);
+      formData.append("password", data.password);
+      formAction(formData);
+    }
+  };
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
       <Form {...form}>
         <form
           className="flex w-2/5 flex-col gap-4 border border-black p-8"
-          action={formAction}
+          onSubmit={form.handleSubmit(onSubmit)}
         >
           <div className="flex flex-col items-center">
             <Image src={logo} width={200} height={200} alt="jotstream-logo" />
-            <Link href="/dashboard">Dashboard</Link>
           </div>
           <FormField
             control={form.control}
@@ -75,17 +86,31 @@ export default function LoginPage() {
           />
           <Button
             type="submit"
-            className="bg-[#FF5858] hover:bg-[#ff6969]"
+            className="rounded-md bg-[#FF5858] py-2 hover:bg-[#ff6969]"
             aria-disabled={isPending}
+            disabled={form.formState.isSubmitting}
           >
-            Login
+            {form.formState.isSubmitting ? "Loading..." : "Login"}
           </Button>
-          {errorMessage && (
-            <div className="flex items-center gap-1 text-[#FF5858]">
-              <MdErrorOutline className="size-5" />
-              {errorMessage}
-            </div>
-          )}
+          <div
+            className={clsx(
+              "flex h-fit items-center justify-end gap-2 text-sm",
+              errorMessage ? "justify-between" : "justify-end",
+            )}
+          >
+            {errorMessage && (
+              <div className="flex items-center gap-1 text-[#FF5858]">
+                <MdErrorOutline className="size-5" />
+                {errorMessage}
+              </div>
+            )}
+            <p>
+              {`Don't have an account?`}
+              <Link href={"/register"} className="ml-1 underline">
+                Sign up
+              </Link>
+            </p>
+          </div>
         </form>
       </Form>
     </div>

@@ -1,7 +1,9 @@
 'use server';
  
+import { User } from '@prisma/client';
 import { signIn } from '../../auth';
 import { AuthError } from 'next-auth';
+import prisma from '../../db/db';
 
 export async function authenticate(
   prevState: string | undefined,
@@ -21,3 +23,13 @@ export async function authenticate(
     throw error;
   }
 }
+
+export const getUser = async (email: string): Promise<User | null> => {
+  const user = await prisma.user.findUnique({
+    where: {
+      email: email,
+    },
+  });
+
+  return user;
+};
