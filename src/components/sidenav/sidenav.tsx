@@ -17,6 +17,7 @@ import { FiChevronsLeft, FiChevronRight } from "react-icons/fi";
 import SideNavButton from "./sidenav-button";
 import { SideNavContext } from "@/app/dashboard/layout";
 import { TooltipItem } from "../ui/tooltip-item";
+import { logoutUser } from "@/data/authActions";
 const SideNav = ({ toggleSideNav }: { toggleSideNav: () => void }) => {
   const { collapsed } = useContext(SideNavContext);
   return (
@@ -40,7 +41,9 @@ const SideNav = ({ toggleSideNav }: { toggleSideNav: () => void }) => {
         <Button
           variant="outline"
           size="icon"
-          className={clsx("transform border-none text-2xl dark:bg-dark-side bg-transparent")}
+          className={clsx(
+            "transform border-none bg-transparent text-2xl dark:bg-dark-side",
+          )}
           onClick={toggleSideNav}
         >
           {collapsed ? <FiChevronRight /> : <FiChevronsLeft />}
@@ -72,7 +75,13 @@ const SideNav = ({ toggleSideNav }: { toggleSideNav: () => void }) => {
       </section>
       <section>
         <SideNavButton icon={IoSettings} label="Settings" />
-        <SideNavButton icon={IoLogOut} label="Sign out" />
+        <SideNavButton
+          icon={IoLogOut}
+          label="Sign out"
+          onClick={async () => {
+            await logoutUser();
+          }}
+        />
       </section>
     </aside>
   );

@@ -36,8 +36,15 @@ import {
 } from "react";
 import { moveSection, moveTask } from "@/data/actions";
 import TaskCard from "./task/task-card";
+import { useAuthStore } from "@/data/authStore";
 export const DashboardClient = memo(
-  ({ sectionsData }: { sectionsData: sectionProps[] }) => {
+  ({
+    sectionsData,
+    userId,
+  }: {
+    sectionsData: sectionProps[];
+    userId?: string;
+  }) => {
     const [optimisticSections, setOptimisticSections] = useOptimistic(
       sectionsData,
       (prevSections: sectionProps[], updatedSections: sectionProps[]) =>
@@ -47,6 +54,15 @@ export const DashboardClient = memo(
     const [active, setActive] = useState<Active | null>(null);
 
     const setSections = useSectionStore((state) => state.setSections);
+    const setUserId = useAuthStore((state) => state.setUserId);
+
+    useEffect(() => {
+      setUserId(userId);
+    }, [userId, setUserId]);
+
+    useEffect(() => {
+      setSections(sectionsData);
+    }, [sectionsData, setSections]);
 
     const findSection = (id: string, type: string) => {
       if (type === "section") {
@@ -153,10 +169,6 @@ export const DashboardClient = memo(
       //   coordinateGetter: sortableKeyboardCoordinates,
       // }),
     );
-
-    useEffect(() => {
-      setSections(sectionsData);
-    }, [sectionsData, setSections]);
 
     return (
       <div className="flex h-full grow gap-8 bg-white-main dark:bg-dark-main">

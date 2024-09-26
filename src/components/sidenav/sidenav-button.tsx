@@ -8,12 +8,14 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { clsx } from "clsx";
-type IconbuttonProps = {
+
+interface IconbuttonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   icon: React.ElementType;
   label: string;
-};
+}
 
-const SideNavButton: FC<IconbuttonProps> = ({ icon: Icon, label }) => {
+const SideNavButton = ({ icon: Icon, label, ...props }: IconbuttonProps) => {
   const { collapsed } = useContext(SideNavContext);
   const [hovered, setHovered] = useState(false);
   return (
@@ -27,6 +29,7 @@ const SideNavButton: FC<IconbuttonProps> = ({ icon: Icon, label }) => {
           <Button
             className="flex w-full items-center justify-start hover:bg-light-grey-hover dark:hover:bg-dark-hover"
             variant="ghost"
+            {...props}
           >
             <Icon className="flex flex-shrink-0 text-lg" />
             <span

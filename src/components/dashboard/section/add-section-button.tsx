@@ -18,9 +18,11 @@ import {
 } from "@/components/ui/form";
 import { useSectionStore } from "@/data/sectionStore";
 import { useShallow } from "zustand/react/shallow";
+import { useAuthStore } from "@/data/authStore";
 
 const sectionSchema = z.object({
   name: z.string().min(1, { message: "section name cannot be empty" }),
+  userId: z.string().min(1),
 });
 
 type SectionProp = z.infer<typeof sectionSchema>;
@@ -37,13 +39,27 @@ const AddSectionButton = () => {
     message: "",
   });
 
+  const userId = useAuthStore((state) => state.userId);
+
+  const onSubmit = async (data: SectionProp) => {
+    if (sectionSchema.safeParse(data) && userId) {
+      const formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("userId", data.userId);
+      formAction(formData);
+    }
+  };
+
   const form = useForm<SectionProp>({
     resolver: zodResolver(sectionSchema),
+    defaultValues: {
+      userId: userId,
+    },
   });
 
   const handleCancel = () => {
     form.reset();
-    setIsAdding()
+    setIsAdding();
   };
 
   useEffect(() => {
@@ -54,7 +70,10 @@ const AddSectionButton = () => {
     <div className="mr-16">
       {isAdding ? (
         <Form {...form}>
-          <form action={formAction} className="flex w-48 flex-col">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex w-48 flex-col"
+          >
             <FormField
               control={form.control}
               name="name"
