@@ -148,7 +148,7 @@ export const duplicateSection = async (
 };
 
 export const updateSection = async (
-  data: Omit<Section, "createdAt" | "rank">,
+  data: Omit<Section, "createdAt" | "rank" | "updatedAt">,
 ): Promise<FormState> => {
   await prisma.section.update({
     where: {
