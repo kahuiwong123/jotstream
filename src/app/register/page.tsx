@@ -53,7 +53,9 @@ const RegisterForm = () => {
           className="flex h-fit w-2/5 flex-col gap-6 rounded-xl bg-white p-8 shadow-xl dark:bg-white"
           onSubmit={form.handleSubmit(onSubmit)}
         >
-            <h1 className="text-2xl font-bold text-dark-main text-center">Get Started Today</h1>
+          <h1 className="text-center text-2xl font-bold text-dark-main">
+            Get Started Today
+          </h1>
           <FormField
             control={form.control}
             name="email"

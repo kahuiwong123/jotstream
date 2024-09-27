@@ -5,10 +5,10 @@ const prisma = new PrismaClient();
 async function main() {
   const tasks = await prisma.section.findMany({
     include: {
-      tasks: true
-    }
-  })
-  console.log(tasks)
+      tasks: true,
+    },
+  });
+  console.log(tasks);
 }
 
 main()

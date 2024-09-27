@@ -53,7 +53,7 @@ export default function LoginPage() {
     <div className="relative flex h-screen flex-col items-center justify-center bg-gradient-to-r from-[#FF5858] to-red-400">
       <Form {...form}>
         <form
-          className="flex h-fit w-2/5 flex-col gap-6 rounded-xl p-8 shadow-xl dark:bg-white bg-white"
+          className="flex h-fit w-2/5 flex-col gap-6 rounded-xl bg-white p-8 shadow-xl dark:bg-white"
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <div className="flex flex-col items-center">
@@ -64,9 +64,13 @@ export default function LoginPage() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="dark:text-black text-md">Email</FormLabel>
+                <FormLabel className="text-md dark:text-black">Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter your email" {...field} className="dark:bg-dark-white py-6 text-md rounded-[0.5rem]"/>
+                  <Input
+                    placeholder="Enter your email"
+                    {...field}
+                    className="dark:bg-dark-white text-md rounded-[0.5rem] py-6"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -77,9 +81,15 @@ export default function LoginPage() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="dark:text-black text-md">Password</FormLabel>
+                <FormLabel className="text-md dark:text-black">
+                  Password
+                </FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter your password" {...field} className="dark:bg-white py-6 text-md rounded-[0.5rem]"/>
+                  <Input
+                    placeholder="Enter your password"
+                    {...field}
+                    className="text-md rounded-[0.5rem] py-6 dark:bg-white"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -87,7 +97,7 @@ export default function LoginPage() {
           />
           <Button
             type="submit"
-            className="rounded-[0.5rem] bg-[#FF5858] py-6 hover:bg-[#ff6969] dark:bg-[#FF5858] dark:text-white dark:hover:bg-[#ff6969] text-lg"
+            className="rounded-[0.5rem] bg-[#FF5858] py-6 text-lg hover:bg-[#ff6969] dark:bg-[#FF5858] dark:text-white dark:hover:bg-[#ff6969]"
             aria-disabled={isPending}
             disabled={form.formState.isSubmitting}
           >
