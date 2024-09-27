@@ -7,45 +7,46 @@ import { useWindowSize } from "@/lib/useWindowSize";
 import { clsx } from "clsx";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 import { SectionSkeleton } from "@/components/dashboard/section/section-skeleton";
-const SideNavContext = createContext({ collapsed: false });
+import { useSectionStore } from "@/data/sectionStore";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { width } = useWindowSize();
-  const [collapsed, setCollapsed] = useState(width < 768);
+  const sidebarCollapsed = useSectionStore((state) => state.sidebarCollapsed);
+  const setSidebarCollapsed = useSectionStore(
+    (state) => state.setSidebarCollapsed,
+  );
   const toggleSideNav = () => {
-    setCollapsed((prev) => !prev);
+    setSidebarCollapsed(sidebarCollapsed ? false : true);
   };
 
   useEffect(() => {
-    setCollapsed(width < 768);
-  }, [width]);
+    setSidebarCollapsed(width < 768);
+  }, [width, setSidebarCollapsed]);
 
   return (
     <TooltipProvider>
-      <SideNavContext.Provider value={{ collapsed }}>
-        <div className="grid h-svh grid-cols-[15rem_auto] grid-rows-[auto_1fr] overflow-hidden">
-          <SideNav toggleSideNav={toggleSideNav} />
-          <header
-            className={clsx(
-              "flex justify-between p-8 transition-all duration-300 ease-in-out dark:bg-dark-main",
-              collapsed ? "col-span-2 pl-24" : "col-span-1 col-start-2",
-            )}
-          >
-            <h1 className="text-4xl font-bold">Inbox</h1>
-            <ThemeToggle />
-          </header>
-          <main
-            className={clsx(
-              "overflow-auto transition-all duration-300 ease-in-out",
-              collapsed ? "col-span-2 pl-24" : "col-span-1 col-start-2 pl-8",
-            )}
-          >
-            <Suspense fallback={<SectionSkeleton />}>{children}</Suspense>
-          </main>
-        </div>
-      </SideNavContext.Provider>
+      <div className="grid h-svh grid-cols-[15rem_auto] grid-rows-[auto_1fr] overflow-hidden">
+        <SideNav toggleSideNav={toggleSideNav} />
+        <header
+          className={clsx(
+            "flex justify-between p-8 transition-all duration-300 ease-in-out dark:bg-dark-main",
+            sidebarCollapsed ? "col-span-2 pl-24" : "col-span-1 col-start-2",
+          )}
+        >
+          <h1 className="text-4xl font-bold">Inbox</h1>
+          <ThemeToggle />
+        </header>
+        <main
+          className={clsx(
+            "overflow-auto transition-all duration-300 ease-in-out",
+            sidebarCollapsed
+              ? "col-span-2 pl-24"
+              : "col-span-1 col-start-2 pl-8",
+          )}
+        >
+          <Suspense fallback={<SectionSkeleton />}>{children}</Suspense>
+        </main>
+      </div>
     </TooltipProvider>
   );
 }
-
-export { SideNavContext };

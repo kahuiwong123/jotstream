@@ -15,6 +15,8 @@ type SectionStore = {
   setActiveSection: (sectionId: string | null) => void;
   editOpen: boolean;
   setEditOpen: () => void;
+  sidebarCollapsed: boolean;
+  setSidebarCollapsed: (bool: boolean) => void;
 };
 
 export const useSectionStore = create<SectionStore>((set) => ({
@@ -30,4 +32,6 @@ export const useSectionStore = create<SectionStore>((set) => ({
     set((prev) => ({
       activeSection: prev.sections.find((section) => section.id === sectionId),
     })),
+  sidebarCollapsed: false,
+  setSidebarCollapsed: (bool) => set({ sidebarCollapsed: bool }),
 }));

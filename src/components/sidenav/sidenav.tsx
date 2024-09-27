@@ -15,26 +15,30 @@ import { Button } from "../ui/button";
 import { LuDot } from "react-icons/lu";
 import { FiChevronsLeft, FiChevronRight } from "react-icons/fi";
 import SideNavButton from "./sidenav-button";
-import { SideNavContext } from "@/app/dashboard/layout";
 import { TooltipItem } from "../ui/tooltip-item";
 import { logoutUser } from "@/data/authActions";
+import { useSectionStore } from "@/data/sectionStore";
 const SideNav = ({ toggleSideNav }: { toggleSideNav: () => void }) => {
-  const { collapsed } = useContext(SideNavContext);
+  const sidebarCollapsed = useSectionStore((state) => state.sidebarCollapsed);
+
   return (
     <aside
       className={clsx(
         "fixed left-0 top-0 z-10 flex h-full shrink-0 flex-col justify-around overflow-hidden bg-light-grey py-4 shadow-sm transition-all duration-300 ease-out dark:bg-dark-side",
-        collapsed ? "w-16 px-2" : "w-60 px-4",
+        sidebarCollapsed ? "w-16 px-2" : "w-60 px-4",
       )}
     >
       <section
         className={clsx(
           "flex items-center text-2xl",
-          collapsed ? "justify-center" : "justify-around",
+          sidebarCollapsed ? "justify-center" : "justify-around",
         )}
       >
         <h1
-          className={clsx("transtion-all overflow-hidden", collapsed && "w-0")}
+          className={clsx(
+            "transtion-all overflow-hidden",
+            sidebarCollapsed && "w-0",
+          )}
         >
           Menu
         </h1>
@@ -46,7 +50,7 @@ const SideNav = ({ toggleSideNav }: { toggleSideNav: () => void }) => {
           )}
           onClick={toggleSideNav}
         >
-          {collapsed ? <FiChevronRight /> : <FiChevronsLeft />}
+          {sidebarCollapsed ? <FiChevronRight /> : <FiChevronsLeft />}
         </Button>
       </section>
       <section>
@@ -55,7 +59,10 @@ const SideNav = ({ toggleSideNav }: { toggleSideNav: () => void }) => {
       </section>
       <section>
         <h2
-          className={clsx("transtion-all overflow-hidden", collapsed && "w-0")}
+          className={clsx(
+            "transtion-all overflow-hidden",
+            sidebarCollapsed && "w-0",
+          )}
         >
           Tasks
         </h2>
@@ -65,7 +72,10 @@ const SideNav = ({ toggleSideNav }: { toggleSideNav: () => void }) => {
       </section>
       <section>
         <h2
-          className={clsx("transtion-all overflow-hidden", collapsed && "w-0")}
+          className={clsx(
+            "transtion-all overflow-hidden",
+            sidebarCollapsed && "w-0",
+          )}
         >
           Notes
         </h2>

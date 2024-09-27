@@ -1,5 +1,4 @@
 import React, { FC, useContext, useState } from "react";
-import { SideNavContext } from "@/app/dashboard/layout";
 import { Button } from "../ui/button";
 import {
   Tooltip,
@@ -8,6 +7,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { clsx } from "clsx";
+import { useSectionStore } from "@/data/sectionStore";
 
 interface IconbuttonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -16,7 +16,8 @@ interface IconbuttonProps
 }
 
 const SideNavButton = ({ icon: Icon, label, ...props }: IconbuttonProps) => {
-  const { collapsed } = useContext(SideNavContext);
+  const sidebarCollapsed = useSectionStore((state) => state.sidebarCollapsed);
+
   const [hovered, setHovered] = useState(false);
   return (
     <TooltipProvider delayDuration={200}>
@@ -35,14 +36,14 @@ const SideNavButton = ({ icon: Icon, label, ...props }: IconbuttonProps) => {
             <span
               className={clsx(
                 "overflow-hidden transition-all",
-                collapsed ? "w-0" : "ml-2 w-auto",
+                sidebarCollapsed ? "w-0" : "ml-2 w-auto",
               )}
             >
               {label}
             </span>
           </Button>
         </TooltipTrigger>
-        {collapsed && hovered && (
+        {sidebarCollapsed && hovered && (
           <TooltipContent>
             <p>{label}</p>
           </TooltipContent>
