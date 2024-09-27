@@ -21,6 +21,7 @@ import { useForm } from "react-hook-form";
 import { useFormState } from "react-dom";
 import { authenticate } from "@/data/authActions";
 import clsx from "clsx";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
@@ -49,10 +50,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
+    <div className="relative flex h-screen flex-col items-center justify-center bg-gradient-to-r from-[#FF5858] to-red-400">
       <Form {...form}>
         <form
-          className="flex w-2/5 flex-col gap-4 border border-black p-8"
+          className="flex h-fit w-2/5 flex-col gap-6 rounded-xl p-8 shadow-xl dark:bg-white bg-white"
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <div className="flex flex-col items-center">
@@ -63,9 +64,9 @@ export default function LoginPage() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel className="dark:text-black text-md">Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter your email" {...field} />
+                  <Input placeholder="Enter your email" {...field} className="dark:bg-dark-white py-6 text-md rounded-[0.5rem]"/>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -76,9 +77,9 @@ export default function LoginPage() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel className="dark:text-black text-md">Password</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter your password" {...field} />
+                  <Input placeholder="Enter your password" {...field} className="dark:bg-white py-6 text-md rounded-[0.5rem]"/>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -86,7 +87,7 @@ export default function LoginPage() {
           />
           <Button
             type="submit"
-            className="rounded-md bg-[#FF5858] py-2 hover:bg-[#ff6969]"
+            className="rounded-[0.5rem] bg-[#FF5858] py-6 hover:bg-[#ff6969] dark:bg-[#FF5858] dark:text-white dark:hover:bg-[#ff6969] text-lg"
             aria-disabled={isPending}
             disabled={form.formState.isSubmitting}
           >
@@ -104,7 +105,7 @@ export default function LoginPage() {
                 {errorMessage}
               </div>
             )}
-            <p>
+            <p className="text-dark-grey">
               {`Don't have an account?`}
               <Link href={"/register"} className="ml-1 underline">
                 Sign up

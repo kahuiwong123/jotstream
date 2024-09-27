@@ -47,21 +47,25 @@ const RegisterForm = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
-      <h1 className="mb-4 text-4xl font-bold">Sign up</h1>
+    <div className="relative flex h-screen flex-col items-center justify-center bg-gradient-to-r from-[#FF5858] to-red-400">
       <Form {...form}>
         <form
-          className="flex w-2/5 flex-col gap-4 border border-black p-8"
+          className="flex h-fit w-2/5 flex-col gap-6 rounded-xl bg-white p-8 shadow-xl dark:bg-white"
           onSubmit={form.handleSubmit(onSubmit)}
         >
+            <h1 className="text-2xl font-bold text-dark-main text-center">Get Started Today</h1>
           <FormField
             control={form.control}
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel className="text-md dark:text-black">Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter your email" {...field} />
+                  <Input
+                    placeholder="Enter your email"
+                    {...field}
+                    className="dark:bg-dark-white text-md rounded-[0.5rem] py-6"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -72,9 +76,15 @@ const RegisterForm = () => {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel className="text-md dark:text-black">
+                  Password
+                </FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter your password" {...field} />
+                  <Input
+                    placeholder="Enter your password"
+                    {...field}
+                    className="text-md rounded-[0.5rem] py-6 dark:bg-white"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -82,10 +92,11 @@ const RegisterForm = () => {
           />
           <Button
             type="submit"
+            className="rounded-[0.5rem] bg-[#FF5858] py-6 text-lg hover:bg-[#ff6969] dark:bg-[#FF5858] dark:text-white dark:hover:bg-[#ff6969]"
             aria-disabled={isPending}
-            className="rounded-md bg-[#FF5858] py-2 hover:bg-[#ff6969]"
+            disabled={form.formState.isSubmitting}
           >
-            Sign up with Email
+            {form.formState.isSubmitting ? "Loading..." : "Sign up with Email"}
           </Button>
           <div
             className={clsx(
@@ -94,12 +105,12 @@ const RegisterForm = () => {
             )}
           >
             {errorMessage && (
-              <div className="flex items-center gap-1 text-[#FF5858] text-nowrap">
+              <div className="flex items-center gap-1 text-[#FF5858]">
                 <MdErrorOutline className="size-5" />
                 {errorMessage}
               </div>
             )}
-            <p className="text-nowrap">
+            <p className="text-dark-grey">
               {`Already signed up?`}
               <Link href={"/"} className="ml-1 underline">
                 Go to login

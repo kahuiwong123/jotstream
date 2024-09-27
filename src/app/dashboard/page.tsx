@@ -9,7 +9,7 @@ const Dashboard = async () => {
   }
   const sections = await prisma.section.findMany({
     where: {
-      userId: session?.user?.id, //placeholder
+      userId: session?.user?.id,
     },
     include: {
       tasks: {
