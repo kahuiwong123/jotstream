@@ -35,8 +35,8 @@ import {
   startTransition,
 } from "react";
 import { moveSection, moveTask } from "@/data/actions";
-import TaskCard from "./task/task-card";
 import { useAuthStore } from "@/data/authStore";
+import { Task } from "@prisma/client";
 export const DashboardClient = memo(
   ({
     sectionsData,
@@ -69,7 +69,7 @@ export const DashboardClient = memo(
         return optimisticSections.find((section) => section.id === id);
       } else {
         return optimisticSections.find((section) =>
-          section.tasks.find((task) => task.id === id),
+          section.tasks.find((task: Task) => task.id === id),
         );
       }
     };
