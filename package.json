@@ -4,13 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma db push && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "devStart": "ts-node db/index.ts",
-    "postinstall": "npx prisma generate",
-    "vercel-build": "prisma generate && prisma migrate deploy && next build",
-    "prisma:generate": "prisma generate"
+    "devStart": "ts-node db/index.ts"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.1.0",
