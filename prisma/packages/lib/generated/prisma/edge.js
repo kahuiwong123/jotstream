@@ -171,7 +171,7 @@ const config = {
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": "../../../../../.env",
+    "rootEnvPath": null,
     "schemaEnvPath": "../../../../../.env"
   },
   "relativePath": "../../../..",
@@ -184,13 +184,13 @@ const config = {
   "inlineDatasources": {
     "db": {
       "url": {
-        "fromEnvVar": "DATABASE_URL",
+        "fromEnvVar": "POSTGRES_URL_NON_POOLING",
         "value": null
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider      = \"prisma-client-js\"\n  output        = \"./packages/lib/generated/prisma\"\n  binaryTargets = [\"native\", \"debian-openssl-3.0.x\"]\n}\n\ndatasource db {\n  provider  = \"postgresql\"\n  url       = env(\"DATABASE_URL\")\n  directUrl = env(\"DIRECT_URL\")\n}\n\nmodel User {\n  id       String    @id @default(uuid())\n  email    String    @unique\n  password String    @db.Text\n  sections Section[]\n}\n\nmodel Task {\n  id          String    @id @default(uuid())\n  section     Section   @relation(fields: [sectionId], references: [id], onDelete: Cascade, onUpdate: Cascade)\n  sectionId   String\n  title       String\n  description String?\n  priority    Int       @default(4)\n  dueDate     DateTime?\n  createdAt   DateTime  @default(now())\n  updatedAt   DateTime  @updatedAt\n  rank        String\n\n  @@index([rank])\n}\n\nmodel Section {\n  id        String   @id @default(uuid())\n  name      String\n  tasks     Task[]\n  User      User?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)\n  userId    String?\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n  rank      String\n\n  @@index([rank])\n}\n",
-  "inlineSchemaHash": "84399b3ea26b72dd3020d53e2b4a04d0f6cf57d6b939bdba5c27483474a07599",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider      = \"prisma-client-js\"\n  output        = \"./packages/lib/generated/prisma\"\n  binaryTargets = [\"native\", \"debian-openssl-3.0.x\"]\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"POSTGRES_URL_NON_POOLING\")\n}\n\nmodel User {\n  id       String    @id @default(uuid())\n  email    String    @unique\n  password String    @db.Text\n  sections Section[]\n}\n\nmodel Task {\n  id          String    @id @default(uuid())\n  section     Section   @relation(fields: [sectionId], references: [id], onDelete: Cascade, onUpdate: Cascade)\n  sectionId   String\n  title       String\n  description String?\n  priority    Int       @default(4)\n  dueDate     DateTime?\n  createdAt   DateTime  @default(now())\n  updatedAt   DateTime  @updatedAt\n  rank        String\n\n  @@index([rank])\n}\n\nmodel Section {\n  id        String   @id @default(uuid())\n  name      String\n  tasks     Task[]\n  User      User?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)\n  userId    String?\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n  rank      String\n\n  @@index([rank])\n}\n",
+  "inlineSchemaHash": "02cdabc2ef094d9becc9005449df7c327685d3e7a317fcaab03ac7b3e5622817",
   "copyEngine": true
 }
 config.dirname = '/'
@@ -201,7 +201,7 @@ config.engineWasm = undefined
 
 config.injectableEdgeEnv = () => ({
   parsed: {
-    DATABASE_URL: typeof globalThis !== 'undefined' && globalThis['DATABASE_URL'] || typeof process !== 'undefined' && process.env && process.env.DATABASE_URL || undefined
+    POSTGRES_URL_NON_POOLING: typeof globalThis !== 'undefined' && globalThis['POSTGRES_URL_NON_POOLING'] || typeof process !== 'undefined' && process.env && process.env.POSTGRES_URL_NON_POOLING || undefined
   }
 })
 
