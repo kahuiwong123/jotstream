@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useFormState } from "react-dom";
+import { useFormState, useFormStatus } from "react-dom";
 import { authenticate } from "@/data/authActions";
 import clsx from "clsx";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
@@ -34,6 +34,8 @@ export default function LoginPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
+
+  const { pending } = useFormStatus();
 
   const [errorMessage, formAction, isPending] = useFormState(
     authenticate,
@@ -54,7 +56,7 @@ export default function LoginPage() {
       <Form {...form}>
         <form
           className="flex h-fit w-2/5 flex-col gap-6 rounded-xl bg-white p-8 shadow-xl dark:bg-white"
-          onSubmit={form.handleSubmit(onSubmit)}
+          action={formAction}
         >
           <div className="flex flex-col items-center">
             <Image src={logo} width={200} height={200} alt="jotstream-logo" />
@@ -99,9 +101,9 @@ export default function LoginPage() {
             type="submit"
             className="rounded-[0.5rem] bg-[#FF5858] py-6 text-lg hover:bg-[#ff6969] dark:bg-[#FF5858] dark:text-white dark:hover:bg-[#ff6969]"
             aria-disabled={isPending}
-            disabled={form.formState.isSubmitting}
+            disabled={pending}
           >
-            {form.formState.isSubmitting ? "Loading..." : "Login"}
+            {pending ? "Loading..." : "Login"}
           </Button>
           <div
             className={clsx(
