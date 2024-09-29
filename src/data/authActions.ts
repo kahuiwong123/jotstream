@@ -81,5 +81,5 @@ export const logoutUser = async () => {
 };
 
 export const handleSignOut = async () => {
-  await signOut();
+  await signOut({ redirectTo: "/" });
 };
