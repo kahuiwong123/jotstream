@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useContext } from "react";
+import React from "react";
+import logo from "../../../public/logo-no-background.svg";
 import { clsx } from "clsx";
 import {
   IoSearchSharp,
@@ -19,6 +20,8 @@ import { TooltipItem } from "../ui/tooltip-item";
 import { logoutUser } from "@/data/authActions";
 import { useSectionStore } from "@/data/sectionStore";
 import SignOutButton from "./signout-button";
+import Image from "next/image";
+
 const SideNav = ({ toggleSideNav }: { toggleSideNav: () => void }) => {
   const sidebarCollapsed = useSectionStore((state) => state.sidebarCollapsed);
 
@@ -31,18 +34,17 @@ const SideNav = ({ toggleSideNav }: { toggleSideNav: () => void }) => {
     >
       <section
         className={clsx(
-          "flex items-center text-2xl",
+          "flex items-start text-2xl",
           sidebarCollapsed ? "justify-center" : "justify-around",
         )}
       >
-        <h1
-          className={clsx(
-            "transtion-all overflow-hidden",
-            sidebarCollapsed && "w-0",
-          )}
-        >
-          Menu
-        </h1>
+        <Image
+          src={logo}
+          height={100}
+          width={100}
+          alt="jotstream-logo"
+          className={clsx(sidebarCollapsed && "hidden")}
+        />
         <Button
           variant="outline"
           size="icon"
