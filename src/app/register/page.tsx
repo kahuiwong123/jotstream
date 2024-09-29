@@ -51,7 +51,7 @@ const RegisterForm = () => {
       <Form {...form}>
         <form
           className="flex h-fit w-2/5 flex-col gap-6 rounded-xl bg-white p-8 shadow-xl dark:bg-white"
-          onSubmit={form.handleSubmit(onSubmit)}
+          action={formAction}
         >
           <h1 className="text-center text-2xl font-bold text-dark-main">
             Get Started Today

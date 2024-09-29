@@ -18,6 +18,7 @@ import SideNavButton from "./sidenav-button";
 import { TooltipItem } from "../ui/tooltip-item";
 import { logoutUser } from "@/data/authActions";
 import { useSectionStore } from "@/data/sectionStore";
+import SignOutButton from "./signout-button";
 const SideNav = ({ toggleSideNav }: { toggleSideNav: () => void }) => {
   const sidebarCollapsed = useSectionStore((state) => state.sidebarCollapsed);
 
@@ -85,13 +86,7 @@ const SideNav = ({ toggleSideNav }: { toggleSideNav: () => void }) => {
       </section>
       <section>
         <SideNavButton icon={IoSettings} label="Settings" />
-        <SideNavButton
-          icon={IoLogOut}
-          label="Sign out"
-          onClick={async () => {
-            await logoutUser();
-          }}
-        />
+        <SignOutButton />
       </section>
     </aside>
   );

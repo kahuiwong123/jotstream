@@ -2,7 +2,7 @@
 
 import bcrypt from "bcrypt";
 import { Prisma, User } from "@prisma/client";
-import { signIn } from "../../auth";
+import { signIn, signOut } from "../../auth";
 import { AuthError } from "next-auth";
 import prisma from "../../db/db";
 import { createSession, deleteSession } from "@/lib/session";
@@ -76,7 +76,10 @@ export const registerUser = async (
 };
 
 export const logoutUser = async () => {
-  console.log(123);
   deleteSession();
   redirect("/");
+};
+
+export const handleSignOut = async () => {
+  await signOut({ redirectTo: "/" });
 };
