@@ -52,7 +52,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="relative flex h-screen flex-col items-center justify-center bg-gradient-to-r from-[#FF5858] to-red-400">
+    <div className="relative flex h-screen flex-col items-center justify-center bg-gradient-to-r from-[#FF5858] to-red-400 dark:bg-dark-main">
       <Form {...form}>
         <form
           className="flex h-fit w-2/5 flex-col gap-6 rounded-xl bg-white p-8 shadow-xl dark:bg-white"
@@ -71,7 +71,7 @@ export default function LoginPage() {
                   <Input
                     placeholder="Enter your email"
                     {...field}
-                    className="dark:bg-dark-white text-md rounded-[0.5rem] py-6"
+                    className="dark:bg-dark-white text-md rounded-[0.5rem] py-6 dark:text-black"
                   />
                 </FormControl>
                 <FormMessage />
@@ -90,7 +90,7 @@ export default function LoginPage() {
                   <Input
                     placeholder="Enter your password"
                     {...field}
-                    className="text-md rounded-[0.5rem] py-6 dark:bg-white"
+                    className="text-md rounded-[0.5rem] py-6 dark:bg-white dark:text-black"
                   />
                 </FormControl>
                 <FormMessage />

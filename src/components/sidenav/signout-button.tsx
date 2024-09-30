@@ -6,7 +6,7 @@ import { IoLogOutOutline } from "react-icons/io5";
 export default function SignOutButton() {
   return (
     <form action={handleSignOut}>
-      <SideNavButton icon={IoLogOutOutline} label="Sign out"/>
+      <SideNavButton icon={IoLogOutOutline} label="Sign out" />
     </form>
   );
 }
