@@ -22,7 +22,6 @@ import { useAuthStore } from "@/data/authStore";
 
 const sectionSchema = z.object({
   name: z.string().min(1, { message: "section name cannot be empty" }),
-  userId: z.string().min(1),
 });
 
 type SectionProp = z.infer<typeof sectionSchema>;
@@ -47,7 +46,6 @@ const AddSectionButton = () => {
   const form = useForm<SectionProp>({
     resolver: zodResolver(sectionSchema),
     defaultValues: {
-      userId: userId,
       name: "",
     },
   });
@@ -103,7 +101,7 @@ const AddSectionButton = () => {
               <Button
                 type="submit"
                 className="h-fit w-fit rounded-md bg-red-flag px-4 py-1 hover:bg-[#d6584f] dark:bg-red-flag dark:text-white dark:hover:bg-[#d6584f]"
-                disabled={!form.formState.isValid}
+                disabled={!form.formState.isValid || isPending}
               >
                 Save
               </Button>
