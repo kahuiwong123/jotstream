@@ -103,7 +103,7 @@ const AddSectionButton = () => {
               <Button
                 type="submit"
                 className="h-fit w-fit rounded-md bg-red-flag px-4 py-1 hover:bg-[#d6584f] dark:bg-red-flag dark:text-white dark:hover:bg-[#d6584f]"
-                disabled={!form.formState.isValid || isPending}
+                disabled={!form.formState.isValid}
               >
                 Save
               </Button>

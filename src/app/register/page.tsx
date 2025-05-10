@@ -37,7 +37,6 @@ const RegisterForm = () => {
     undefined,
   );
 
-
   return (
     <div className="relative flex h-screen flex-col items-center justify-center bg-gradient-to-r from-[#FF5858] to-red-400 dark:bg-dark-main">
       <Form {...form}>

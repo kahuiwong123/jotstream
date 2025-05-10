@@ -86,16 +86,14 @@ export const registerUser = async (
     }
     await createSession(user.id);
   } catch (e: any) {
-    console.log(e);
     errorOccured = true;
     if (e.code === "P2002") {
       return ["An user with this email already exist."];
     }
     throw e;
-  }
-  finally {
+  } finally {
     if (!errorOccured) {
-      redirect("/dashboard");
+      await authenticate(undefined, data);
     }
   }
 };
