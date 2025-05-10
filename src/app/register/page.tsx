@@ -15,11 +15,11 @@ import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useFormState } from "react-dom";
 import { registerUser } from "@/data/authActions";
 import { MdErrorOutline } from "react-icons/md";
 import Link from "next/link";
 import clsx from "clsx";
+import { useActionState } from "react";
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
   password: z
@@ -32,19 +32,11 @@ const RegisterForm = () => {
     resolver: zodResolver(formSchema),
   });
 
-  const [errorMessage, formAction, isPending] = useFormState(
+  const [state, formAction, isPending] = useActionState(
     registerUser,
     undefined,
   );
 
-  const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    if (formSchema.safeParse(data).success) {
-      const formData = new FormData();
-      formData.append("email", data.email);
-      formData.append("password", data.password);
-      formAction(formData);
-    }
-  };
 
   return (
     <div className="relative flex h-screen flex-col items-center justify-center bg-gradient-to-r from-[#FF5858] to-red-400 dark:bg-dark-main">
@@ -98,18 +90,18 @@ const RegisterForm = () => {
             aria-disabled={isPending}
             disabled={form.formState.isSubmitting}
           >
-            {form.formState.isSubmitting ? "Loading..." : "Sign up with Email"}
+            {isPending ? "Loading..." : "Sign up with Email"}
           </Button>
           <div
             className={clsx(
               "flex h-fit items-center justify-end gap-2 text-sm",
-              errorMessage ? "justify-between" : "justify-end",
+              state ? "justify-between" : "justify-end",
             )}
           >
-            {errorMessage && (
+            {state && (
               <div className="flex items-center gap-1 text-[#FF5858]">
                 <MdErrorOutline className="size-5" />
-                {errorMessage}
+                {state[0]}
               </div>
             )}
             <p className="text-dark-grey">

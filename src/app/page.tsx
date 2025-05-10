@@ -18,10 +18,10 @@ import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormStatus } from "react-dom";
 import { authenticate } from "@/data/authActions";
 import clsx from "clsx";
-import { ThemeToggle } from "@/components/theme/theme-toggle";
+import { useActionState } from "react";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
@@ -33,11 +33,13 @@ const formSchema = z.object({
 export default function LoginPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
 
-  const { pending } = useFormStatus();
-
-  const [errorMessage, formAction, isPending] = useFormState(
+  const [errorMessage, formAction, isPending] = useActionState(
     authenticate,
     undefined,
   );
@@ -101,9 +103,9 @@ export default function LoginPage() {
             type="submit"
             className="rounded-[0.5rem] bg-[#FF5858] py-6 text-lg hover:bg-[#ff6969] dark:bg-[#FF5858] dark:text-white dark:hover:bg-[#ff6969]"
             aria-disabled={isPending}
-            disabled={pending}
+            disabled={isPending}
           >
-            {pending ? "Loading..." : "Login"}
+            {isPending ? "Loading..." : "Login"}
           </Button>
           <div
             className={clsx(

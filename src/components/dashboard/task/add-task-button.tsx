@@ -40,6 +40,8 @@ export const AddTaskButton = ({ sectionId }: AddTaskButtonProps) => {
     resolver: zodResolver(taskSchema),
     defaultValues: {
       sectionId: sectionId,
+      title: "",
+      description: "",
       priority: 4,
     },
   });

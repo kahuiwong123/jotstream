@@ -7,7 +7,8 @@ import { LexoRank } from "lexorank";
 import { Section, Task } from "@prisma/client";
 
 const sectionSchema = z.object({
-  name: z.string().min(1),
+  name: z.string().min(1, { message: "section name cannot be empty" }),
+  userId: z.string().min(1),
 });
 
 const taskSchema = z.object({
@@ -44,6 +45,13 @@ export const addSection = async (
 ): Promise<FormState> => {
   const userId = data.get("userId") as string;
   const name = data.get("name") as string;
+  console.log(data);
+  const validate = sectionSchema.safeParse({ name, userId });
+  if (!validate.success) {
+    return {
+      message: "section name cannot be empty.",
+    };
+  }
   const lastSection = await prisma.section.findFirst({
     select: {
       rank: true,
@@ -116,7 +124,7 @@ export const duplicateSection = async (
     newRank = LexoRank.parse(section.rank).genNext().toString();
   }
 
-  const newSection = await prisma.$transaction(async (tx) => {
+  await prisma.$transaction(async (tx) => {
     const createdSection = await prisma.section.create({
       data: {
         name: `Copy of ${section.name}`,
@@ -431,8 +439,7 @@ export const moveTask = async (
     where: { id: oldTask.id },
     data: { rank: newRank },
   });
-
-  revalidatePath("/dashboard");
+  revalidatePath(`/dashboard/section/${newTask.sectionId}`);
   return {
     message: `${oldTask.title} moved!`,
   };

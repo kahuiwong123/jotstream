@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { startTransition, useEffect, useState } from "react";
 import { MdOutlineAddToPhotos } from "react-icons/md";
 import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { addSection, FormState } from "@/data/actions";
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 import {
   Form,
   FormControl,
@@ -35,27 +35,36 @@ const AddSectionButton = () => {
     })),
   );
 
-  const [state, formAction] = useFormState<FormState, FormData>(addSection, {
-    message: "",
-  });
+  const [state, formAction, isPending] = useActionState<FormState, FormData>(
+    addSection,
+    {
+      message: "",
+    },
+  );
 
   const userId = useAuthStore((state) => state.userId);
-
-  const onSubmit = async (data: SectionProp) => {
-    if (sectionSchema.safeParse(data) && userId) {
-      const formData = new FormData();
-      formData.append("name", data.name);
-      formData.append("userId", data.userId);
-      formAction(formData);
-    }
-  };
 
   const form = useForm<SectionProp>({
     resolver: zodResolver(sectionSchema),
     defaultValues: {
       userId: userId,
+      name: "",
     },
   });
+
+  const onSubmit = async (data: SectionProp) => {
+    const formData = new FormData();
+
+    formData.append("name", data.name); // Add the form field data
+    if (userId) {
+      formData.append("userId", userId); // Add the userId programmatically
+    } else {
+      console.error("User ID is undefined");
+    }
+    startTransition(() => {
+      formAction(formData); // Call the server action with the updated FormData
+    });
+  };
 
   const handleCancel = () => {
     form.reset();
@@ -94,7 +103,7 @@ const AddSectionButton = () => {
               <Button
                 type="submit"
                 className="h-fit w-fit rounded-md bg-red-flag px-4 py-1 hover:bg-[#d6584f] dark:bg-red-flag dark:text-white dark:hover:bg-[#d6584f]"
-                disabled={!form.formState.isValid}
+                disabled={!form.formState.isValid || isPending}
               >
                 Save
               </Button>
