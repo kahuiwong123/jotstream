@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
-import { DialogContent } from "@/components/ui/dialog";
-import React, { useState } from "react";
+import { DialogContent, DialogFooter } from "@/components/ui/dialog";
+import React, { useEffect, useState } from "react";
 import { useSectionStore } from "@/data/sectionStore";
 import { Task } from "@prisma/client";
 import { z } from "zod";
@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { SectionSelectComboBox } from "../section/section-select.combobox";
-import { DialogTitle } from "@radix-ui/react-dialog";
+import { DialogClose, DialogTitle } from "@radix-ui/react-dialog";
 import { DatePicker } from "@/components/ui/date-picker";
 import { PrioritySelect } from "./priority-select";
 import { updateSection, updateTask } from "@/data/actions";
@@ -37,11 +37,19 @@ type taskFields = z.infer<typeof taskSchema>;
 export const EditTaskDialog = () => {
   const activeTask = useSectionStore((state) => state.activeTask);
   const activeSection = useSectionStore((state) => state.activeSection);
+  const setActiveTask = useSectionStore((state) => state.setActiveTask);
+  const setActiveSection = useSectionStore((state) => state.setActiveSection);
+
+  const handleCancel = () => {
+    setActiveTask(null);
+    setActiveSection(null);
+  };
+
   const form = useForm<taskFields>({
     resolver: zodResolver(taskSchema),
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (activeTask) {
       form.reset({
         sectionId: activeTask.sectionId,
@@ -53,11 +61,8 @@ export const EditTaskDialog = () => {
     }
   }, [activeTask, form]);
 
-  if (!activeTask) {
-    return null;
-  }
-
   const action: () => void = form.handleSubmit(async (data) => {
+    if (!activeTask) return;
     await updateTask(activeTask.id, data);
   });
 
@@ -153,14 +158,17 @@ export const EditTaskDialog = () => {
             />
           </div>
           <Separator />
-          <div className="flex justify-end gap-4">
-            <Button
-              type="reset"
-              variant={"outline"}
-              className="dark:bg-dark-main"
-            >
-              Cancel
-            </Button>
+          <DialogFooter className="flex justify-end gap-4">
+            <DialogClose asChild>
+              <Button
+                type="button"
+                variant={"outline"}
+                className="dark:bg-dark-main"
+                onClick={handleCancel}
+              >
+                Cancel
+              </Button>
+            </DialogClose>
             <Button
               type="submit"
               variant={"outline"}
@@ -169,7 +177,7 @@ export const EditTaskDialog = () => {
             >
               Submit
             </Button>
-          </div>
+          </DialogFooter>
         </form>
       </Form>
     </DialogContent>

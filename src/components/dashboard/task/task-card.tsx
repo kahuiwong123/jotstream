@@ -24,6 +24,12 @@ const TaskCard = memo(({ task }: { task: Task }) => {
     removeTask(task.id);
   };
 
+  const handleOnlick = (e: React.MouseEvent) => {
+    setActiveSection(task.sectionId);
+    setActiveTask(task);
+  };
+
+  const activeTask = useSectionStore((state) => state.activeTask);
   const setActiveTask = useSectionStore((state) => state.setActiveTask);
   const setActiveSection = useSectionStore((state) => state.setActiveSection);
   return (
@@ -38,10 +44,7 @@ const TaskCard = memo(({ task }: { task: Task }) => {
             transition,
             transform: CSS.Translate.toString(transform),
           }}
-          onClick={() => {
-            setActiveSection(task.sectionId);
-            setActiveTask(task);
-          }}
+          onClick={handleOnlick}
         >
           <PriorityButton
             priority={task.priority}

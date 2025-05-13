@@ -20,87 +20,82 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-const SectionCard = memo(
-  ({ section }: { section: Section & { tasks: Task[] } }) => {
-    const { attributes, listeners, setNodeRef, transform, transition } =
-      useSortable({
-        id: section.id,
-        data: {
-          type: "section",
-          accepts: ["task"],
-        },
-      });
+const SectionCard = ({ section }: { section: Section & { tasks: Task[] } }) => {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({
+      id: section.id,
+      data: {
+        type: "section",
+        accepts: ["task"],
+      },
+    });
 
-    const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
-    const { activeSectionId, setActiveSectionId } = useSectionStore(
-      useShallow((state) => ({
-        activeSectionId: state.activeSectionId,
-        setActiveSectionId: state.setActiveSectionId,
-      })),
-    );
+  const { activeSectionId, setActiveSectionId } = useSectionStore(
+    useShallow((state) => ({
+      activeSectionId: state.activeSectionId,
+      setActiveSectionId: state.setActiveSectionId,
+    })),
+  );
 
-    return (
-      <section
-        className="flex h-fit w-72 touch-none flex-col gap-4 rounded-md border border-transparent bg-[#fcfcfc] p-4 shadow-md hover:shadow-lg dark:bg-[#202020] dark:hover:border-light-grey-hover"
-        ref={setNodeRef}
-        {...attributes}
-        {...listeners}
-        style={{
-          transition,
-          transform: CSS.Translate.toString(transform),
-        }}
-      >
-        {isEditing ? (
-          <SectionCardEdit section={section} setIsEditing={setIsEditing} />
-        ) : (
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <TooltipItem
-                tooltipTrigger={
-                  <h2
-                    className="font-semibold"
-                    onClick={() => setIsEditing(true)}
-                  >
-                    {section.name}
-                  </h2>
-                }
-                tooltipString={section.name}
-              />
-              <span className="text-sm font-extralight">
-                {section.tasks.length}
-              </span>
-            </div>
-            <SectionCardDropDown
-              setIsEditing={setIsEditing}
-              section={section}
+  return (
+    <section
+      className="flex h-fit w-72 touch-none flex-col gap-4 rounded-md border border-transparent bg-[#fcfcfc] p-4 shadow-md hover:shadow-lg dark:bg-[#202020] dark:hover:border-light-grey-hover"
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
+      style={{
+        transition,
+        transform: CSS.Translate.toString(transform),
+      }}
+    >
+      {isEditing ? (
+        <SectionCardEdit section={section} setIsEditing={setIsEditing} />
+      ) : (
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <TooltipItem
+              tooltipTrigger={
+                <h2
+                  className="font-semibold"
+                  onClick={() => setIsEditing(true)}
+                >
+                  {section.name}
+                </h2>
+              }
+              tooltipString={section.name}
             />
+            <span className="text-sm font-extralight">
+              {section.tasks.length}
+            </span>
           </div>
-        )}
-        <SortableContext
-          items={section.tasks.map((task) => task.id)}
-          strategy={verticalListSortingStrategy}
-        >
-          {section.tasks.map((task) => (
-            <TaskCard key={task.id} task={task} />
-          ))}
-        </SortableContext>
+          <SectionCardDropDown setIsEditing={setIsEditing} section={section} />
+        </div>
+      )}
+      <SortableContext
+        items={section.tasks.map((task) => task.id)}
+        strategy={verticalListSortingStrategy}
+      >
+        {section.tasks.map((task) => (
+          <TaskCard key={task.id} task={task} />
+        ))}
+      </SortableContext>
 
-        {activeSectionId === section.id ? (
-          <AddTaskButton sectionId={section.id} />
-        ) : (
-          <Button
-            variant="ghost"
-            className="flex justify-start gap-2 px-2"
-            onClick={() => setActiveSectionId(section.id)}
-          >
-            <IoAdd className="h-6 w-6" />
-            <p>Add Task</p>
-          </Button>
-        )}
-      </section>
-    );
-  },
-);
+      {activeSectionId === section.id ? (
+        <AddTaskButton sectionId={section.id} />
+      ) : (
+        <Button
+          variant="ghost"
+          className="flex justify-start gap-2 px-2"
+          onClick={() => setActiveSectionId(section.id)}
+        >
+          <IoAdd className="h-6 w-6" />
+          <p>Add Task</p>
+        </Button>
+      )}
+    </section>
+  );
+};
 
 export default SectionCard;

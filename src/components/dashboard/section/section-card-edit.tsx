@@ -16,6 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { updateSection } from "@/data/actions";
+import { useAuthStore } from "@/data/authStore";
 
 type sectionCardEditProps = {
   section: Section;
@@ -43,11 +44,14 @@ export const SectionCardEdit = ({
     },
   });
 
+  const userId = useAuthStore((state) => state.userId);
+
   const action: () => void = form.handleSubmit(async (data) => {
+    if (!userId) return;
     await updateSection({
       ...data,
       id: section.id,
-      userId: "392dc2c9-4ddd-45a2-83bb-a5171e1ef04b",
+      userId: userId,
     });
   });
 
@@ -84,21 +88,5 @@ export const SectionCardEdit = ({
         </div>
       </form>
     </Form>
-
-    // <div className="flex flex-col">
-    //   <Input placeholder="Name this section" autoFocus />
-    //   <div className="mt-2 flex gap-2">
-    //     <Button className="h-fit w-fit rounded-md bg-red-flag px-4 py-1 hover:bg-[#d6584f] dark:bg-red-flag dark:text-white dark:hover:bg-[#d6584f]">
-    //       Save
-    //     </Button>
-    //     <Button
-    //       variant="ghost"
-    //       className="h-fit w-fit rounded-md px-4 py-1"
-    //       onClick={handleCancel}
-    //     >
-    //       Cancel
-    //     </Button>
-    //   </div>
-    // </div>
   );
 };

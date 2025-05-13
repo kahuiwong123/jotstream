@@ -1,19 +1,12 @@
 /* eslint-disable react/display-name */
 "use client";
 import {
-  Active,
   DndContext,
   DragEndEvent,
-  DragMoveEvent,
   DragOverlay,
   DragStartEvent,
-  KeyboardSensor,
   PointerSensor,
   TouchSensor,
-  UniqueIdentifier,
-  closestCenter,
-  closestCorners,
-  pointerWithin,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
@@ -21,22 +14,17 @@ import {
   SortableContext,
   arrayMove,
   horizontalListSortingStrategy,
-  sortableKeyboardCoordinates,
+  useSortable,
 } from "@dnd-kit/sortable";
 import AddSectionButton from "@/components/dashboard/section/add-section-button";
 import SectionCard from "@/components/dashboard/section/section-card";
 import { useSectionStore } from "@/data/sectionStore";
 import { sectionProps } from "@/data/types";
-import {
-  memo,
-  useState,
-  useEffect,
-  useOptimistic,
-  startTransition,
-} from "react";
+import { memo, useEffect, useState } from "react";
 import { moveSection, moveTask } from "@/data/actions";
 import { useAuthStore } from "@/data/authStore";
 import { Task } from "@prisma/client";
+import { createPortal } from "react-dom";
 export const DashboardClient = memo(
   ({
     sectionsData,
@@ -45,14 +33,7 @@ export const DashboardClient = memo(
     sectionsData: sectionProps[];
     userId?: string;
   }) => {
-    const [optimisticSections, setOptimisticSections] = useOptimistic(
-      sectionsData,
-      (prevSections: sectionProps[], updatedSections: sectionProps[]) =>
-        updatedSections,
-    );
-
-    const [active, setActive] = useState<Active | null>(null);
-
+    const sections = useSectionStore((state) => state.sections);
     const setSections = useSectionStore((state) => state.setSections);
     const setUserId = useAuthStore((state) => state.setUserId);
 
@@ -66,19 +47,13 @@ export const DashboardClient = memo(
 
     const findSection = (id: string, type: string) => {
       if (type === "section") {
-        return optimisticSections.find((section) => section.id === id);
+        return sectionsData.find((section) => section.id === id);
       } else {
-        return optimisticSections.find((section) =>
+        return sectionsData.find((section) =>
           section.tasks.find((task: Task) => task.id === id),
         );
       }
     };
-
-    const handleDragStart = ({ active }: DragStartEvent) => {
-      setActive(active);
-    };
-
-    const handleDragMove = ({ active, over }: DragMoveEvent) => {};
 
     const handleDragEnd = async ({ active, over }: DragEndEvent) => {
       console.log(active);
@@ -90,23 +65,21 @@ export const DashboardClient = memo(
         over.data.current?.type == "section" &&
         active.id !== over.id
       ) {
-        const activeSectionIndex = optimisticSections.findIndex(
+        const activeSectionIndex = sectionsData.findIndex(
           (section) => section.id === active.id,
         );
-        const overSectionIndex = optimisticSections.findIndex(
+        const overSectionIndex = sectionsData.findIndex(
           (section) => section.id === over.id,
         );
-        let newSections = [...optimisticSections];
+        let newSections = [...sectionsData];
         newSections = arrayMove(
           newSections,
           activeSectionIndex,
           overSectionIndex,
         );
-        startTransition(() => {
-          setOptimisticSections(newSections);
-        });
 
         await moveSection(active.id.toString(), over.id.toString());
+        setSections(newSections);
       }
 
       if (
@@ -119,10 +92,10 @@ export const DashboardClient = memo(
         const activeSection = findSection(active.id.toString(), "task");
         const overSection = findSection(over.id.toString(), "task");
         if (activeSection && overSection) {
-          const activeSectionIndex = optimisticSections.findIndex(
+          const activeSectionIndex = sectionsData.findIndex(
             (section) => section.id === activeSection.id,
           );
-          const overSectionIndex = optimisticSections.findIndex(
+          const overSectionIndex = sectionsData.findIndex(
             (section) => section.id === overSection.id,
           );
 
@@ -137,21 +110,18 @@ export const DashboardClient = memo(
           if (activeSectionIndex === overSectionIndex) {
             // moving tasks in the same section
 
-            let newSections = [...optimisticSections];
+            let newSections = [...sectionsData];
             newSections[activeSectionIndex].tasks = arrayMove(
               newSections[activeSectionIndex].tasks,
               activeTaskIndex,
               overTaskIndex,
             );
-            startTransition(() => {
-              setOptimisticSections(newSections);
-            });
+
+            setSections(newSections);
             await moveTask(active.id.toString(), over.id.toString());
           }
         }
       }
-
-      setActive(null);
     };
 
     const sensors = useSensors(
@@ -165,45 +135,23 @@ export const DashboardClient = memo(
           distance: 10,
         },
       }),
-      // useSensor(KeyboardSensor, {
-      //   coordinateGetter: sortableKeyboardCoordinates,
-      // }),
     );
 
     return (
       <div className="flex h-full grow gap-8 bg-white-main dark:bg-dark-main">
         <div className="flex grow gap-8">
-          <DndContext
-            sensors={sensors}
-            onDragEnd={handleDragEnd}
-            // onDragStart={handleDragStart}
-          >
-            <SortableContext
-              items={optimisticSections.map((section) => section.id)}
-              strategy={horizontalListSortingStrategy}
-            >
-              {optimisticSections.map((section) => (
+          <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+            <SortableContext items={sectionsData.map((section) => section.id)}>
+              {sections.map((section) => (
                 <SectionCard key={section.id} section={section} />
               ))}
             </SortableContext>
-            {/* <DragOverlay>
-              {active && active.data.current?.type === "task" && (
-                <TaskCard
-                  task={optimisticSections
-                    .find((section) =>
-                      section.tasks.some((task) => task.id === active.id),
-                    )
-                    ?.tasks.find((task) => task.id === active.id)}
-                />
-              )}
-              {active && active.data.current?.type === "section" && (
-                <SectionCard
-                  section={optimisticSections.find(
-                    (section) => section.id === active.id,
-                  )}
-                />
-              )}
-            </DragOverlay> */}
+            {/* {createPortal(
+              <DragOverlay>
+                {activeSection && <SectionCard section={activeSection} />}
+              </DragOverlay>,
+              document.body
+            )} */}
           </DndContext>
           <AddSectionButton />
         </div>

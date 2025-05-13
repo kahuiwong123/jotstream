@@ -439,7 +439,7 @@ export const moveTask = async (
     where: { id: oldTask.id },
     data: { rank: newRank },
   });
-  revalidatePath(`/dashboard/section/${newTask.sectionId}`);
+  revalidatePath("dashboard");
   return {
     message: `${oldTask.title} moved!`,
   };
