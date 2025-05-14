@@ -1,28 +1,13 @@
-import prisma from "../../../db/db";
 import { DashboardClient } from "../../components/dashboard/dashboard-client";
 import { auth } from "../../../auth";
 
 const Dashboard = async () => {
   const session = await auth();
-  if (!session) {
+  if (!session?.user) {
     return null;
   }
-  const sections = await prisma.section.findMany({
-    where: {
-      userId: session?.user?.id,
-    },
-    include: {
-      tasks: {
-        orderBy: {
-          rank: "asc",
-        },
-      },
-    },
-    orderBy: {
-      rank: "asc",
-    },
-  });
-  return <DashboardClient sectionsData={sections} userId={session.user?.id} />;
+  
+  return <DashboardClient userId={session.user?.id} email={session.user?.email ?? undefined} />;
 };
 
 export default Dashboard;

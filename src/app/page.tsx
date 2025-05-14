@@ -22,6 +22,7 @@ import { useFormStatus } from "react-dom";
 import { authenticate } from "@/data/authActions";
 import clsx from "clsx";
 import { useActionState } from "react";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
@@ -105,7 +106,8 @@ export default function LoginPage() {
             aria-disabled={isPending}
             disabled={isPending}
           >
-            {isPending ? "Loading..." : "Login"}
+            {isPending && <Loader2 className="animate-spin mr-2"/>}
+            {isPending ? "Logging in..." : "Login"}
           </Button>
           <div
             className={clsx(

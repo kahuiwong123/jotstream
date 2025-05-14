@@ -10,14 +10,21 @@ import { CSS } from "@dnd-kit/utilities";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import { EditTaskDialog } from "./edit-task-dialog";
 import { useSectionStore } from "@/data/sectionStore";
+
 const TaskCard = memo(({ task }: { task: Task }) => {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({
-      id: task.id,
-      data: {
-        type: "task",
-      },
-    });
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: task.id,
+    data: {
+      type: "task",
+    },
+  });
 
   const handleCompleteTask = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -30,8 +37,27 @@ const TaskCard = memo(({ task }: { task: Task }) => {
   };
 
   const activeTask = useSectionStore((state) => state.activeTask);
+  const activeSection = useSectionStore((state) => state.activeSection);
   const setActiveTask = useSectionStore((state) => state.setActiveTask);
   const setActiveSection = useSectionStore((state) => state.setActiveSection);
+
+  const style = {
+    transition,
+    transform: CSS.Translate.toString(transform),
+  };
+
+  if (isDragging) {
+    return (
+      <div
+        ref={setNodeRef}
+        style={style}
+        className="transtion-all group flex w-full max-w-full items-start gap-2 rounded-lg border border-red-flag p-2 opacity-30 shadow-sm cursor-grab"
+      >
+        {task.title}
+      </div>
+    );
+  }
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -40,10 +66,7 @@ const TaskCard = memo(({ task }: { task: Task }) => {
           ref={setNodeRef}
           {...attributes}
           {...listeners}
-          style={{
-            transition,
-            transform: CSS.Translate.toString(transform),
-          }}
+          style={style}
           onClick={handleOnlick}
         >
           <PriorityButton

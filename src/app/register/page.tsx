@@ -20,6 +20,7 @@ import { MdErrorOutline } from "react-icons/md";
 import Link from "next/link";
 import clsx from "clsx";
 import { useActionState } from "react";
+import { Loader2 } from "lucide-react";
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
   password: z
@@ -89,6 +90,7 @@ const RegisterForm = () => {
             aria-disabled={isPending}
             disabled={form.formState.isSubmitting}
           >
+            {isPending && <Loader2 className="mr-2 animate-spin" />}
             {isPending ? "Loading..." : "Sign up with Email"}
           </Button>
           <div

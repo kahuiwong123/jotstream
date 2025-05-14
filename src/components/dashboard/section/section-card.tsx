@@ -20,13 +20,12 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-const SectionCard = ({ section }: { section: Section & { tasks: Task[] } }) => {
+const SectionCard = memo(({ section }: { section: Section & { tasks: Task[] } }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
       id: section.id,
       data: {
-        type: "section",
-        accepts: ["task"],
+        type: "section"
       },
     });
 
@@ -96,6 +95,6 @@ const SectionCard = ({ section }: { section: Section & { tasks: Task[] } }) => {
       )}
     </section>
   );
-};
+});
 
 export default SectionCard;

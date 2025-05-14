@@ -53,9 +53,13 @@ import {
 
 import { Task } from "@prisma/client";
 import { duplicateTask, removeTask, updateTask } from "@/data/actions";
+import { EditTaskDialog } from "./edit-task-dialog";
+import { DialogTrigger } from "@radix-ui/react-dialog";
 
 export const TaskCardDropDown = ({ task }: { task: Task }) => {
   const sections = useSectionStore((state) => state.sections);
+  const setActiveTask = useSectionStore((state) => state.setActiveTask);
+  const setActiveSection = useSectionStore((state) => state.setActiveSection);
   const EllipsisButton = (
     <Button
       variant="ghost"
@@ -65,6 +69,11 @@ export const TaskCardDropDown = ({ task }: { task: Task }) => {
       <IoEllipsisHorizontalOutline className="h-5 w-5" />
     </Button>
   );
+
+  const handleEdit = (e: React.MouseEvent) => {
+    setActiveSection(task.sectionId);
+    setActiveTask(task);
+  };
 
   return (
     <AlertDialog>
@@ -79,10 +88,12 @@ export const TaskCardDropDown = ({ task }: { task: Task }) => {
             onClick={(e) => e.stopPropagation()}
           >
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <IoPencilOutline className="mr-2 h-4 w-4" />
-                <span>Edit</span>
-              </DropdownMenuItem>
+              <DialogTrigger asChild>
+                <DropdownMenuItem onClick={handleEdit}>
+                  <IoPencilOutline className="mr-2 h-4 w-4" />
+                  <span>Edit</span>
+                </DropdownMenuItem>
+              </DialogTrigger>
               <DropdownMenuItem
                 onClick={(e) => {
                   e.stopPropagation();
@@ -204,6 +215,7 @@ export const TaskCardDropDown = ({ task }: { task: Task }) => {
           </TooltipContent>
         </Tooltip>
       </DropdownMenu>
+      <EditTaskDialog />
     </AlertDialog>
   );
 };

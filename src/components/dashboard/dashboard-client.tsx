@@ -3,6 +3,7 @@
 import {
   DndContext,
   DragEndEvent,
+  DragOverEvent,
   DragOverlay,
   DragStartEvent,
   PointerSensor,
@@ -21,29 +22,29 @@ import SectionCard from "@/components/dashboard/section/section-card";
 import { useSectionStore } from "@/data/sectionStore";
 import { sectionProps } from "@/data/types";
 import { memo, useEffect, useState } from "react";
-import { moveSection, moveTask } from "@/data/actions";
+import { findAllSections, moveSection, moveTask } from "@/data/actions";
+import { Section, Task } from "@prisma/client";
 import { useAuthStore } from "@/data/authStore";
-import { Task } from "@prisma/client";
-import { createPortal } from "react-dom";
 export const DashboardClient = memo(
-  ({
-    sectionsData,
-    userId,
-  }: {
-    sectionsData: sectionProps[];
-    userId?: string;
-  }) => {
-    const sections = useSectionStore((state) => state.sections);
+  ({ userId, email }: { userId?: string; email?: string }) => {
+    const [sectionsData, setSectionsData] = useState<sectionProps[]>([]);
     const setSections = useSectionStore((state) => state.setSections);
     const setUserId = useAuthStore((state) => state.setUserId);
+    const setEmail = useAuthStore((state) => state.setEmail);
+    const [activeSection, setActiveSection] = useState<
+      sectionProps | undefined
+    >();
 
     useEffect(() => {
-      setUserId(userId);
-    }, [userId, setUserId]);
-
-    useEffect(() => {
-      setSections(sectionsData);
-    }, [sectionsData, setSections]);
+      const fetchSections = async () => {
+        const sections = await findAllSections(userId);
+        setSectionsData(sections);
+        setSections(sections);
+        setUserId(userId);
+        setEmail(email);
+      };
+      fetchSections();
+    }, [setSectionsData, setSections, userId, setUserId, setEmail, email]);
 
     const findSection = (id: string, type: string) => {
       if (type === "section") {
@@ -56,8 +57,6 @@ export const DashboardClient = memo(
     };
 
     const handleDragEnd = async ({ active, over }: DragEndEvent) => {
-      console.log(active);
-      console.log(over);
       if (
         active &&
         over &&
@@ -78,8 +77,8 @@ export const DashboardClient = memo(
           overSectionIndex,
         );
 
+        setSectionsData(newSections);
         await moveSection(active.id.toString(), over.id.toString());
-        setSections(newSections);
       }
 
       if (
@@ -109,7 +108,6 @@ export const DashboardClient = memo(
 
           if (activeSectionIndex === overSectionIndex) {
             // moving tasks in the same section
-
             let newSections = [...sectionsData];
             newSections[activeSectionIndex].tasks = arrayMove(
               newSections[activeSectionIndex].tasks,
@@ -117,12 +115,21 @@ export const DashboardClient = memo(
               overTaskIndex,
             );
 
-            setSections(newSections);
+            // setSectionsData(newSections);
             await moveTask(active.id.toString(), over.id.toString());
           }
         }
       }
     };
+
+    const handleDragStart = ({ active }: DragStartEvent) => {
+      if (active.data.current?.type === "section") {
+        const temp = sectionsData.find((section) => section.id === active.id);
+        setActiveSection(temp);
+      }
+    };
+
+    const handleDragOver = ({ active, over }: DragOverEvent) => {};
 
     const sensors = useSensors(
       useSensor(PointerSensor, {
@@ -140,18 +147,19 @@ export const DashboardClient = memo(
     return (
       <div className="flex h-full grow gap-8 bg-white-main dark:bg-dark-main">
         <div className="flex grow gap-8">
-          <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+          <DndContext
+            sensors={sensors}
+            onDragEnd={handleDragEnd}
+            onDragStart={handleDragStart}
+          >
             <SortableContext items={sectionsData.map((section) => section.id)}>
-              {sections.map((section) => (
+              {sectionsData.map((section) => (
                 <SectionCard key={section.id} section={section} />
               ))}
             </SortableContext>
-            {/* {createPortal(
-              <DragOverlay>
-                {activeSection && <SectionCard section={activeSection} />}
-              </DragOverlay>,
-              document.body
-            )} */}
+            {/* <DragOverlay>
+            {activeSection && <SectionCard section={activeSection} />}
+          </DragOverlay> */}
           </DndContext>
           <AddSectionButton />
         </div>

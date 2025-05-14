@@ -39,6 +39,26 @@ type taskUpdateProps = {
   description?: string | null;
 };
 
+export const findAllSections = async (userId?: string) => {
+  const sections = await prisma.section.findMany({
+    where: {
+      userId: userId,
+    },
+    include: {
+      tasks: {
+        orderBy: {
+          rank: "asc",
+        },
+      },
+    },
+    orderBy: {
+      rank: "asc",
+    },
+  });
+
+  return sections;
+};
+
 export const addSection = async (
   prevState: FormState,
   data: FormData,
@@ -244,7 +264,7 @@ export const moveSection = async (
     data: { rank: newRank },
   });
 
-  revalidatePath("/dashboard");
+  // revalidatePath("/dashboard");
   return {
     message: `${oldSection.name} moved!`,
   };
@@ -279,7 +299,7 @@ export const addTask = async (data: TaskModified): Promise<FormState> => {
   await prisma.task.create({
     data: { ...data, rank: rank },
   });
-  revalidatePath("/dashboard");
+  // revalidatePath("/dashboard");
   return {
     message: `task ${data.title} added!`,
   };
@@ -439,7 +459,7 @@ export const moveTask = async (
     where: { id: oldTask.id },
     data: { rank: newRank },
   });
-  revalidatePath("dashboard");
+  // revalidatePath("dashboard");
   return {
     message: `${oldTask.title} moved!`,
   };

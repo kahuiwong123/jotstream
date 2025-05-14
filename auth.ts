@@ -32,12 +32,14 @@ export const { auth, signIn, signOut } = NextAuth({
       // Add user id to the token on initial sign in
       if (user) {
         token.id = user.id; // Assuming user has an `id` property
+        token.email = user.email; // Assuming user has an `email` property
       }
       return token;
     },
     async session({ session, token }) {
       // Include the user id in the session object
       session.user.id = token.id as string;
+      session.user.email = token.email as string; // Assuming you want to include email as well
       return session;
     },
   },
