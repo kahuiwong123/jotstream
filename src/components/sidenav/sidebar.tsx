@@ -41,8 +41,6 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import { useAuthStore } from "@/data/authStore";
 import { ChevronRight, ChevronUp } from "lucide-react";
-import { Button } from "../ui/button";
-import { signOut } from "../../../auth";
 import { handleSignOut } from "@/data/authActions";
 import Image from "next/image";
 

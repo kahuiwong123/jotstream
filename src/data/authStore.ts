@@ -2,8 +2,8 @@ import { create } from "zustand";
 
 type AuthState = {
   userId?: string;
-  email?: string;
-  setEmail: (email?: string) => void;
+  email?: string | null;
+  setEmail: (email?: string | null) => void;
   setUserId: (userId?: string) => void;
 };
 

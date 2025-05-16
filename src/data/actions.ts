@@ -5,6 +5,7 @@ import prisma from "../../db/db";
 import { z } from "zod";
 import { LexoRank } from "lexorank";
 import { Section, Task } from "@prisma/client";
+import { sectionProps } from "./types";
 
 const sectionSchema = z.object({
   name: z.string().min(1, { message: "section name cannot be empty" }),
@@ -197,56 +198,45 @@ export const moveSection = async (
   oldId: string,
   newId: string,
 ): Promise<FormState> => {
+  // 1. Fetch both sections
   const [oldSection, newSection] = await prisma.$transaction([
-    prisma.section.findUnique({
-      where: {
-        id: oldId,
-      },
-    }),
-
-    prisma.section.findUnique({
-      where: {
-        id: newId,
-      },
-    }),
+    prisma.section.findUnique({ where: { id: oldId } }),
+    prisma.section.findUnique({ where: { id: newId } }),
   ]);
 
   if (!oldSection || !newSection) {
-    return {
-      message: "one or both sections not found!",
-    };
+    return { message: "one or both sections not found!" };
   }
 
-  let [prevSection, nextSection] = await prisma.$transaction([
-    prisma.section.findFirst({
-      select: {
-        rank: true,
-      },
+  // 2. Determine direction (moving up or down)
+  const movingDown = oldSection.rank < newSection.rank;
+
+  // 3. Find neighbors for the new position
+  // Only consider sections for the same user!
+  let prevSection, nextSection;
+  if (movingDown) {
+    // Insert after newSection
+    prevSection = newSection;
+    nextSection = await prisma.section.findFirst({
       where: {
+        userId: oldSection.userId,
+        rank: { gt: newSection.rank },
+      },
+      orderBy: { rank: "asc" },
+    });
+  } else {
+    // Insert before newSection
+    prevSection = await prisma.section.findFirst({
+      where: {
+        userId: oldSection.userId,
         rank: { lt: newSection.rank },
       },
       orderBy: { rank: "desc" },
-    }),
+    });
+    nextSection = newSection;
+  }
 
-    prisma.section.findFirst({
-      select: {
-        rank: true,
-      },
-      where: { rank: { gt: newSection.rank } },
-      orderBy: { rank: "asc" },
-    }),
-  ]);
-
-  let newRank;
-  // console.log("active section: " + oldSection.name);
-  // console.log("over section: " + newSection.name);
-
-  prevSection = oldSection.rank < newSection.rank ? newSection : prevSection;
-  nextSection = oldSection.rank > newSection.rank ? newSection : nextSection;
-
-  // console.log(prevSection?.name);
-  // console.log(nextSection?.name);
-
+  let newRank: string;
   if (prevSection && nextSection) {
     newRank = LexoRank.parse(prevSection.rank)
       .between(LexoRank.parse(nextSection.rank))
@@ -265,14 +255,12 @@ export const moveSection = async (
   });
 
   // revalidatePath("/dashboard");
-  return {
-    message: `${oldSection.name} moved!`,
-  };
+
+  return { message: `${oldSection.name} moved!` };
 };
 
-export const addTask = async (data: TaskModified): Promise<FormState> => {
+export const addTask = async (data: TaskModified, userId?: string): Promise<FormState> => {
   const validate = taskSchema.safeParse(data);
-  const lexorank = LexoRank.middle();
   if (!validate.success) {
     return {
       message: "task name cannot be empty.",
@@ -297,9 +285,9 @@ export const addTask = async (data: TaskModified): Promise<FormState> => {
     : LexoRank.middle().toString();
 
   await prisma.task.create({
-    data: { ...data, rank: rank },
+    data: { ...data, rank: rank, userId: userId },
   });
-  // revalidatePath("/dashboard");
+  revalidatePath("/dashboard");
   return {
     message: `task ${data.title} added!`,
   };
@@ -404,45 +392,55 @@ export const updateTask = async (
 export const moveTask = async (
   oldId: string,
   newId: string,
+  moveToEmptySection?: boolean,
 ): Promise<FormState> => {
-  const [oldTask, newTask] = await prisma.$transaction([
-    prisma.task.findUnique({
-      where: {
-        id: oldId,
-      },
-    }),
+  if (moveToEmptySection) {
+    await prisma.task.update({
+      where: { id: oldId },
+      data: { rank: LexoRank.middle().toString(), sectionId: newId },
+    });
 
-    prisma.task.findUnique({
-      where: {
-        id: newId,
-      },
-    }),
+    revalidatePath("/dashboard");
+
+    return { message: `moved task ${oldId} to section ${newId}` };
+  }
+  // 1. Fetch both sections
+  const [oldTask, newTask] = await prisma.$transaction([
+    prisma.task.findUnique({ where: { id: oldId } }),
+    prisma.task.findUnique({ where: { id: newId } }),
   ]);
 
   if (!oldTask || !newTask) {
-    return {
-      message: "one or both tasks not found!",
-    };
+    return { message: "one or both tasks not found!" };
   }
 
-  let [prevTask, nextTask] = await prisma.$transaction([
-    prisma.task.findFirst({
+  // 2. Determine direction (moving up or down)
+  const movingDown = oldTask.rank < newTask.rank;
+
+  // 3. Find neighbors for the new position
+  // Only consider sections for the same user!
+  let prevTask, nextTask;
+  if (movingDown) {
+    // Insert after newSection
+    prevTask = newTask;
+    nextTask = await prisma.task.findFirst({
+      where: {
+        rank: { gt: newTask.rank },
+      },
+      orderBy: { rank: "asc" },
+    });
+  } else {
+    // Insert before newSection
+    prevTask = await prisma.task.findFirst({
       where: {
         rank: { lt: newTask.rank },
       },
       orderBy: { rank: "desc" },
-    }),
+    });
+    nextTask = newTask;
+  }
 
-    prisma.task.findFirst({
-      where: { rank: { gt: newTask.rank } },
-      orderBy: { rank: "asc" },
-    }),
-  ]);
-
-  let newRank;
-  prevTask = oldTask.rank < newTask.rank ? newTask : prevTask;
-  nextTask = oldTask.rank > newTask.rank ? newTask : nextTask;
-
+  let newRank: string;
   if (prevTask && nextTask) {
     newRank = LexoRank.parse(prevTask.rank)
       .between(LexoRank.parse(nextTask.rank))
@@ -457,10 +455,10 @@ export const moveTask = async (
 
   await prisma.task.update({
     where: { id: oldTask.id },
-    data: { rank: newRank },
+    data: { rank: newRank, sectionId: newTask.sectionId },
   });
-  // revalidatePath("dashboard");
-  return {
-    message: `${oldTask.title} moved!`,
-  };
+
+  // revalidatePath("/dashboard");
+
+  return { message: `${oldTask.title} moved!` };
 };

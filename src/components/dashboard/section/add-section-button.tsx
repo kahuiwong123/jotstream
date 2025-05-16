@@ -53,14 +53,14 @@ const AddSectionButton = () => {
   const onSubmit = async (data: SectionProp) => {
     const formData = new FormData();
 
-    formData.append("name", data.name); // Add the form field data
+    formData.append("name", data.name);
     if (userId) {
-      formData.append("userId", userId); // Add the userId programmatically
+      formData.append("userId", userId);
     } else {
       console.error("User ID is undefined");
     }
     startTransition(() => {
-      formAction(formData); // Call the server action with the updated FormData
+      formAction(formData);
     });
   };
 

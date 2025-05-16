@@ -23,6 +23,7 @@ const TaskCard = memo(({ task }: { task: Task }) => {
     id: task.id,
     data: {
       type: "task",
+      task
     },
   });
 

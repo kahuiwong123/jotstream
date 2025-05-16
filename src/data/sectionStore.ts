@@ -3,20 +3,18 @@ import { sectionProps, taskProps } from "./types";
 import { Section, Task } from "@prisma/client";
 
 type SectionStore = {
-  sections: sectionProps[];
+  sections: Section[];
   activeSectionId?: string | null;
   isAdding: boolean;
   activeTask?: Task | null;
   activeSection?: (Section & { tasks: Task[] }) | null;
   setIsAdding: () => void;
-  setSections: (sections: sectionProps[]) => void;
+  setSections: (sections: Section[]) => void;
   setActiveSectionId: (sectionId: string | null) => void;
   setActiveTask: (task: Task | null) => void;
   setActiveSection: (sectionId: string | null) => void;
   editOpen: boolean;
   setEditOpen: () => void;
-  sidebarCollapsed: boolean;
-  setSidebarCollapsed: (bool: boolean) => void;
 };
 
 export const useSectionStore = create<SectionStore>((set) => ({
@@ -29,9 +27,12 @@ export const useSectionStore = create<SectionStore>((set) => ({
   setActiveSectionId: (sectionId) => set({ activeSectionId: sectionId }),
   setActiveTask: (task) => set({ activeTask: task }),
   setActiveSection: (sectionId) =>
-    set((prev) => ({
-      activeSection: prev.sections.find((section) => section.id === sectionId),
-    })),
-  sidebarCollapsed: false,
-  setSidebarCollapsed: (bool) => set({ sidebarCollapsed: bool }),
+    set((prev) => {
+      const section = prev.sections.find((section) => section.id === sectionId) as (Section & { tasks?: Task[] }) | undefined;
+      return {
+        activeSection: section
+          ? { ...section, tasks: section.tasks ?? [] }
+          : null,
+      };
+    }),
 }));

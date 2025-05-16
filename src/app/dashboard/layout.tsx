@@ -6,22 +6,18 @@ import { SectionSkeleton } from "@/components/dashboard/section/section-skeleton
 import { IoFileTray } from "react-icons/io5";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/sidenav/sidebar";
-import { cookies } from "next/headers";
 
 export default async function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const cookieStore = await cookies();
-  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
-
   return (
-    <SidebarProvider defaultOpen={defaultOpen}>
+    <SidebarProvider defaultOpen={false}>
       <TooltipProvider>
         <AppSidebar />
         <div className="grid h-svh grid-cols-2 grid-rows-[auto_auto_1fr] overflow-hidden">
-          <div className="col-span-2 row-start-1 flex items-center justify-between px-6 py-4">
+          <div className="col-span-2 row-start-1 flex items-center justify-between px-6 py-4 w-screen">
             <SidebarTrigger />
             <ThemeToggle />
           </div>

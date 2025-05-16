@@ -20,6 +20,7 @@ import { IoChevronForwardOutline, IoCloseOutline } from "react-icons/io5";
 import { TooltipItem } from "@/components/ui/tooltip-item";
 import { addTask } from "@/data/actions";
 import { useSectionStore } from "@/data/sectionStore";
+import { useAuthStore } from "@/data/authStore";
 
 const taskSchema = z.object({
   sectionId: z.string(),
@@ -36,6 +37,8 @@ type AddTaskButtonProps = {
 };
 
 export const AddTaskButton = ({ sectionId }: AddTaskButtonProps) => {
+  const userId = useAuthStore(state => state.userId)
+
   const form = useForm<taskFields>({
     resolver: zodResolver(taskSchema),
     defaultValues: {
@@ -47,7 +50,7 @@ export const AddTaskButton = ({ sectionId }: AddTaskButtonProps) => {
   });
 
   const action: () => void = form.handleSubmit(async (data) => {
-    await addTask(data);
+    await addTask(data, userId);
   });
 
   const setActiveSectionId = useSectionStore(
