@@ -65,15 +65,6 @@ export const TaskCardDropDown = ({ task }: { task: Task }) => {
       state.setActiveSection,
     ]),
   );
-  const EllipsisButton = (
-    <Button
-      variant="ghost"
-      size="icon"
-      className="h-fit w-fit opacity-0 group-hover:opacity-100"
-    >
-      <IoEllipsisHorizontalOutline className="h-5 w-5" />
-    </Button>
-  );
 
   const handleEdit = (e: React.MouseEvent) => {
     setActiveSection(task.sectionId);
@@ -85,7 +76,15 @@ export const TaskCardDropDown = ({ task }: { task: Task }) => {
       <DropdownMenu>
         <Tooltip>
           <DropdownMenuTrigger asChild>
-            <TooltipTrigger asChild>{EllipsisButton}</TooltipTrigger>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-fit w-fit group-hover:opacity-100"
+              >
+                <IoEllipsisHorizontalOutline className="h-5 w-5" />
+              </Button>
+            </TooltipTrigger>
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-56"

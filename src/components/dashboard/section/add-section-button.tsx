@@ -74,7 +74,7 @@ const AddSectionButton = () => {
   }, [state, form]);
 
   return (
-    <div className="mr-16">
+    <div className="h-fit">
       {isAdding ? (
         <Form {...form}>
           <form
@@ -119,7 +119,7 @@ const AddSectionButton = () => {
       ) : (
         <Button
           variant="ghost"
-          className="h-12 w-48 border border-transparent shadow-lg hover:border-light-grey"
+          className="h-12 w-48 border border-transparent shadow-lg hover:border-light-grey dark:bg-[#262626]"
           onClick={() => setIsAdding()}
         >
           <MdOutlineAddToPhotos className="mr-2 size-6" />

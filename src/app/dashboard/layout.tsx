@@ -17,13 +17,13 @@ export default async function Layout({
       <TooltipProvider>
         <AppSidebar />
         <div className="grid h-svh grid-cols-2 grid-rows-[auto_auto_1fr] overflow-hidden">
-          <div className="col-span-2 row-start-1 flex items-center justify-between px-6 py-4 w-screen">
+          <div className="col-span-2 row-start-1 flex items-center justify-between px-8 py-4 w-screen">
             <SidebarTrigger />
-            <ThemeToggle />
+            <ThemeToggle className="fixed right-8"/>
           </div>
           <header
             className={clsx(
-              "flex justify-between px-6 py-4 transition-all duration-300 ease-in-out dark:bg-dark-main",
+              "flex justify-between px-8 py-4 transition-all duration-300 ease-in-out dark:bg-dark-main",
               "col-span-2 row-start-2",
             )}
           >
@@ -34,7 +34,7 @@ export default async function Layout({
           </header>
           <main
             className={clsx(
-              "overflow-auto transition-all duration-300 ease-in-out px-6",
+              "overflow-auto transition-all duration-300 ease-in-out px-8",
               "col-span-2 row-start-3",
             )}
           >

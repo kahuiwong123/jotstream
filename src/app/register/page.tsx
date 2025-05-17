@@ -88,7 +88,7 @@ const RegisterForm = () => {
             type="submit"
             className="rounded-[0.5rem] bg-[#FF5858] py-6 text-lg hover:bg-[#ff6969] dark:bg-[#FF5858] dark:text-white dark:hover:bg-[#ff6969]"
             aria-disabled={isPending}
-            disabled={form.formState.isSubmitting}
+            disabled={isPending}
           >
             {isPending && <Loader2 className="mr-2 animate-spin" />}
             {isPending ? "Loading..." : "Sign up with Email"}

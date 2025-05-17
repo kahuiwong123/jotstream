@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Button } from "../../ui/button";
 import {
@@ -10,7 +12,6 @@ import {
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
@@ -44,21 +45,20 @@ export const SectionCardDropDown = ({
   setIsEditing: (bool: boolean) => void;
   section: Section;
 }) => {
-  const EllipsisButton = (
-    <Button
-      variant="outline"
-      size="icon"
-      className="border-none bg-[#fcfcfc] focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-[#202020]"
-    >
-      <IoEllipsisHorizontalOutline className="h-5 w-5" />
-    </Button>
-  );
   return (
     <AlertDialog>
       <DropdownMenu>
         <Tooltip>
           <DropdownMenuTrigger asChild>
-            <TooltipTrigger asChild>{EllipsisButton}</TooltipTrigger>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                className="border-none bg-[#fcfcfc] focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-[#202020]"
+              >
+                <IoEllipsisHorizontalOutline className="h-5 w-5" />
+              </Button>
+            </TooltipTrigger>
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-56"

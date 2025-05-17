@@ -161,6 +161,7 @@ export const duplicateSection = async (
       dueDate: task.dueDate,
       priority: task.priority,
       rank: task.rank,
+      userId: section.userId,
     }));
 
     await tx.task.createMany({
@@ -259,7 +260,10 @@ export const moveSection = async (
   return { message: `${oldSection.name} moved!` };
 };
 
-export const addTask = async (data: TaskModified, userId?: string): Promise<FormState> => {
+export const addTask = async (
+  data: TaskModified,
+  userId?: string,
+): Promise<FormState> => {
   const validate = taskSchema.safeParse(data);
   if (!validate.success) {
     return {
@@ -334,6 +338,7 @@ export const duplicateTask = async (task: Task): Promise<FormState> => {
       priority: task.priority,
       dueDate: task.dueDate,
       rank: newRank,
+      userId: task.userId,
     },
   });
 

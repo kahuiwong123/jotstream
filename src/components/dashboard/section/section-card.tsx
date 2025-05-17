@@ -56,7 +56,7 @@ const SectionCard = memo(
         <div
           ref={setNodeRef}
           style={style}
-          className="flex w-72 touch-none flex-col gap-4 rounded-md bg-[#fcfcfc] p-4 opacity-60 shadow-2xl hover:shadow-lg dark:bg-[#202020] dark:hover:border-light-grey-hover"
+          className="flex w-72 touch-none flex-col gap-4 rounded-lg bg-[#fcfcfc] p-4 opacity-60 shadow-2xl hover:shadow-lg dark:bg-[#202020] dark:hover:border-light-grey-hover cursor-grabbing"
         />
       );
     }
@@ -64,7 +64,7 @@ const SectionCard = memo(
     return (
       <section
         data-section-id={section.id}
-        className="flex h-fit w-72 touch-none flex-col gap-4 rounded-md border border-transparent bg-[#fcfcfc] p-4 shadow-md hover:shadow-lg dark:bg-[#202020] dark:hover:border-light-grey-hover"
+        className="section-card flex h-fit w-72 flex-col gap-4 rounded-lg border border-transparent bg-[#fcfcfc] p-4 shadow-md dark:bg-[#202020]"
         ref={setNodeRef}
         {...attributes}
         {...listeners}
@@ -73,7 +73,7 @@ const SectionCard = memo(
         {isEditing ? (
           <SectionCardEdit section={section} setIsEditing={setIsEditing} />
         ) : (
-          <div className="flex items-center justify-between">
+          <div className="section-card-header flex items-center justify-between">
             <div className="flex items-center gap-2">
               <TooltipItem
                 tooltipTrigger={

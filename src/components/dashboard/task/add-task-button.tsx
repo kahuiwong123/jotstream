@@ -37,7 +37,7 @@ type AddTaskButtonProps = {
 };
 
 export const AddTaskButton = ({ sectionId }: AddTaskButtonProps) => {
-  const userId = useAuthStore(state => state.userId)
+  const userId = useAuthStore((state) => state.userId);
 
   const form = useForm<taskFields>({
     resolver: zodResolver(taskSchema),
@@ -60,7 +60,7 @@ export const AddTaskButton = ({ sectionId }: AddTaskButtonProps) => {
   return (
     <Form {...form}>
       <form
-        className="divide-y rounded-lg border border-[#E6E6E6] border-transparent transition-all duration-300 dark:border-[#707070]"
+        className="divide-y rounded-xl border border-gray-300 p-1 shadow-sm transition-all duration-300 dark:border-[#707070] dark:border-transparent dark:bg-[#262626]"
         action={action}
       >
         <div>
@@ -158,7 +158,7 @@ export const AddTaskButton = ({ sectionId }: AddTaskButtonProps) => {
                   type="reset"
                   variant={"outline"}
                   size={"icon"}
-                  className="dark:bg-dark-main"
+                  className="rounded-lg dark:bg-dark-main"
                   onClick={() => setActiveSectionId(null)}
                 >
                   <IoCloseOutline className="size-6" />
@@ -173,7 +173,7 @@ export const AddTaskButton = ({ sectionId }: AddTaskButtonProps) => {
                   variant={"outline"}
                   size={"icon"}
                   disabled={!form.formState.isValid}
-                  className="bg-red-flag hover:bg-[#d6584f] dark:bg-red-flag dark:hover:bg-[#d6584f]"
+                  className="rounded-lg bg-red-flag hover:bg-[#d6584f] dark:bg-red-flag dark:hover:bg-[#d6584f]"
                 >
                   <IoChevronForwardOutline className="size-6" />
                 </Button>
