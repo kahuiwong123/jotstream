@@ -5,7 +5,7 @@ import { TooltipProvider } from "@radix-ui/react-tooltip";
 import { SectionSkeleton } from "@/components/dashboard/section/section-skeleton";
 import { IoFileTray } from "react-icons/io5";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/sidenav/sidebar";
+import { AppSidebar } from "@/components/sidebar/sidebar";
 
 export default async function Layout({
   children,

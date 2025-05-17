@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { create, createStore } from "zustand";
 import { sectionProps, taskProps } from "./types";
 import { Section, Task } from "@prisma/client";
 
@@ -7,7 +7,7 @@ type SectionStore = {
   activeSectionId?: string | null;
   isAdding: boolean;
   activeTask?: Task | null;
-  activeSection?: (Section & { tasks: Task[] }) | null;
+  activeSection?: Section | null;
   setIsAdding: () => void;
   setSections: (sections: Section[]) => void;
   setActiveSectionId: (sectionId: string | null) => void;
@@ -27,12 +27,7 @@ export const useSectionStore = create<SectionStore>((set) => ({
   setActiveSectionId: (sectionId) => set({ activeSectionId: sectionId }),
   setActiveTask: (task) => set({ activeTask: task }),
   setActiveSection: (sectionId) =>
-    set((prev) => {
-      const section = prev.sections.find((section) => section.id === sectionId) as (Section & { tasks?: Task[] }) | undefined;
-      return {
-        activeSection: section
-          ? { ...section, tasks: section.tasks ?? [] }
-          : null,
-      };
-    }),
+    set((prev) => ({
+      activeSection: prev.sections.find((section) => section.id === sectionId),
+    })),
 }));

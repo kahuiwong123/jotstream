@@ -21,13 +21,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 
 const SectionCard = memo(
-  ({
-    section,
-    tasks
-  }: {
-    section: Section;
-    tasks: Task[]
-  }) => {
+  ({ section, tasks }: { section: Section; tasks: Task[] }) => {
     const {
       attributes,
       listeners,
@@ -39,7 +33,7 @@ const SectionCard = memo(
       id: section.id,
       data: {
         type: "section",
-        section
+        section,
       },
     });
 
@@ -92,9 +86,7 @@ const SectionCard = memo(
                 }
                 tooltipString={section.name}
               />
-              <span className="text-sm font-extralight">
-                {tasks.length}
-              </span>
+              <span className="text-sm font-extralight">{tasks.length}</span>
             </div>
             <SectionCardDropDown
               setIsEditing={setIsEditing}
@@ -102,9 +94,7 @@ const SectionCard = memo(
             />
           </div>
         )}
-        <SortableContext
-          items={tasks.map((task) => task.id)}
-        >
+        <SortableContext items={tasks.map((task) => task.id)}>
           {tasks.map((task) => (
             <TaskCard key={task.id} task={task} />
           ))}

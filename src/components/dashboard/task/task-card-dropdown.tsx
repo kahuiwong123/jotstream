@@ -55,11 +55,16 @@ import { Task } from "@prisma/client";
 import { duplicateTask, removeTask, updateTask } from "@/data/actions";
 import { EditTaskDialog } from "./edit-task-dialog";
 import { DialogTrigger } from "@radix-ui/react-dialog";
+import { useShallow } from "zustand/react/shallow";
 
 export const TaskCardDropDown = ({ task }: { task: Task }) => {
-  const sections = useSectionStore((state) => state.sections);
-  const setActiveTask = useSectionStore((state) => state.setActiveTask);
-  const setActiveSection = useSectionStore((state) => state.setActiveSection);
+  const [sections, setActiveTask, setActiveSection] = useSectionStore(
+    useShallow((state) => [
+      state.sections,
+      state.setActiveTask,
+      state.setActiveSection,
+    ]),
+  );
   const EllipsisButton = (
     <Button
       variant="ghost"
@@ -112,7 +117,7 @@ export const TaskCardDropDown = ({ task }: { task: Task }) => {
                 <DropdownMenuPortal>
                   <DropdownMenuSubContent>
                     {sections
-                      .sort((a, b) => (a.id === task.sectionId ? -1 : 1))
+                      .toSorted((a, b) => (a.id === task.sectionId ? -1 : 1))
                       .map((section, index) => (
                         <DropdownMenuItem
                           key={index}

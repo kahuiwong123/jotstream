@@ -400,7 +400,7 @@ export const moveTask = async (
       data: { rank: LexoRank.middle().toString(), sectionId: newId },
     });
 
-    revalidatePath("/dashboard");
+    // revalidatePath("/dashboard");
 
     return { message: `moved task ${oldId} to section ${newId}` };
   }

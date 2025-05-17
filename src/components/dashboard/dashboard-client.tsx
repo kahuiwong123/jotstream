@@ -35,12 +35,15 @@ export const DashboardClient = memo(
     sectionsData: Section[];
     tasksData: Task[];
   }) => {
-    const [sections, setSectionsData] = useState<Section[]>(sectionsData);
+    // const [sections, setSections] = useState<Section[]>(sectionsData);
     const [tasks, setTasks] = useState<Task[]>(tasksData);
-    const [activeId, setActiveId] = useState<string>("");
-    const [overId, setOverId] = useState<string | undefined>("");
 
-    const setSections = useSectionStore((state) => state.setSections);
+    const { sections, setSections } = useSectionStore(
+      useShallow((state) => ({
+        sections: state.sections,
+        setSections: state.setSections,
+      })),
+    );
 
     const { setUserId, setEmail } = useAuthStore(
       useShallow((state) => ({
@@ -57,7 +60,8 @@ export const DashboardClient = memo(
     useEffect(() => {
       setUserId(userId);
       setEmail(email);
-    }, [userId, email, setUserId, setEmail]);
+      setSections(sectionsData);
+    }, [userId, email, setUserId, setEmail, setSections, sectionsData]);
 
     const handleDragEnd = async ({ active, over }: DragEndEvent) => {
       setActiveSection(undefined);
@@ -78,18 +82,10 @@ export const DashboardClient = memo(
           (section) => section.id === over.id,
         );
         if (oldIndex !== -1 && newIndex !== -1) {
-          setSectionsData((prev) => arrayMove(prev, oldIndex, newIndex));
+          setSections(arrayMove(sections, oldIndex, newIndex));
         }
         await moveSection(active.id.toString(), over.id.toString());
       }
-
-      // if (activeType === "task") {
-      //   await moveTask(
-      //     active.id.toString(),
-      //     over.id.toString(),
-      //     overType === "section",
-      //   );
-      // }
     };
 
     const handleDragStart = ({ active }: DragStartEvent) => {
