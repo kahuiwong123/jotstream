@@ -16,6 +16,10 @@ const formSchema = z.object({
     .min(8, { message: "Passwords must be at least 8 characters long." }),
 });
 
+export async function googleSignin() {
+  await signIn("google", { redirectTo: "/dashboard" });
+}
+
 export async function authenticate(
   prevState: string | undefined,
   formData: FormData,

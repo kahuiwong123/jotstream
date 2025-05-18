@@ -4,8 +4,10 @@ import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
 import bcrypt from "bcrypt";
 import { getUser } from "@/data/authActions";
+import GoogleProvider from "next-auth/providers/google";
+import prisma from "./db/db";
 
-export const { auth, signIn, signOut } = NextAuth({
+export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
   providers: [
     Credentials({
@@ -16,7 +18,7 @@ export const { auth, signIn, signOut } = NextAuth({
         if (parsedCredentials.success) {
           const { email, password } = parsedCredentials.data;
           const user = await getUser(email);
-          if (!user) return null;
+          if (!user || !user.password) return null;
           const passwordsMatch = await bcrypt.compare(password, user.password);
           if (passwordsMatch) return user;
         }
@@ -25,9 +27,33 @@ export const { auth, signIn, signOut } = NextAuth({
         return null;
       },
     }),
+
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
   ],
 
   callbacks: {
+    async signIn({ account, profile }) {
+      if (account?.provider === "google") {
+        if (!profile?.email) {
+          throw new Error("no profile");
+        }
+        const success = await prisma.user.upsert({
+          where: {
+            email: profile.email,
+          },
+
+          update: {},
+          create: {
+            email: profile.email,
+          },
+        });
+      }
+      return true;
+    },
+
     async jwt({ token, user }) {
       // Add user id to the token on initial sign in
       if (user) {

@@ -21,7 +21,7 @@ import Link from "next/link";
 import clsx from "clsx";
 import { useActionState } from "react";
 import { Loader2 } from "lucide-react";
-import { PasswordInput } from "@/components/ui/password-input";
+import { PasswordInput } from "@/components/ui/login/password-input";
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
   password: z
@@ -47,7 +47,7 @@ const RegisterForm = () => {
           action={formAction}
         >
           <h1 className="text-center text-2xl font-bold text-dark-main">
-            Get Started Today
+            Get Started Today!
           </h1>
           <FormField
             control={form.control}
@@ -92,8 +92,14 @@ const RegisterForm = () => {
             aria-disabled={isPending}
             disabled={isPending}
           >
-            {isPending && <Loader2 className="mr-2 animate-spin" />}
-            {isPending ? "Loading..." : "Sign up with Email"}
+            {isPending ? (
+              <>
+                <Loader2 className="mr-2 animate-spin" />
+                Registering...
+              </>
+            ) : (
+              "Register With Email"
+            )}
           </Button>
           <div
             className={clsx(

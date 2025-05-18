@@ -3,11 +3,12 @@ import { auth } from "../../../auth";
 import { Suspense } from "react";
 import prisma from "../../../db/db";
 import { SectionSkeleton } from "@/components/dashboard/section/section-skeleton";
+import { redirect } from "next/navigation";
 
 const Dashboard = async () => {
   const session = await auth();
   if (!session?.user) {
-    return null;
+    redirect("/");
   }
 
   const { id, email } = session.user;
