@@ -35,7 +35,6 @@ export const DashboardClient = memo(
     sectionsData: Section[];
     tasksData: Task[];
   }) => {
-    // const [sections, setSections] = useState<Section[]>(sectionsData);
     const [tasks, setTasks] = useState<Task[]>(tasksData);
 
     const { sections, setSections } = useSectionStore(

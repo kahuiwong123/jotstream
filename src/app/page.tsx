@@ -23,6 +23,7 @@ import { authenticate } from "@/data/authActions";
 import clsx from "clsx";
 import { useActionState } from "react";
 import { Loader2 } from "lucide-react";
+import { PasswordInput } from "@/components/ui/password-input";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
@@ -45,15 +46,6 @@ export default function LoginPage() {
     undefined,
   );
 
-  const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    if (formSchema.safeParse(data).success) {
-      const formData = new FormData();
-      formData.append("email", data.email);
-      formData.append("password", data.password);
-      formAction(formData);
-    }
-  };
-
   return (
     <div className="relative flex h-screen flex-col items-center justify-center bg-gradient-to-r from-[#FF5858] to-red-400 dark:bg-dark-main">
       <Form {...form}>
@@ -73,8 +65,9 @@ export default function LoginPage() {
                 <FormControl>
                   <Input
                     placeholder="Enter your email"
+                    type="email"
                     {...field}
-                    className="dark:bg-dark-white text-md rounded-[0.5rem] py-6 dark:text-black"
+                    className="dark:bg-[#EFF3F6] dark:border-gray-200 dark:focus:border-gray-400 bg-[#EFF3F6] border border-gray-200 shadow-sm focus:border-gray-400 focus:shadow-md text-md rounded-[0.5rem] py-6 dark:text-black"
                   />
                 </FormControl>
                 <FormMessage />
@@ -90,10 +83,10 @@ export default function LoginPage() {
                   Password
                 </FormLabel>
                 <FormControl>
-                  <Input
+                  <PasswordInput
                     placeholder="Enter your password"
                     {...field}
-                    className="text-md rounded-[0.5rem] py-6 dark:bg-white dark:text-black"
+                    className="dark:bg-[#EFF3F6] dark:border-gray-200 dark:focus:border-gray-400 bg-[#EFF3F6] border border-gray-200 shadow-sm focus:border-gray-400 focus:shadow-md text-md rounded-[0.5rem] py-6 dark:text-black"
                   />
                 </FormControl>
                 <FormMessage />
@@ -106,7 +99,7 @@ export default function LoginPage() {
             aria-disabled={isPending}
             disabled={isPending}
           >
-            {isPending && <Loader2 className="animate-spin mr-2"/>}
+            {isPending && <Loader2 className="mr-2 animate-spin" />}
             {isPending ? "Logging in..." : "Login"}
           </Button>
           <div

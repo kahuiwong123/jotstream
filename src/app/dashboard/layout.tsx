@@ -6,6 +6,7 @@ import { SectionSkeleton } from "@/components/dashboard/section/section-skeleton
 import { IoFileTray } from "react-icons/io5";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/sidebar/sidebar";
+import { ThemeProvider } from "@/components/theme/theme-provider";
 
 export default async function Layout({
   children,
@@ -13,35 +14,42 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   return (
-    <SidebarProvider defaultOpen={false}>
-      <TooltipProvider>
-        <AppSidebar />
-        <div className="grid h-svh grid-cols-2 grid-rows-[auto_auto_1fr] overflow-hidden">
-          <div className="col-span-2 row-start-1 flex items-center justify-between px-8 py-4 w-screen">
-            <SidebarTrigger />
-            <ThemeToggle className="fixed right-8"/>
-          </div>
-          <header
-            className={clsx(
-              "flex justify-between px-8 py-4 transition-all duration-300 ease-in-out dark:bg-dark-main",
-              "col-span-2 row-start-2",
-            )}
-          >
-            <div className="flex items-center gap-2">
-              <IoFileTray className="text-4xl" />
-              <h1 className="text-4xl font-bold">Inbox</h1>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+    >
+      <SidebarProvider defaultOpen={false}>
+        <TooltipProvider>
+          <AppSidebar />
+          <div className="grid h-svh grid-cols-2 grid-rows-[auto_auto_1fr] overflow-hidden bg-white-main antialiased dark:bg-dark-main">
+            <div className="col-span-2 row-start-1 flex w-screen items-center justify-between px-8 py-4">
+              <SidebarTrigger />
+              <ThemeToggle className="fixed right-8" />
             </div>
-          </header>
-          <main
-            className={clsx(
-              "overflow-auto transition-all duration-300 ease-in-out px-8",
-              "col-span-2 row-start-3",
-            )}
-          >
-            <Suspense fallback={<SectionSkeleton />}>{children}</Suspense>
-          </main>
-        </div>
-      </TooltipProvider>
-    </SidebarProvider>
+            <header
+              className={clsx(
+                "flex justify-between px-8 py-4 transition-all duration-300 ease-in-out dark:bg-dark-main",
+                "col-span-2 row-start-2",
+              )}
+            >
+              <div className="flex items-center gap-2">
+                <IoFileTray className="text-4xl" />
+                <h1 className="text-4xl font-bold">Inbox</h1>
+              </div>
+            </header>
+            <main
+              className={clsx(
+                "overflow-auto px-8 transition-all duration-300 ease-in-out",
+                "col-span-2 row-start-3",
+              )}
+            >
+              <Suspense fallback={<SectionSkeleton />}>{children}</Suspense>
+            </main>
+          </div>
+        </TooltipProvider>
+      </SidebarProvider>
+    </ThemeProvider>
   );
 }

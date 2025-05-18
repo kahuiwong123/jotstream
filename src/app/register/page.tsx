@@ -21,6 +21,7 @@ import Link from "next/link";
 import clsx from "clsx";
 import { useActionState } from "react";
 import { Loader2 } from "lucide-react";
+import { PasswordInput } from "@/components/ui/password-input";
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
   password: z
@@ -57,8 +58,9 @@ const RegisterForm = () => {
                 <FormControl>
                   <Input
                     placeholder="Enter your email"
+                    type="email"
                     {...field}
-                    className="dark:bg-dark-white text-md rounded-[0.5rem] py-6 dark:text-black"
+                    className="dark:bg-[#EFF3F6] dark:border-gray-200 dark:focus:border-gray-400 bg-[#EFF3F6] border border-gray-200 shadow-sm focus:border-gray-400 focus:shadow-md text-md rounded-[0.5rem] py-6 dark:text-black"
                   />
                 </FormControl>
                 <FormMessage />
@@ -74,10 +76,10 @@ const RegisterForm = () => {
                   Password
                 </FormLabel>
                 <FormControl>
-                  <Input
+                  <PasswordInput
                     placeholder="Enter your password"
                     {...field}
-                    className="text-md rounded-[0.5rem] py-6 dark:bg-white dark:text-black"
+                    className="dark:bg-[#EFF3F6] dark:border-gray-200 dark:focus:border-gray-400 bg-[#EFF3F6] border border-gray-200 shadow-sm focus:border-gray-400 focus:shadow-md text-md rounded-[0.5rem] py-6 dark:text-black"
                   />
                 </FormControl>
                 <FormMessage />
