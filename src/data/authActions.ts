@@ -16,8 +16,8 @@ const formSchema = z.object({
     .min(8, { message: "Passwords must be at least 8 characters long." }),
 });
 
-export async function googleSignin() {
-  await signIn("google", { redirectTo: "/dashboard" });
+export async function authSignin(provider: string) {
+  await signIn(provider, { redirectTo: "/dashboard" });
 }
 
 export async function authenticate(
@@ -109,4 +109,21 @@ export const logoutUser = async () => {
 
 export const handleSignOut = async () => {
   await signOut({ redirectTo: "/" });
+};
+
+export const createAuthUser = async (email: string) => {
+  try {
+    await prisma.user.upsert({
+      where: {
+        email: email,
+      },
+
+      update: {},
+      create: {
+        email: email,
+      },
+    });
+  } catch (error) {
+    throw error;
+  }
 };

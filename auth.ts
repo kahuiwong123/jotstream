@@ -3,8 +3,9 @@ import { authConfig } from "./auth.config";
 import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
 import bcrypt from "bcrypt";
-import { getUser } from "@/data/authActions";
+import { createAuthUser, getUser } from "@/data/authActions";
 import GoogleProvider from "next-auth/providers/google";
+import GitHub from "next-auth/providers/github";
 import prisma from "./db/db";
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
@@ -32,6 +33,11 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
+
+    GitHub({
+      clientId: process.env.AUTH_GITHUB_ID,
+      clientSecret: process.env.AUTH_GITHUB_SECRET,
+    }),
   ],
 
   callbacks: {
@@ -40,17 +46,17 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         if (!profile?.email) {
           throw new Error("no profile");
         }
-        await prisma.user.upsert({
-          where: {
-            email: profile.email,
-          },
 
-          update: {},
-          create: {
-            email: profile.email,
-          },
-        });
+        if (!profile.email_verified) {
+          throw new Error("email not verified");
+        }
+
+        await createAuthUser(profile.email);
+      } else if (account?.provider === "github" && profile?.email) {
+        console.log("github");
+        await createAuthUser(profile.email);
       }
+
       return true;
     },
 
