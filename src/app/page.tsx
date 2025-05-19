@@ -122,26 +122,19 @@ export default function LoginPage() {
         <div className="mb-4 flex items-center justify-between gap-6">
           <Button
             onClick={() => authSignin("google")}
-            className="w-1/3 rounded-[0.5rem] dark:border-gray-300 shadow-sm dark:bg-white dark:hover:bg-[#F5F5F5] dark:text-black dark:hover:text-black"
+            className="w-1/2 rounded-[0.5rem] shadow-sm dark:border-gray-300 dark:bg-white dark:text-black dark:hover:bg-[#F5F5F5] dark:hover:text-black"
             variant={"outline"}
             size={"icon"}
           >
             <FcGoogle className="size-8" />
           </Button>
           <Button
-            className="w-1/3 rounded-[0.5rem] dark:border-gray-300 shadow-sm dark:bg-white dark:hover:bg-[#F5F5F5] dark:text-black dark:hover:text-black"
+            className="w-1/2 rounded-[0.5rem] shadow-sm dark:border-gray-300 dark:bg-white dark:text-black dark:hover:bg-[#F5F5F5] dark:hover:text-black"
             onClick={() => authSignin("github")}
             variant={"outline"}
             size={"icon"}
           >
             <FaGithub className="size-8" />
-          </Button>
-          <Button
-            className="w-1/3 rounded-[0.5rem] dark:border-gray-300 shadow-sm dark:bg-white dark:hover:bg-[#F5F5F5] dark:text-black dark:hover:text-black"
-            variant={"outline"}
-            size={"icon"}
-          >
-            <FaXTwitter className="size-8" />
           </Button>
         </div>
         <div
