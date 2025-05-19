@@ -40,7 +40,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         if (!profile?.email) {
           throw new Error("no profile");
         }
-        const success = await prisma.user.upsert({
+        await prisma.user.upsert({
           where: {
             email: profile.email,
           },

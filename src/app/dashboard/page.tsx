@@ -11,14 +11,29 @@ const Dashboard = async () => {
     redirect("/");
   }
 
-  const { id, email } = session.user;
+  const { email } = session.user;
+
+  const user = await prisma.user.findUnique({
+    where: {
+      email: email ?? undefined,
+    },
+
+    select: {
+      id: true,
+    },
+  });
+
+  if (!user) {
+    return null
+  }
+
   const [sections, tasks] = await prisma.$transaction([
     prisma.section.findMany({
-      where: { userId: session.user.id },
+      where: { userId: user.id },
       orderBy: { rank: "asc" },
     }),
     prisma.task.findMany({
-      where: { userId: session.user.id },
+      where: { userId: user.id },
       orderBy: { rank: "asc" },
     }),
   ]);
@@ -26,7 +41,7 @@ const Dashboard = async () => {
   return (
     <Suspense fallback={<SectionSkeleton />}>
       <DashboardClient
-        userId={id}
+        userId={user.id}
         email={email}
         sectionsData={sections}
         tasksData={tasks}

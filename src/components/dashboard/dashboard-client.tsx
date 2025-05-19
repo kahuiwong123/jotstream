@@ -23,6 +23,7 @@ import { useAuthStore } from "@/data/authStore";
 import { createPortal } from "react-dom";
 import TaskCard from "./task/task-card";
 import { useShallow } from "zustand/react/shallow";
+import { useSession } from "next-auth/react";
 export const DashboardClient = memo(
   ({
     userId,
@@ -36,7 +37,6 @@ export const DashboardClient = memo(
     tasksData: Task[];
   }) => {
     const [tasks, setTasks] = useState<Task[]>(tasksData);
-
     const { sections, setSections } = useSectionStore(
       useShallow((state) => ({
         sections: state.sections,
