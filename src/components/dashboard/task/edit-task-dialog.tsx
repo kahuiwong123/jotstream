@@ -17,12 +17,13 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { SectionSelectComboBox } from "../section/section-select.combobox";
-import { DialogClose, DialogTitle } from "@radix-ui/react-dialog";
+import { DialogClose, DialogTitle } from "../../ui/dialog";
 import { DatePicker } from "@/components/ui/date-picker";
 import { PrioritySelect } from "./priority-select";
 import { updateSection, updateTask } from "@/data/actions";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import { IoFileTray } from "react-icons/io5";
 
 const taskSchema = z.object({
   sectionId: z.string(),
@@ -43,6 +44,7 @@ export const EditTaskDialog = () => {
   const handleCancel = () => {
     setActiveTask(null);
     setActiveSection(null);
+    form.reset();
   };
 
   const form = useForm<taskFields>({
@@ -66,9 +68,25 @@ export const EditTaskDialog = () => {
     await updateTask(activeTask.id, data);
   });
 
+  useEffect(() => {
+    form.reset();
+  }, [form]);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    const isGrammarly =
+      target && target.hasAttribute("data-grammarly-shadow-root");
+    if (target && isGrammarly) {
+      e.preventDefault();
+    }
+  };
+
   return (
     <DialogContent isTaskEditing>
-      <DialogTitle>{activeSection?.name}</DialogTitle>
+      <DialogTitle className="flex items-center">
+        <IoFileTray size={20} className="mr-1" />
+        Inbox / {activeSection?.name}
+      </DialogTitle>
       <Form {...form}>
         <form className="flex flex-col gap-4" action={action}>
           <div className="flex flex-col">
@@ -82,7 +100,7 @@ export const EditTaskDialog = () => {
                       <Input
                         placeholder="Task name"
                         {...field}
-                        className="w-full rounded-b-none border-b-0"
+                        className="w-full rounded-b-none border-b-0 focus:border-b-0"
                       />
                     </div>
                   </FormControl>
@@ -101,7 +119,8 @@ export const EditTaskDialog = () => {
                       placeholder="Description"
                       {...field}
                       value={field.value === null ? undefined : field.value}
-                      className="rounded-t-none border-t-0"
+                      data-gramm={false}
+                      className="rounded-t-none border-t-0 focus-visible:ring-0"
                     />
                   </FormControl>
                   <FormMessage />
@@ -161,7 +180,7 @@ export const EditTaskDialog = () => {
           <DialogFooter className="flex justify-end gap-4">
             <DialogClose asChild>
               <Button
-                type="button"
+                type="reset"
                 variant={"outline"}
                 className="dark:bg-dark-main"
                 onClick={handleCancel}
@@ -173,7 +192,7 @@ export const EditTaskDialog = () => {
               type="submit"
               variant={"outline"}
               disabled={!form.formState.isValid}
-              className="bg-red-flag hover:bg-[#d6584f] dark:bg-red-flag dark:hover:bg-[#d6584f]"
+              className="bg-red-flag !text-white hover:bg-[#d6584f] dark:bg-red-flag dark:hover:bg-[#d6584f]"
             >
               Submit
             </Button>
