@@ -42,7 +42,6 @@ const Dashboard = async () => {
     <Suspense fallback={<SectionSkeleton />}>
       <DashboardClient
         userId={user.id}
-        email={email}
         sectionsData={sections}
         tasksData={tasks}
       />

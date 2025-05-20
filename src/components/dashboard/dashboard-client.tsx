@@ -27,12 +27,10 @@ import { useSession } from "next-auth/react";
 export const DashboardClient = memo(
   ({
     userId,
-    email,
     sectionsData,
     tasksData,
   }: {
     userId?: string;
-    email?: string | null;
     sectionsData: Section[];
     tasksData: Task[];
   }) => {
@@ -44,12 +42,7 @@ export const DashboardClient = memo(
       })),
     );
 
-    const { setUserId, setEmail } = useAuthStore(
-      useShallow((state) => ({
-        setUserId: state.setUserId,
-        setEmail: state.setEmail,
-      })),
-    );
+    const setUserId = useAuthStore(state => state.setUserId)
 
     const [activeSection, setActiveSection] = useState<
       sectionProps | undefined
@@ -58,9 +51,8 @@ export const DashboardClient = memo(
 
     useEffect(() => {
       setUserId(userId);
-      setEmail(email);
       setSections(sectionsData);
-    }, [userId, email, setUserId, setEmail, setSections, sectionsData]);
+    }, [userId, setUserId, setSections, sectionsData]);
 
     const handleDragEnd = async ({ active, over }: DragEndEvent) => {
       setActiveSection(undefined);

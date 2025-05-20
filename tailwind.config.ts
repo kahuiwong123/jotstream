@@ -8,43 +8,59 @@ const config: Config = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-  	extend: {
-  		backgroundImage: {
-  			'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-  			'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))'
-  		},
-  		borderRadius: {
-  			lg: 'var(--radius)',
-  			md: 'calc(var(--radius) - 2px)',
-  			sm: 'calc(var(--radius) - 4px)'
-  		},
-  		colors: {
-  			'light-grey': '#FAFAFA',
-  			'dark-grey': '#262626',
-  			'light-grey-hover': '#EFEFED',
-  			'dark-hover': '#322F2A',
-  			'dark-side': '#262626',
-  			'dark-main': '#1E1E1E',
-  			'white-main': '#FFFFFF',
-  			'blue-accent': '#00B8FF',
-  			'text-grey': '#666666',
-  			'red-flag': '#D1453B',
-  			'orange-flag': '#EB8909',
-  			'blue-flag': '#246FE0',
-  			sidebar: {
-  				DEFAULT: 'hsl(var(--sidebar-background))',
-  				foreground: 'hsl(var(--sidebar-foreground))',
-  				primary: 'hsl(var(--sidebar-primary))',
-  				'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-  				accent: 'hsl(var(--sidebar-accent))',
-  				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-  				border: 'hsl(var(--sidebar-border))',
-  				ring: 'hsl(var(--sidebar-ring))'
-  			}
-  		}
-  	}
+    extend: {
+      backgroundImage: {
+        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+        "gradient-conic":
+          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
+      colors: {
+        "light-grey": "#FAFAFA",
+        "dark-grey": "#262626",
+        "light-grey-hover": "#EFEFED",
+        "dark-hover": "#322F2A",
+        "dark-side": "#262626",
+        "dark-main": "#1E1E1E",
+        "white-main": "#FFFFFF",
+        "blue-accent": "#00B8FF",
+        "text-grey": "#666666",
+        "red-flag": "#D1453B",
+        "orange-flag": "#EB8909",
+        "blue-flag": "#246FE0",
+        sidebar: {
+          DEFAULT: "hsl(var(--sidebar-background))",
+          foreground: "hsl(var(--sidebar-foreground))",
+          primary: "hsl(var(--sidebar-primary))",
+          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
+          accent: "hsl(var(--sidebar-accent))",
+          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
+          border: "hsl(var(--sidebar-border))",
+          ring: "hsl(var(--sidebar-ring))",
+        },
+      },
+    },
   },
-  
+
+  keyframes: {
+    "collapsible-down": {
+      from: { height: "0" },
+      to: { height: "var(--radix-collapsible-content-height)" },
+    },
+    "collapsible-up": {
+      from: { height: "var(--radix-collapsible-content-height)" },
+      to: { height: "0" },
+    },
+  },
+  animation: {
+    "collapsible-down": "collapsible-down 0.2s ease-out",
+    "collapsible-up": "collapsible-up 0.2s ease-out",
+  },
+
   plugins: [require("tailwindcss-animate")],
 };
 export default config;
