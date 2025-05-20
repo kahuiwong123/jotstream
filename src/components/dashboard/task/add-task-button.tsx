@@ -21,6 +21,7 @@ import { TooltipItem } from "@/components/ui/tooltip-item";
 import { addTask } from "@/data/actions";
 import { useSectionStore } from "@/data/sectionStore";
 import { useAuthStore } from "@/data/authStore";
+import { DialogClose } from "@/components/ui/dialog";
 
 const taskSchema = z.object({
   sectionId: z.string(),
@@ -33,10 +34,11 @@ const taskSchema = z.object({
 type taskFields = z.infer<typeof taskSchema>;
 
 type AddTaskButtonProps = {
-  sectionId: string;
+  sectionId?: string;
+  dialog?: boolean;
 };
 
-export const AddTaskButton = ({ sectionId }: AddTaskButtonProps) => {
+export const AddTaskButton = ({ sectionId, dialog }: AddTaskButtonProps) => {
   const userId = useAuthStore((state) => state.userId);
 
   const form = useForm<taskFields>({
@@ -57,10 +59,34 @@ export const AddTaskButton = ({ sectionId }: AddTaskButtonProps) => {
     (state) => state.setActiveSectionId,
   );
 
+  const closeButton = (
+    <Button
+      type="reset"
+      variant={"outline"}
+      size={"icon"}
+      className="rounded-lg dark:bg-dark-main"
+      onClick={() => setActiveSectionId(null)}
+    >
+      <IoCloseOutline className="size-6" />
+    </Button>
+  );
+
+  const submitButton = (
+    <Button
+      type="submit"
+      variant={"outline"}
+      size={"icon"}
+      disabled={!form.formState.isValid}
+      className="rounded-lg bg-red-flag hover:bg-[#d6584f] dark:bg-red-flag dark:hover:bg-[#d6584f]"
+    >
+      <IoChevronForwardOutline className="size-6" />
+    </Button>
+  );
+
   return (
     <Form {...form}>
       <form
-        className="divide-y rounded-xl border border-gray-300 p-1 shadow-sm transition-all duration-300 dark:border-[#707070] dark:border-transparent dark:bg-[#262626]"
+        className="flex flex-col gap-2 divide-y p-2 cursor-auto shadow-sm transition-all duration-300 dark:border-[#707070] dark:border-transparent dark:bg-[#262626]"
         action={action}
       >
         <div>
@@ -134,52 +160,26 @@ export const AddTaskButton = ({ sectionId }: AddTaskButtonProps) => {
           />
         </div>
 
-        <div className="flex items-center justify-around gap-1 p-2">
+        <div className="flex items-center justify-between p-2">
           <FormField
             name="sectionId"
             control={form.control}
             render={({ field }) => (
-              <FormItem className="grow">
+              <FormItem>
                 <FormControl>
                   <SectionSelect
                     onValueChange={field.onChange}
                     value={field.value}
-                    className="border-none dark:bg-transparent"
+                    className="space-x-2 border-none dark:bg-transparent"
                   />
                 </FormControl>
               </FormItem>
             )}
           />
 
-          <div className="flex gap-1">
-            <TooltipItem
-              tooltipTrigger={
-                <Button
-                  type="reset"
-                  variant={"outline"}
-                  size={"icon"}
-                  className="rounded-lg dark:bg-dark-main"
-                  onClick={() => setActiveSectionId(null)}
-                >
-                  <IoCloseOutline className="size-6" />
-                </Button>
-              }
-              tooltipString="Cancel"
-            />
-            <TooltipItem
-              tooltipTrigger={
-                <Button
-                  type="submit"
-                  variant={"outline"}
-                  size={"icon"}
-                  disabled={!form.formState.isValid}
-                  className="rounded-lg bg-red-flag hover:bg-[#d6584f] dark:bg-red-flag dark:hover:bg-[#d6584f]"
-                >
-                  <IoChevronForwardOutline className="size-6" />
-                </Button>
-              }
-              tooltipString="Add task"
-            />
+          <div className="flex items-center gap-2">
+            {dialog ? <DialogClose asChild>{closeButton}</DialogClose> : closeButton}
+            {dialog ? <DialogClose asChild>{submitButton}</DialogClose> : submitButton}
           </div>
         </div>
       </form>

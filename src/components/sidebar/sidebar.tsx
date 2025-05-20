@@ -33,7 +33,7 @@ import {
   IoSettings,
   IoToday,
 } from "react-icons/io5";
-import { LuChevronsUpDown, LuDot } from "react-icons/lu";
+import { LuChevronsUpDown } from "react-icons/lu";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -44,6 +44,7 @@ import { ChevronRight } from "lucide-react";
 import { handleSignOut } from "@/data/authActions";
 import Image from "next/image";
 import { FaBook, FaColumns, FaList } from "react-icons/fa";
+import SidebarAddTaskButton from "./sidebar-add-task";
 
 export function AppSidebar() {
   const { data: session } = useSession();
@@ -74,10 +75,7 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu className="space-y-2">
               <SidebarMenuItem>
-                <SidebarMenuButton className="rounded-xl border-2 border-[#FF5858] !bg-[#FF5858] text-lg !text-white hover:opacity-90">
-                  <IoAddCircle size={22} />
-                  Add Task
-                </SidebarMenuButton>
+                <SidebarAddTaskButton />
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton
