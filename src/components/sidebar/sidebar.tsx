@@ -42,6 +42,7 @@ import { LuChevronsUpDown } from "react-icons/lu";
 import logo from "../../../public/logo-2.svg";
 import SidebarAddTaskButton from "./sidebar-add-task";
 import SidebarSearchButton from "./sidebar-search-button";
+import { Suspense } from "react";
 
 export function AppSidebar() {
   const { data: session } = useSession();
@@ -76,7 +77,9 @@ export function AppSidebar() {
                 <SidebarAddTaskButton />
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarSearchButton />
+                <Suspense>
+                  <SidebarSearchButton />
+                </Suspense>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
