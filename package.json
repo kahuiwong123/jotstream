@@ -46,6 +46,7 @@
     "supabase": "^2.22.12",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
+    "use-debounce": "^10.0.4",
     "usehooks-ts": "^3.1.0",
     "zod": "^3.23.8",
     "zustand": "^4.5.5"

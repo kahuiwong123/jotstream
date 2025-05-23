@@ -11,9 +11,14 @@ const priorityColors = [
 interface PriorityButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   priority: number;
+  hoverEffect?: boolean;
 }
 
-export const PriorityButton = ({ priority, ...props }: PriorityButtonProps) => {
+export const PriorityButton = ({
+  priority,
+  hoverEffect,
+  ...props
+}: PriorityButtonProps) => {
   const { border, text } = priorityColors[priority - 1];
   return (
     <Button
@@ -23,7 +28,7 @@ export const PriorityButton = ({ priority, ...props }: PriorityButtonProps) => {
       {...props}
     >
       <FaCheck
-        className={`size-4 rounded-full border border-transparent ${text} opacity-0 transition-opacity duration-200 hover:opacity-100`}
+        className={`size-4 rounded-full border border-transparent ${text} opacity-0 transition-opacity duration-200 ${hoverEffect && "opacity-100"}`}
       />
     </Button>
   );

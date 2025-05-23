@@ -11,6 +11,7 @@ import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import { EditTaskDialog } from "./edit-task-dialog";
 import { useSectionStore } from "@/data/sectionStore";
 import clsx from "clsx";
+import { useTaskStore } from "@/data/taskStore";
 
 const TaskCard = memo(({ task }: { task: Task }) => {
   const {
@@ -41,9 +42,7 @@ const TaskCard = memo(({ task }: { task: Task }) => {
     setActiveTask(task);
   };
 
-  const activeTask = useSectionStore((state) => state.activeTask);
-  const activeSection = useSectionStore((state) => state.activeSection);
-  const setActiveTask = useSectionStore((state) => state.setActiveTask);
+  const setActiveTask = useTaskStore((state) => state.setActiveTask);
   const setActiveSection = useSectionStore((state) => state.setActiveSection);
 
   const style = {
@@ -63,40 +62,35 @@ const TaskCard = memo(({ task }: { task: Task }) => {
     );
   }
 
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <div
-          className={clsx(
-            "task-card flex w-full max-w-full items-start gap-2 rounded-xl border border-gray-300 p-2 shadow-sm transition-all duration-300 hover:border-gray-400 hover:shadow-md dark:border-transparent dark:bg-[#262626] dark:hover:border-light-grey-hover",
-          )}
-          ref={setNodeRef}
-          {...attributes}
-          {...listeners}
-          style={style}
-          onClick={handleOnlick}
-        >
-          <PriorityButton
-            priority={task.priority}
-            onClick={(e) => handleCompleteTask(e)}
-          />
-          <div className="flex flex-1 flex-col justify-center overflow-hidden">
-            <div className="flex items-center justify-between">
-              <h3>{task.title}</h3>
-              <TaskCardDropDown task={task} />
-            </div>
-            <p className="truncate text-sm text-text-grey">
-              {task.description}
-            </p>
-            <div className="flex">
-              {task.dueDate && <DateString date={task.dueDate} />}
-            </div>
-          </div>
+  const taskCard = (
+    <div
+      className={clsx(
+        "task-card flex w-full max-w-full items-start gap-2 rounded-xl border border-gray-300 p-2 shadow-sm transition-all duration-300 hover:border-gray-400 hover:shadow-md dark:border-transparent dark:bg-[#262626] dark:hover:border-light-grey-hover",
+      )}
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
+      style={style}
+      onClick={handleOnlick}
+    >
+      <PriorityButton
+        priority={task.priority}
+        onClick={(e) => handleCompleteTask(e)}
+      />
+      <div className="flex flex-1 flex-col justify-center overflow-hidden">
+        <div className="flex items-center justify-between truncate">
+          <h3>{task.title}</h3>
+          <TaskCardDropDown task={task} />
         </div>
-      </DialogTrigger>
-      <EditTaskDialog />
-    </Dialog>
+        <p className="truncate text-sm text-text-grey">{task.description}</p>
+        <div className="flex">
+          {task.dueDate && <DateString date={task.dueDate} />}
+        </div>
+      </div>
+    </div>
   );
+
+  return <EditTaskDialog dialogTrigger={taskCard} />;
 });
 
 export default TaskCard;

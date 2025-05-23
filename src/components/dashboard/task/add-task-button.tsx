@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { SectionSelect } from "../section/section-select";
@@ -17,7 +19,6 @@ import { useForm } from "react-hook-form";
 import { DatePicker } from "@/components/ui/date-picker";
 import { PrioritySelect } from "./priority-select";
 import { IoChevronForwardOutline, IoCloseOutline } from "react-icons/io5";
-import { TooltipItem } from "@/components/ui/tooltip-item";
 import { addTask } from "@/data/actions";
 import { useSectionStore } from "@/data/sectionStore";
 import { useAuthStore } from "@/data/authStore";
@@ -35,10 +36,10 @@ type taskFields = z.infer<typeof taskSchema>;
 
 type AddTaskButtonProps = {
   sectionId?: string;
-  dialog?: boolean;
+  setOpen?: (val: boolean) => void;
 };
 
-export const AddTaskButton = ({ sectionId, dialog }: AddTaskButtonProps) => {
+export const AddTaskButton = ({ sectionId, setOpen }: AddTaskButtonProps) => {
   const userId = useAuthStore((state) => state.userId);
 
   const form = useForm<taskFields>({
@@ -65,7 +66,12 @@ export const AddTaskButton = ({ sectionId, dialog }: AddTaskButtonProps) => {
       variant={"outline"}
       size={"icon"}
       className="rounded-lg dark:bg-dark-main"
-      onClick={() => setActiveSectionId(null)}
+      onClick={() => {
+        if (setOpen) {
+          setOpen(false);
+        }
+        setActiveSectionId(null);
+      }}
     >
       <IoCloseOutline className="size-6" />
     </Button>
@@ -78,6 +84,11 @@ export const AddTaskButton = ({ sectionId, dialog }: AddTaskButtonProps) => {
       size={"icon"}
       disabled={!form.formState.isValid}
       className="rounded-lg bg-red-flag hover:bg-[#d6584f] dark:bg-red-flag dark:hover:bg-[#d6584f]"
+      onClick={() => {
+        if (setOpen) {
+          setOpen(false);
+        }
+      }}
     >
       <IoChevronForwardOutline className="size-6" />
     </Button>
@@ -86,7 +97,7 @@ export const AddTaskButton = ({ sectionId, dialog }: AddTaskButtonProps) => {
   return (
     <Form {...form}>
       <form
-        className="flex flex-col gap-2 divide-y p-2 cursor-auto shadow-sm transition-all duration-300 dark:border-[#707070] dark:border-transparent dark:bg-[#262626]"
+        className="flex cursor-auto flex-col gap-2 divide-y p-2 shadow-sm transition-all duration-300 dark:border-[#707070] dark:border-transparent dark:bg-[#262626]"
         action={action}
       >
         <div>
@@ -178,8 +189,8 @@ export const AddTaskButton = ({ sectionId, dialog }: AddTaskButtonProps) => {
           />
 
           <div className="flex items-center gap-2">
-            {dialog ? <DialogClose asChild>{closeButton}</DialogClose> : closeButton}
-            {dialog ? <DialogClose asChild>{submitButton}</DialogClose> : submitButton}
+            {closeButton}
+            {submitButton}
           </div>
         </div>
       </form>

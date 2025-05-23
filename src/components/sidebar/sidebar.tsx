@@ -1,39 +1,25 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-import logo from "../../../public/logo-2.svg";
-import { CgProfile } from "react-icons/cg";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
-  SidebarSeparator,
-} from "@/components/ui/sidebar";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import {
-  IoAddCircle,
-  IoCalendar,
-  IoFileTray,
-  IoLogOutOutline,
-  IoSearchSharp,
-  IoSettings,
-  IoToday,
-} from "react-icons/io5";
-import { LuChevronsUpDown } from "react-icons/lu";
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuBadge,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarSeparator
+} from "@/components/ui/sidebar";
+import { handleSignOut } from "@/data/authActions";
+import { useTaskStore } from "@/data/taskStore";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -41,17 +27,29 @@ import {
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
 import { ChevronRight } from "lucide-react";
-import { handleSignOut } from "@/data/authActions";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { CgProfile } from "react-icons/cg";
 import { FaBook, FaColumns, FaList } from "react-icons/fa";
+import {
+  IoCalendar,
+  IoFileTray,
+  IoLogOutOutline,
+  IoSettings,
+  IoToday
+} from "react-icons/io5";
+import { LuChevronsUpDown } from "react-icons/lu";
+import logo from "../../../public/logo-2.svg";
 import SidebarAddTaskButton from "./sidebar-add-task";
+import SidebarSearchButton from "./sidebar-search-button";
 
 export function AppSidebar() {
   const { data: session } = useSession();
-
+  const tasksCount = useTaskStore((state) => state.tasksCount);
+  const todayCount = useTaskStore((state) => state.todayCount);
   const taskMenuItems = [
-    { icon: IoFileTray, label: "Inbox", url: "#" },
-    { icon: IoToday, label: "Today", url: "#" },
+    { icon: IoFileTray, label: "Inbox", url: "#", badge: tasksCount },
+    { icon: IoToday, label: "Today", url: "#", badge: todayCount },
     { icon: IoCalendar, label: "Calendar", url: "#" },
   ];
 
@@ -78,16 +76,7 @@ export function AppSidebar() {
                 <SidebarAddTaskButton />
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton
-                  variant={"outline"}
-                  className="rounded-xl border border-gray-200 text-lg hover:opacity-90 dark:border-transparent dark:bg-[#202020]"
-                >
-                  <IoSearchSharp
-                    size={22}
-                    className="group-data-[collapsible=icon]:size-full"
-                  />
-                  Search...
-                </SidebarMenuButton>
+                <SidebarSearchButton />
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
@@ -117,6 +106,11 @@ export function AppSidebar() {
                         <a href={item.url} className="space-x-1">
                           {item.icon ? <item.icon size={20} /> : null}
                           <span>{item.label}</span>
+                          {item.badge && (
+                            <SidebarMenuBadge className="pr-2 size-fit">
+                              {item.badge}
+                            </SidebarMenuBadge>
+                          )}
                         </a>
                       </SidebarMenuButton>
                     ))}

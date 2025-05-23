@@ -24,6 +24,7 @@ import { createPortal } from "react-dom";
 import TaskCard from "./task/task-card";
 import { useShallow } from "zustand/react/shallow";
 import { useSession } from "next-auth/react";
+import { useTaskStore } from "@/data/taskStore";
 export const DashboardClient = memo(
   ({
     userId,
@@ -42,7 +43,14 @@ export const DashboardClient = memo(
       })),
     );
 
-    const setUserId = useAuthStore(state => state.setUserId)
+    const { setTasksCount, setTodayCount } = useTaskStore(
+      useShallow((state) => ({
+        setTasksCount: state.setTasksCount,
+        setTodayCount: state.setTodayCount,
+      })),
+    );
+
+    const setUserId = useAuthStore((state) => state.setUserId);
 
     const [activeSection, setActiveSection] = useState<
       sectionProps | undefined
@@ -52,7 +60,22 @@ export const DashboardClient = memo(
     useEffect(() => {
       setUserId(userId);
       setSections(sectionsData);
-    }, [userId, setUserId, setSections, sectionsData]);
+      setTasksCount(tasksData.length);
+      setTodayCount(
+        tasksData.filter(
+          (task) => task.dueDate !== null && task.dueDate <= new Date(),
+        ).length,
+      );
+    }, [
+      userId,
+      setUserId,
+      setSections,
+      sectionsData,
+      setTasksCount,
+      tasksData.length,
+      tasksData,
+      setTodayCount,
+    ]);
 
     const handleDragEnd = async ({ active, over }: DragEndEvent) => {
       setActiveSection(undefined);

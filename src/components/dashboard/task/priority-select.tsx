@@ -40,6 +40,11 @@ export const PrioritySelect = ({
   className,
 }: PrioritySelectProps) => {
   let trigger: React.JSX.Element;
+
+  if (!value) {
+    return null;
+  }
+
   if (variant == "dropdown") {
     trigger = (
       <Select

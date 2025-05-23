@@ -36,7 +36,7 @@ export function SectionSelectComboBox({ onSelect, value }: SelectProps) {
             variant="outline"
             role="combobox"
             className={cn(
-              "w-[200px] justify-between",
+              "w-full md:w-[200px] justify-between",
               !value && "text-muted-foreground",
             )}
           >
@@ -47,7 +47,7 @@ export function SectionSelectComboBox({ onSelect, value }: SelectProps) {
           </Button>
         </FormControl>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="w-full md:w-[200px] p-0">
         <Command>
           <CommandInput placeholder="Search section..." />
           <CommandList>

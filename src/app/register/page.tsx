@@ -43,7 +43,7 @@ const RegisterForm = () => {
     <div className="relative flex h-screen flex-col items-center justify-center bg-gradient-to-r from-[#FF5858] to-red-400 dark:bg-dark-main">
       <Form {...form}>
         <form
-          className="flex h-fit w-2/5 flex-col gap-6 rounded-xl bg-white p-8 shadow-xl dark:bg-white"
+          className="flex size-full md:h-fit md:w-2/5 justify-center flex-col gap-6 md:rounded-xl bg-white p-8 shadow-xl dark:bg-white"
           action={formAction}
         >
           <h1 className="text-center text-2xl font-bold text-dark-main">

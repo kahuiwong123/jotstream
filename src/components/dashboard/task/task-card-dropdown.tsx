@@ -56,20 +56,29 @@ import { duplicateTask, removeTask, updateTask } from "@/data/actions";
 import { EditTaskDialog } from "./edit-task-dialog";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { useShallow } from "zustand/react/shallow";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useTaskStore } from "@/data/taskStore";
 
 export const TaskCardDropDown = ({ task }: { task: Task }) => {
-  const [sections, setActiveTask, setActiveSection] = useSectionStore(
-    useShallow((state) => [
-      state.sections,
-      state.setActiveTask,
-      state.setActiveSection,
-    ]),
+  const [sections, setActiveSection] = useSectionStore(
+    useShallow((state) => [state.sections, state.setActiveSection]),
   );
+
+  const setActiveTask = useTaskStore((state) => state.setActiveTask);
 
   const handleEdit = (e: React.MouseEvent) => {
     setActiveSection(task.sectionId);
     setActiveTask(task);
   };
+
+  const editButton = (
+    <DropdownMenuItem onClick={handleEdit} onSelect={(e) => e.preventDefault()}>
+      <IoPencilOutline className="mr-2 h-4 w-4" />
+      <span>Edit</span>
+    </DropdownMenuItem>
+  );
 
   return (
     <AlertDialog>
@@ -92,12 +101,7 @@ export const TaskCardDropDown = ({ task }: { task: Task }) => {
             onClick={(e) => e.stopPropagation()}
           >
             <DropdownMenuGroup>
-              <DialogTrigger asChild>
-                <DropdownMenuItem onClick={handleEdit}>
-                  <IoPencilOutline className="mr-2 h-4 w-4" />
-                  <span>Edit</span>
-                </DropdownMenuItem>
-              </DialogTrigger>
+              <EditTaskDialog dialogTrigger={editButton} />
               <DropdownMenuItem
                 onClick={(e) => {
                   e.stopPropagation();
@@ -219,7 +223,6 @@ export const TaskCardDropDown = ({ task }: { task: Task }) => {
           </TooltipContent>
         </Tooltip>
       </DropdownMenu>
-      <EditTaskDialog />
     </AlertDialog>
   );
 };
