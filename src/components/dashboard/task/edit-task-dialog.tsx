@@ -8,7 +8,7 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormMessage
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
@@ -18,7 +18,7 @@ import { useSectionStore } from "@/data/sectionStore";
 import { useTaskStore } from "@/data/taskStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogTrigger } from "@radix-ui/react-dialog";
-import { ReactElement, useEffect } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { IoFileTray } from "react-icons/io5";
 import { z } from "zod";
@@ -45,6 +45,17 @@ export const EditTaskDialog = ({
   const activeSection = useSectionStore((state) => state.activeSection);
   const setActiveTask = useTaskStore((state) => state.setActiveTask);
   const setActiveSection = useSectionStore((state) => state.setActiveSection);
+  
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = (isOpen: boolean) => {
+    setOpen(isOpen);
+    if (!isOpen) {
+      setActiveSection(null);
+      setActiveTask(null);
+      form.reset();
+    }
+  };
 
   const form = useForm<taskFields>({
     resolver: zodResolver(taskSchema),
@@ -53,6 +64,7 @@ export const EditTaskDialog = ({
   const action: () => void = form.handleSubmit(async (data) => {
     if (!activeTask) return;
     await updateTask(activeTask.id, data);
+    
   });
 
   useEffect(() => {
@@ -65,15 +77,7 @@ export const EditTaskDialog = ({
   }, [activeTask, form]);
 
   return (
-    <Dialog
-      onOpenChange={(open) => {
-        if (!open) {
-          setActiveSection(null);
-          setActiveTask(null);
-          form.reset();
-        }
-      }}
-    >
+    <Dialog open={open} onOpenChange={handleOpen}>
       <DialogTrigger asChild>{dialogTrigger}</DialogTrigger>
       <DialogContent className="m-0">
         <DialogTitle className="flex items-center">
@@ -121,7 +125,7 @@ export const EditTaskDialog = ({
                 )}
               />
             </div>
-            <div className="flex md:flex-row flex-col justify-center md:justify-between gap-4 md:gap-0">
+            <div className="flex flex-col justify-center gap-4 md:flex-row md:justify-between md:gap-0">
               <FormField
                 control={form.control}
                 name="sectionId"
@@ -162,7 +166,7 @@ export const EditTaskDialog = ({
                         variant="dropdown"
                         onValueChange={(val) => field.onChange(Number(val))}
                         value={field.value}
-                        className="w-full md:size-fit dark:border-[#3D3D3D] dark:bg-transparent"
+                        className="w-full dark:border-[#3D3D3D] dark:bg-transparent md:size-fit"
                       />
                     </FormControl>
                   </FormItem>
@@ -185,6 +189,9 @@ export const EditTaskDialog = ({
                 variant={"outline"}
                 disabled={!form.formState.isValid}
                 className="bg-red-flag !text-white hover:bg-[#d6584f] dark:bg-red-flag dark:hover:bg-[#d6584f]"
+                onClick={() => {
+                  setOpen(false);
+                }}
               >
                 Submit
               </Button>

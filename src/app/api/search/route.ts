@@ -25,6 +25,10 @@ export async function GET(req: Request) {
         { description: { contains: query, mode: "insensitive" } },
       ],
     },
+
+    select: {
+      id: true,
+    },
   });
 
   return NextResponse.json({ sections, tasks });

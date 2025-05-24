@@ -9,10 +9,14 @@ import { PriorityButton } from "../dashboard/task/priority-button";
 import { FaRegFolder } from "react-icons/fa";
 import { useTaskStore } from "@/data/taskStore";
 
-function SidebarSearchTaskButton({ task }: { task: Task }) {
+function SidebarSearchTaskButton({ task }: { task: Task | null | undefined }) {
   const setActiveTask = useTaskStore((state) => state.setActiveTask);
   const setActiveSection = useSectionStore((state) => state.setActiveSection);
   const sections = useSectionStore((state) => state.sections);
+
+  if (!task) {
+    return null;
+  }
 
   const button = (
     <div
@@ -29,10 +33,10 @@ function SidebarSearchTaskButton({ task }: { task: Task }) {
           <span className="truncate text-base">{task.title}</span>
           <span className="truncate text-sm">{task.description}</span>
         </div>
-        <div className="hidden md:block w-24 flex-shrink-0 text-right ml-auto">
+        <div className="ml-auto hidden w-24 flex-shrink-0 text-right md:block">
           {task.dueDate && <DateString date={task.dueDate} />}
         </div>
-        <div className="hidden w-24 flex-shrink-0 truncate text-sm md:flex items-center gap-2 ml-auto text-right">
+        <div className="ml-auto hidden w-24 flex-shrink-0 items-center gap-2 truncate text-right text-sm md:flex">
           <FaRegFolder size={15} />
           {sections.find((section) => section.id === task.sectionId)?.name}
         </div>

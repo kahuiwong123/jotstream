@@ -21,9 +21,11 @@ import { useDebounceCallback } from "usehooks-ts";
 import SidebarSearchTaskButton from "./sidebar-search-task-button";
 import SideBarSearchSectionButton from "./sidebar-search-section.button";
 import { useAuthStore } from "@/data/authStore";
+import { useTaskStore } from "@/data/taskStore";
 
 function SidebarSearchButton() {
   const userId = useAuthStore((state) => state.userId);
+  const tasks = useTaskStore((state) => state.tasks);
   const [open, setOpen] = useState(false);
 
   const [results, setResults] = useState<{
@@ -131,7 +133,10 @@ function SidebarSearchButton() {
           {results.tasks.length > 0 && (
             <CommandGroup heading="Tasks" className="flex flex-col">
               {results.tasks.map((task) => (
-                <SidebarSearchTaskButton key={task.id} task={task} />
+                <SidebarSearchTaskButton
+                  key={task.id}
+                  task={tasks.find((t) => t.id === task.id)}
+                />
               ))}
             </CommandGroup>
           )}

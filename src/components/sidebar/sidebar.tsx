@@ -43,14 +43,15 @@ import logo from "../../../public/logo-2.svg";
 import SidebarAddTaskButton from "./sidebar-add-task";
 import SidebarSearchButton from "./sidebar-search-button";
 import { Suspense } from "react";
+import Link from "next/link";
 
 export function AppSidebar() {
   const { data: session } = useSession();
   const tasksCount = useTaskStore((state) => state.tasksCount);
   const todayCount = useTaskStore((state) => state.todayCount);
   const taskMenuItems = [
-    { icon: IoFileTray, label: "Inbox", url: "#", badge: tasksCount },
-    { icon: IoToday, label: "Today", url: "#", badge: todayCount },
+    { icon: IoFileTray, label: "Inbox", url: "/dashboard", badge: tasksCount },
+    { icon: IoToday, label: "Today", url: "/dashboard/today", badge: todayCount },
     { icon: IoCalendar, label: "Calendar", url: "#" },
   ];
 
@@ -106,7 +107,7 @@ export function AppSidebar() {
                         asChild
                         className="rounded-xl text-base"
                       >
-                        <a href={item.url} className="space-x-1">
+                        <Link href={item.url} className="space-x-1">
                           {item.icon ? <item.icon size={20} /> : null}
                           <span>{item.label}</span>
                           {item.badge && (
@@ -114,7 +115,7 @@ export function AppSidebar() {
                               {item.badge}
                             </SidebarMenuBadge>
                           )}
-                        </a>
+                        </Link>
                       </SidebarMenuButton>
                     ))}
                   </CollapsibleContent>
@@ -146,10 +147,10 @@ export function AppSidebar() {
                         asChild
                         className="rounded-xl text-base"
                       >
-                        <a href={item.url} className="space-x-1">
+                        <Link href={item.url} className="space-x-1">
                           {item.icon ? <item.icon size={20} /> : null}
                           <span>{item.label}</span>
-                        </a>
+                        </Link>
                       </SidebarMenuButton>
                     ))}
                   </CollapsibleContent>

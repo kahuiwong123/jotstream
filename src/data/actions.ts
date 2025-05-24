@@ -389,6 +389,7 @@ export const updateTask = async (
     data: { ...updates, rank: newRank },
   });
   revalidatePath("/dashboard");
+  
   return {
     message: `${currentTask?.title} updated!`,
   };
