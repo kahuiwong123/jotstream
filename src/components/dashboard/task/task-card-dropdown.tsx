@@ -1,22 +1,20 @@
 "use client";
 
-import React, { useState } from "react";
-import { Button } from "../../ui/button";
-import { TooltipItem } from "../../ui/tooltip-item";
-import { DatePicker } from "../../ui/date-picker";
-import { PrioritySelect } from "./priority-select";
-import { useSectionStore } from "@/data/sectionStore";
+import { useSectionStore } from "@/data/store/sectionStore";
+import React from "react";
 import {
-  IoEllipsisHorizontalOutline,
-  IoDuplicateOutline,
-  IoPencilOutline,
-  IoTrashOutline,
-  IoSwapHorizontalOutline,
   IoCaretForwardOutline,
-  IoFlag,
-  IoFlagOutline,
+  IoDuplicateOutline,
+  IoEllipsisHorizontalOutline,
+  IoPencilOutline,
   IoRemoveCircleOutline,
+  IoSwapHorizontalOutline,
+  IoTrashOutline
 } from "react-icons/io5";
+import { Button } from "../../ui/button";
+import { DatePicker } from "../../ui/date-picker";
+import { TooltipItem } from "../../ui/tooltip-item";
+import { PrioritySelect } from "./priority-select";
 
 import {
   Tooltip,
@@ -32,11 +30,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 
 import {
@@ -51,15 +48,11 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-import { Task } from "@prisma/client";
 import { duplicateTask, removeTask, updateTask } from "@/data/actions";
-import { EditTaskDialog } from "./edit-task-dialog";
-import { DialogTrigger } from "@radix-ui/react-dialog";
+import { useTaskStore } from "@/data/store/taskStore";
+import { Task } from "@prisma/client";
 import { useShallow } from "zustand/react/shallow";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useTaskStore } from "@/data/taskStore";
+import { EditTaskDialog } from "./edit-task-dialog";
 
 export const TaskCardDropDown = ({ task }: { task: Task }) => {
   const [sections, setActiveSection] = useSectionStore(

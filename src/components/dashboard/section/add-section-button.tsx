@@ -1,24 +1,22 @@
 "use client";
 
-import React, { startTransition, useEffect, useState } from "react";
-import { MdOutlineAddToPhotos } from "react-icons/md";
-import { Button } from "../../ui/button";
-import { Input } from "../../ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { addSection, FormState } from "@/data/actions";
-import { useActionState } from "react";
 import {
   Form,
   FormControl,
   FormField,
-  FormItem,
-  FormMessage,
+  FormItem
 } from "@/components/ui/form";
-import { useSectionStore } from "@/data/sectionStore";
+import { addSection, FormState } from "@/data/actions";
+import { useAuthStore } from "@/data/store/authStore";
+import { useSectionStore } from "@/data/store/sectionStore";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { startTransition, useActionState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { MdOutlineAddToPhotos } from "react-icons/md";
+import { z } from "zod";
 import { useShallow } from "zustand/react/shallow";
-import { useAuthStore } from "@/data/authStore";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
 
 const sectionSchema = z.object({
   name: z.string().min(1, { message: "section name cannot be empty" }),

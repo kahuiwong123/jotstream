@@ -5,8 +5,8 @@ import AddSectionButton from "@/components/dashboard/section/add-section-button"
 import SectionCard from "@/components/dashboard/section/section-card";
 import TaskCard from "@/components/dashboard/task/task-card";
 import { moveSection, moveTask } from "@/data/actions";
-import { useSectionStore } from "@/data/sectionStore";
-import { useTaskStore } from "@/data/taskStore";
+import { useSectionStore } from "@/data/store/sectionStore";
+import { useTaskStore } from "@/data/store/taskStore";
 import { sectionProps } from "@/data/types";
 import {
   DndContext,

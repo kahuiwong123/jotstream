@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useSectionStore } from "@/data/sectionStore";
+import { useSectionStore } from "@/data/store/sectionStore";
 
 type SectionSelectProps = {
   onValueChange: (...event: any[]) => void;

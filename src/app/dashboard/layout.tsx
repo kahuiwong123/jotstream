@@ -1,32 +1,21 @@
-import { ThemeToggle } from "@/components/theme/theme-toggle";
-import { clsx } from "clsx";
-import { TooltipProvider } from "@radix-ui/react-tooltip";
-import { SectionSkeleton } from "@/components/dashboard/section/section-skeleton";
-import { IoFileTray } from "react-icons/io5";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import DashboardHeader from "@/components/dashboard/dashboard-header";
 import { AppSidebar } from "@/components/sidebar/sidebar";
 import { ThemeProvider } from "@/components/theme/theme-provider";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import GlobalStateProvider from "@/data/GlobalStateProvider";
+import { TooltipProvider } from "@radix-ui/react-tooltip";
+import { clsx } from "clsx";
 import { SessionProvider } from "next-auth/react";
-import { redirect, usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { redirect } from "next/navigation";
 import { auth } from "../../../auth";
 import prisma from "../../../db/db";
-import GlobalStateProvider from "@/data/GlobalStateProvider";
 
 export default async function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // const pathname = usePathname();
-  // const [path, setPath] = useState("");
-
-  // useEffect(() => {
-  //   const cleanPath = pathname.replace("/dashboard", "");
-  //   const segments = cleanPath.split("/").filter(Boolean);
-  //   setPath(segments.length > 0 ? segments[segments.length - 1] : "Inbox");
-  // }, [pathname]);
-
   const session = await auth();
 
   if (!session?.user?.email) {
@@ -74,17 +63,7 @@ export default async function Layout({
                 <SidebarTrigger />
                 <ThemeToggle className="fixed right-8" />
               </div>
-              <header
-                className={clsx(
-                  "flex justify-between px-8 py-4 transition-all duration-300 ease-in-out dark:bg-dark-main",
-                  "col-span-2 row-start-2",
-                )}
-              >
-                <div className="flex items-center gap-2">
-                  <IoFileTray className="text-4xl" />
-                  <h1 className="text-4xl font-bold">Inbox</h1>
-                </div>
-              </header>
+              <DashboardHeader />
               <main
                 className={clsx(
                   "overflow-auto px-8 transition-all duration-300 ease-in-out",

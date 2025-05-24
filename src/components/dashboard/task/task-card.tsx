@@ -1,17 +1,16 @@
 /* eslint-disable react/display-name */
-import React, { memo } from "react";
-import { DateString } from "./date-string";
-import { TaskCardDropDown } from "./task-card-dropdown";
-import { Task } from "@prisma/client";
-import { PriorityButton } from "./priority-button";
 import { removeTask } from "@/data/actions";
+import { useSectionStore } from "@/data/store/sectionStore";
+import { useTaskStore } from "@/data/store/taskStore";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
-import { EditTaskDialog } from "./edit-task-dialog";
-import { useSectionStore } from "@/data/sectionStore";
+import { Task } from "@prisma/client";
 import clsx from "clsx";
-import { useTaskStore } from "@/data/taskStore";
+import React, { memo } from "react";
+import { DateString } from "./date-string";
+import { EditTaskDialog } from "./edit-task-dialog";
+import { PriorityButton } from "./priority-button";
+import { TaskCardDropDown } from "./task-card-dropdown";
 
 const TaskCard = memo(({ task }: { task: Task }) => {
   const {

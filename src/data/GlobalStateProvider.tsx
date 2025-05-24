@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
-import { useSectionStore } from "@/data/sectionStore";
-import { useTaskStore } from "@/data/taskStore";
+import { useSectionStore } from "@/data/store/sectionStore";
+import { useTaskStore } from "@/data/store/taskStore";
 import { Section, Task } from "@prisma/client";
+import { useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { useAuthStore } from "./authStore";
+import { useAuthStore } from "./store/authStore";
 
 type GlobalStateProps = {
   sectionsData: Section[];

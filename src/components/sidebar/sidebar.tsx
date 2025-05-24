@@ -19,7 +19,7 @@ import {
   SidebarSeparator
 } from "@/components/ui/sidebar";
 import { handleSignOut } from "@/data/authActions";
-import { useTaskStore } from "@/data/taskStore";
+import { useTaskStore } from "@/data/store/taskStore";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,6 +29,8 @@ import {
 import { ChevronRight } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
+import { Suspense } from "react";
 import { CgProfile } from "react-icons/cg";
 import { FaBook, FaColumns, FaList } from "react-icons/fa";
 import {
@@ -42,8 +44,6 @@ import { LuChevronsUpDown } from "react-icons/lu";
 import logo from "../../../public/logo-2.svg";
 import SidebarAddTaskButton from "./sidebar-add-task";
 import SidebarSearchButton from "./sidebar-search-button";
-import { Suspense } from "react";
-import Link from "next/link";
 
 export function AppSidebar() {
   const { data: session } = useSession();

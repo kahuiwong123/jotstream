@@ -1,7 +1,7 @@
 /* eslint-disable react/display-name */
 "use client";
 
-import { useSectionStore } from "@/data/sectionStore";
+import { useSectionStore } from "@/data/store/sectionStore";
 import {
   SortableContext,
   useSortable

@@ -1,9 +1,7 @@
 "use client";
 
-import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -13,13 +11,14 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { FormControl } from "@/components/ui/form";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useSectionStore } from "@/data/sectionStore";
-import { FormControl } from "@/components/ui/form";
+import { useSectionStore } from "@/data/store/sectionStore";
+import { cn } from "@/lib/utils";
 
 type SelectProps = {
   onSelect: any;

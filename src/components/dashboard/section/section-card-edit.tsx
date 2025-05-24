@@ -1,22 +1,18 @@
-import React from "react";
-import { Input } from "../../ui/input";
-import { Button } from "../../ui/button";
-import { Section } from "@prisma/client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Section } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
 
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+  FormItem
 } from "@/components/ui/form";
 import { updateSection } from "@/data/actions";
-import { useAuthStore } from "@/data/authStore";
+import { useAuthStore } from "@/data/store/authStore";
 
 type sectionCardEditProps = {
   section: Section;

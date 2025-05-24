@@ -1,7 +1,7 @@
+import { useSectionStore } from "@/data/store/sectionStore";
 import { Section } from "@prisma/client";
-import { CommandItem } from "../ui/command";
 import { FaRegFolder } from "react-icons/fa";
-import { useSectionStore } from "@/data/sectionStore";
+import { CommandItem } from "../ui/command";
 
 function SideBarSearchSectionButton({
   section,

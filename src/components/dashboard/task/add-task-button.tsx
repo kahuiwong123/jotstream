@@ -1,28 +1,23 @@
 "use client";
 
-import React from "react";
 import { Button } from "@/components/ui/button";
-import { SectionSelect } from "../section/section-select";
+import { DatePicker } from "@/components/ui/date-picker";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+  FormItem
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { z } from "zod";
+import { addTask } from "@/data/actions";
+import { useAuthStore } from "@/data/store/authStore";
+import { useSectionStore } from "@/data/store/sectionStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { DatePicker } from "@/components/ui/date-picker";
-import { PrioritySelect } from "./priority-select";
 import { IoChevronForwardOutline, IoCloseOutline } from "react-icons/io5";
-import { addTask } from "@/data/actions";
-import { useSectionStore } from "@/data/sectionStore";
-import { useAuthStore } from "@/data/authStore";
-import { DialogClose } from "@/components/ui/dialog";
+import { z } from "zod";
+import { SectionSelect } from "../section/section-select";
+import { PrioritySelect } from "./priority-select";
 
 const taskSchema = z.object({
   sectionId: z.string(),

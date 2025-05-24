@@ -1,27 +1,22 @@
 "use client";
 
+import { useAuthStore } from "@/data/store/authStore";
+import { useTaskStore } from "@/data/store/taskStore";
+import { Section, Task } from "@prisma/client";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { IoSearchSharp } from "react-icons/io5";
-import { SidebarMenuButton } from "../ui/sidebar";
-import { Dialog, DialogTrigger } from "../ui/dialog";
-import { DialogContent, DialogTitle } from "../ui/dialog";
+import { useDebounceCallback } from "usehooks-ts";
 import {
   Command,
-  CommandList,
-  CommandShortcut,
-  CommandInput,
-  CommandEmpty,
-  CommandItem,
   CommandGroup,
+  CommandShortcut
 } from "../ui/command";
-import { useEffect, useState } from "react";
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Input } from "../ui/input";
-import { usePathname, useSearchParams, useRouter } from "next/navigation";
-import { Section, Task } from "@prisma/client";
-import { useDebounceCallback } from "usehooks-ts";
-import SidebarSearchTaskButton from "./sidebar-search-task-button";
+import { SidebarMenuButton } from "../ui/sidebar";
 import SideBarSearchSectionButton from "./sidebar-search-section.button";
-import { useAuthStore } from "@/data/authStore";
-import { useTaskStore } from "@/data/taskStore";
+import SidebarSearchTaskButton from "./sidebar-search-task-button";
 
 function SidebarSearchButton() {
   const userId = useAuthStore((state) => state.userId);

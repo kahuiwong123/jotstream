@@ -1,13 +1,13 @@
 "use client";
 
+import { useSectionStore } from "@/data/store/sectionStore";
+import { useTaskStore } from "@/data/store/taskStore";
 import { Task } from "@prisma/client";
-import { CommandItem } from "../ui/command";
-import { useSectionStore } from "@/data/sectionStore";
-import { EditTaskDialog } from "../dashboard/task/edit-task-dialog";
-import { DateString } from "../dashboard/task/date-string";
-import { PriorityButton } from "../dashboard/task/priority-button";
 import { FaRegFolder } from "react-icons/fa";
-import { useTaskStore } from "@/data/taskStore";
+import { DateString } from "../dashboard/task/date-string";
+import { EditTaskDialog } from "../dashboard/task/edit-task-dialog";
+import { PriorityButton } from "../dashboard/task/priority-button";
+import { CommandItem } from "../ui/command";
 
 function SidebarSearchTaskButton({ task }: { task: Task | null | undefined }) {
   const setActiveTask = useTaskStore((state) => state.setActiveTask);
