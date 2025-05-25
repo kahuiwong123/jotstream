@@ -28,7 +28,7 @@ export const PriorityButton = ({
       {...props}
     >
       <FaCheck
-        className={`size-4 rounded-full border border-transparent ${text} opacity-0 transition-opacity duration-200 ${hoverEffect && "opacity-100"}`}
+        className={`size-4 rounded-full border border-transparent ${text} opacity-0 transition-opacity duration-200 ${hoverEffect ? "hover:opacity-0" : "hover:opacity-100"}`}
       />
     </Button>
   );

@@ -1,4 +1,6 @@
 /* eslint-disable react/display-name */
+"use client"
+
 import { removeTask } from "@/data/actions";
 import { useSectionStore } from "@/data/store/sectionStore";
 import { useTaskStore } from "@/data/store/taskStore";

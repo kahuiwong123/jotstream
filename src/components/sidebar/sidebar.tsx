@@ -16,7 +16,7 @@ import {
   SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarSeparator
+  SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { handleSignOut } from "@/data/authActions";
 import { useTaskStore } from "@/data/store/taskStore";
@@ -38,21 +38,41 @@ import {
   IoFileTray,
   IoLogOutOutline,
   IoSettings,
-  IoToday
+  IoToday,
 } from "react-icons/io5";
 import { LuChevronsUpDown } from "react-icons/lu";
 import logo from "../../../public/logo-2.svg";
 import SidebarAddTaskButton from "./sidebar-add-task";
 import SidebarSearchButton from "./sidebar-search-button";
+import clsx from "clsx";
+import { usePathname } from "next/navigation";
 
 export function AppSidebar() {
   const { data: session } = useSession();
+  const tasks = useTaskStore((state) => state.tasks);
   const tasksCount = useTaskStore((state) => state.tasksCount);
   const todayCount = useTaskStore((state) => state.todayCount);
+  const pathname = usePathname();
+  const now = new Date();
+  const startOfToday = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+  );
+
+  const overdue = tasks.some(
+    (task) => task.dueDate && task.dueDate < startOfToday,
+  );
+
   const taskMenuItems = [
     { icon: IoFileTray, label: "Inbox", url: "/dashboard", badge: tasksCount },
-    { icon: IoToday, label: "Today", url: "/dashboard/today", badge: todayCount },
-    { icon: IoCalendar, label: "Calendar", url: "#" },
+    {
+      icon: IoToday,
+      label: "Today",
+      url: "/dashboard/today",
+      badge: todayCount,
+    },
+    { icon: IoCalendar, label: "Calendar", url: "/dashboard/calendar" },
   ];
 
   const noteMenuItems = [
@@ -107,11 +127,25 @@ export function AppSidebar() {
                         asChild
                         className="rounded-xl text-base"
                       >
-                        <Link href={item.url} className="space-x-1">
+                        <Link
+                          href={item.url}
+                          className={clsx(
+                            "space-x-1",
+                            pathname === item.url &&
+                              "border !bg-[#FFFFFF] shadow-sm dark:!bg-[#1E1E1E] dark:border-none",
+                          )}
+                        >
                           {item.icon ? <item.icon size={20} /> : null}
                           <span>{item.label}</span>
                           {item.badge && (
-                            <SidebarMenuBadge className="pr-2 size-fit">
+                            <SidebarMenuBadge
+                              className={clsx(
+                                "size-fit pr-2",
+                                item.label === "Today" &&
+                                  overdue &&
+                                  "text-[#FF5858]",
+                              )}
+                            >
                               {item.badge}
                             </SidebarMenuBadge>
                           )}

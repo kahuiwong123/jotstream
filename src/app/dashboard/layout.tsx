@@ -17,32 +17,18 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   const session = await auth();
-
-  if (!session?.user?.email) {
+  const id = session?.user?.id;
+  if (!id) {
     redirect("/");
-  }
-
-  const user = await prisma.user.findUnique({
-    where: {
-      email: session.user.email,
-    },
-
-    select: {
-      id: true,
-    },
-  });
-
-  if (!user) {
-    return null;
   }
 
   const [sections, tasks] = await prisma.$transaction([
     prisma.section.findMany({
-      where: { userId: user.id },
+      where: { userId: id },
       orderBy: { rank: "asc" },
     }),
     prisma.task.findMany({
-      where: { userId: user.id },
+      where: { userId: id },
       orderBy: { rank: "asc" },
     }),
   ]);
@@ -73,7 +59,7 @@ export default async function Layout({
                 <GlobalStateProvider
                   sectionsData={sections}
                   tasksData={tasks}
-                  userId={user.id}
+                  userId={id}
                 >
                   {children}
                 </GlobalStateProvider>

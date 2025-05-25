@@ -2,11 +2,13 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import isToday from "dayjs/plugin/isToday";
 import isTomorrow from "dayjs/plugin/isTomorrow";
+import isYesterday from "dayjs/plugin/isYesterday";
 import { CiCalendar } from "react-icons/ci";
 
 dayjs.extend(relativeTime);
 dayjs.extend(isToday);
 dayjs.extend(isTomorrow);
+dayjs.extend(isYesterday);
 type DateStrirngProps = {
   date: Date;
 };
@@ -28,11 +30,18 @@ export const DateString = ({ date }: DateStrirngProps): React.JSX.Element => {
         <span className="text-[#C69350]">Tomorrow</span>
       </>
     );
+  } else if (day.isYesterday()) {
+    span = (
+      <>
+        <CiCalendar className="text-red-400" />
+        <span className="text-red-400">Yesterday</span>
+      </>
+    );
   } else if (day.isBefore(dayjs())) {
     span = (
       <>
         <CiCalendar className="text-red-400" />
-        <span className="text-red-400">Past due</span>
+        <span className="text-red-400">{dayjs(date).format("MMM D")}</span>
       </>
     );
   } else if (day.isBefore(dayjs().add(7, "day"))) {

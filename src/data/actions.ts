@@ -1,11 +1,10 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import prisma from "../../db/db";
-import { z } from "zod";
-import { LexoRank } from "lexorank";
 import { Section, Task } from "@prisma/client";
-import { sectionProps } from "./types";
+import { LexoRank } from "lexorank";
+import { revalidatePath } from "next/cache";
+import { z } from "zod";
+import prisma from "../../db/db";
 
 const sectionSchema = z.object({
   name: z.string().min(1, { message: "section name cannot be empty" }),
@@ -389,7 +388,7 @@ export const updateTask = async (
     data: { ...updates, rank: newRank },
   });
   revalidatePath("/dashboard");
-  
+
   return {
     message: `${currentTask?.title} updated!`,
   };
@@ -467,4 +466,27 @@ export const moveTask = async (
   // revalidatePath("/dashboard");
 
   return { message: `${oldTask.title} moved!` };
+};
+
+export const rescheduleTasks = async (
+  taskIds: string[],
+  prevState: FormState,
+  formData: FormData,
+): Promise<FormState> => {
+  const dueDate = formData.get("dueDate") as string;
+  await prisma.task.updateMany({
+    where: {
+      id: {
+        in: taskIds,
+      },
+    },
+
+    data: {
+      dueDate: dueDate,
+    },
+  });
+  revalidatePath("/dashboard");
+  return {
+    message: "tasks rescheduled",
+  };
 };

@@ -1,9 +1,5 @@
 "use client";
 
-import * as React from "react";
-import { addDays } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -18,23 +14,32 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DateString } from "../dashboard/task/date-string";
+import { cn } from "@/lib/utils";
+import { addDays } from "date-fns";
 import dayjs from "dayjs";
+import { Calendar as CalendarIcon } from "lucide-react";
+import { useState } from "react";
 type DatePickerProps = {
   variant: "icon" | "text";
+  mode?: "reschedule";
   value?: Date | null;
+  text?: string;
   onChange: (...event: any[]) => void;
   className?: string;
 };
 
 export function DatePicker({
   variant,
+  mode,
   value,
+  text,
   onChange,
   className,
 }: DatePickerProps) {
+  const [open, setOpen] = useState(false);
+
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant={"outline"}
@@ -48,18 +53,21 @@ export function DatePicker({
           <CalendarIcon
             className={cn("size-4", (variant == "text" || value) && "mr-2")}
           />
-          {value ? (
+          {value && mode !== "reschedule" ? (
             <span>{dayjs(value).format("MMMM D YYYY")}</span>
           ) : (
-            variant == "text" && <span>Pick a date</span>
+            variant == "text" && <span>{text ? text : "Pick a date"}</span>
           )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="flex w-auto flex-col space-y-2 p-2 focus-visible:ring-0 focus-visible:ring-offset-0">
         <Select
-          onValueChange={(value) =>
-            onChange(addDays(new Date(), parseInt(value)))
-          }
+          onValueChange={(value) => {
+            onChange(addDays(new Date(), parseInt(value)));
+            if (mode === "reschedule") {
+              setOpen(false);
+            }
+          }}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select" />
@@ -74,8 +82,13 @@ export function DatePicker({
         <div className="rounded-md border">
           <Calendar
             mode="single"
-            selected={value || undefined}
-            onSelect={onChange}
+            selected={mode === "reschedule" ? undefined : value || undefined}
+            onSelect={(val) => {
+              onChange(val);
+              if (mode === "reschedule") {
+                setOpen(false);
+              }
+            }}
             fromDate={new Date()}
           />
         </div>

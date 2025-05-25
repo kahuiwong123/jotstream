@@ -27,7 +27,7 @@ function SidebarSearchTaskButton({ task }: { task: Task | null | undefined }) {
     >
       <CommandItem className="flex w-full items-center gap-4 border-l-4 border-transparent py-2 hover:cursor-pointer hover:border-l-[#FE6767]">
         <div className="flex-shrink-0">
-          <PriorityButton priority={task.priority} />
+          <PriorityButton priority={task.priority} hoverEffect />
         </div>
         <div className="flex min-w-0 flex-1 flex-col">
           <span className="truncate text-base">{task.title}</span>

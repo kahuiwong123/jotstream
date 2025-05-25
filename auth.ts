@@ -53,7 +53,6 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
 
         await createAuthUser(profile.email);
       } else if (account?.provider === "github" && profile?.email) {
-        console.log("github");
         await createAuthUser(profile.email);
       }
 
@@ -61,17 +60,27 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
     },
 
     async jwt({ token, user }) {
-      // Add user id to the token on initial sign in
       if (user) {
-        token.id = user.id; // Assuming user has an `id` property
-        token.email = user.email; // Assuming user has an `email` property
+        token.id = user.id;
+        token.email = user.email;
       }
       return token;
     },
     async session({ session, token }) {
-      // Include the user id in the session object
-      session.user.id = token.id as string;
-      session.user.email = token.email as string; // Assuming you want to include email as well
+      const user = await prisma.user.findUnique({
+        where: {
+          email: session.user.email,
+        },
+
+        select: {
+          id: true,
+        },
+      });
+
+      if (user) {
+        session.user.id = user.id as string;
+        session.user.email = token.email as string;
+      }
       return session;
     },
   },
