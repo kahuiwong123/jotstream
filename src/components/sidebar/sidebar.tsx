@@ -65,12 +65,12 @@ export function AppSidebar() {
   );
 
   const taskMenuItems = [
-    { icon: IoFileTray, label: "Inbox", url: "/dashboard", badge: tasksCount },
+    { icon: IoFileTray, label: "Inbox", url: "/dashboard", badge: tasksCount || "" },
     {
       icon: IoToday,
       label: "Today",
       url: "/dashboard/today",
-      badge: todayCount,
+      badge: todayCount || "",
     },
     { icon: IoCalendar, label: "Calendar", url: "/dashboard/calendar" },
   ];

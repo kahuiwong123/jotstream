@@ -1,20 +1,28 @@
-"use client";
+import { addYears, eachDayOfInterval, format, startOfYear } from "date-fns";
+import { redirect } from "next/navigation";
+import { auth } from "../../../../auth";
+async function Page() {
+  const session = await auth();
 
-import { Button } from "@/components/ui/button";
-import { authSignin } from "@/data/authActions";
-import { useSession } from "next-auth/react";
-
-function Page() {
-  const { data: session } = useSession();
-  if (!session) {
-    return (
-      <Button onClick={() => authSignin("google")}>
-        Connect with Google Calendar
-      </Button>
-    );
+  if (!session?.user?.id) {
+    redirect("/");
   }
 
-  return <p>Connected</p>;
+  const generateDays = (today: Date) => {
+    const start = today;
+    const end = addYears(start, 1);
+    return eachDayOfInterval({ start, end });
+  };
+
+  const days = generateDays(new Date());
+
+  return (
+    <div>
+      {days.map((day) => (
+        <div key={day.toISOString()}>{format(day, "MM/dd/yyyy")}</div>
+      ))}
+    </div>
+  );
 }
 
 export default Page;
