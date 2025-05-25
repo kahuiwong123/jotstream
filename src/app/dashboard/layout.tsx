@@ -22,6 +22,18 @@ export default async function Layout({
     redirect("/");
   }
 
+  const now = new Date();
+  const startOfToday = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+  );
+  const startOfTomorrow = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate() + 1,
+  );
+
   const [sections, tasks] = await prisma.$transaction([
     prisma.section.findMany({
       where: { userId: id },
@@ -32,6 +44,18 @@ export default async function Layout({
       orderBy: { rank: "asc" },
     }),
   ]);
+
+  const tasksDueTodayOrTomorrow = await prisma.task.aggregate({
+    where: {
+      userId: id,
+      OR: [
+        { dueDate: { lt: startOfToday } },
+        { dueDate: { gte: startOfToday, lt: startOfTomorrow } },
+      ],
+    },
+
+    _count: true,
+  });
 
   return (
     <ThemeProvider
@@ -60,6 +84,7 @@ export default async function Layout({
                   sectionsData={sections}
                   tasksData={tasks}
                   userId={id}
+                  todaysCount={tasksDueTodayOrTomorrow._count}
                 >
                   {children}
                 </GlobalStateProvider>

@@ -11,6 +11,7 @@ type GlobalStateProps = {
   sectionsData: Section[];
   tasksData: Task[];
   userId: string;
+  todaysCount: number;
   children: React.ReactNode;
 };
 
@@ -18,6 +19,7 @@ export default function GlobalStateProvider({
   sectionsData,
   tasksData,
   userId,
+  todaysCount,
   children,
 }: GlobalStateProps) {
   const setSections = useSectionStore((state) => state.setSections);
@@ -37,11 +39,7 @@ export default function GlobalStateProvider({
     setUserId(userId);
     setSections(sectionsData);
     setTasksCount(tasksData.length);
-    setTodayCount(
-      tasksData.filter(
-        (task) => task.dueDate !== null && task.dueDate <= new Date(),
-      ).length,
-    );
+    setTodayCount(todaysCount);
   }, [
     setUserId,
     setSections,
@@ -52,6 +50,7 @@ export default function GlobalStateProvider({
     setTodayCount,
     userId,
     setTasks,
+    todaysCount,
   ]);
 
   return <>{children}</>;
