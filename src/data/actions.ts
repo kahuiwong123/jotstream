@@ -5,6 +5,7 @@ import { LexoRank } from "lexorank";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import prisma from "../../db/db";
+import { Description } from "@radix-ui/react-dialog";
 
 const sectionSchema = z.object({
   name: z.string().min(1, { message: "section name cannot be empty" }),
@@ -260,22 +261,33 @@ export const moveSection = async (
 };
 
 export const addTask = async (
-  data: TaskModified,
-  userId?: string,
+  userId: string | undefined,
+  prevState: FormState,
+  data: FormData,
 ): Promise<FormState> => {
-  const validate = taskSchema.safeParse(data);
+  const taskData = Object.fromEntries(data.entries());
+  const newTask = {
+    title: taskData.title.toString(),
+    description: taskData.description.toString(),
+    dueDate: taskData.dueDate
+      ? new Date(taskData.dueDate.toString())
+      : undefined,
+    priority: Number(taskData.priority),
+    sectionId: taskData.sectionId.toString(),
+  };
+  const validate = taskSchema.safeParse(newTask);
+  console.log(validate.error?.flatten().fieldErrors)
   if (!validate.success) {
     return {
-      message: "task name cannot be empty.",
+      message: "task schema validation failed.",
     };
   }
-
   const lastTask = await prisma.task.findFirst({
     select: {
       rank: true,
     },
     where: {
-      sectionId: data.sectionId,
+      sectionId: newTask.sectionId,
     },
 
     orderBy: {
@@ -288,11 +300,11 @@ export const addTask = async (
     : LexoRank.middle().toString();
 
   await prisma.task.create({
-    data: { ...data, rank: rank, userId: userId },
+    data: { ...newTask, rank: rank, userId: userId },
   });
   revalidatePath("/dashboard");
   return {
-    message: `task ${data.title} added!`,
+    message: `task added!`,
   };
 };
 

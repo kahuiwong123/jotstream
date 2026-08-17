@@ -201,7 +201,7 @@ export function AppSidebar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton className="flex h-fit items-center gap-2 rounded-xl">
-                  {session?.user?.image ? (
+                  {session?.user?.image && session.user.image !== "profile image" ? (
                     <Image
                       className="rounded-full"
                       alt="profile-image"

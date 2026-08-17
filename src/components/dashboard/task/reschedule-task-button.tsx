@@ -11,7 +11,6 @@ type formType = {
 
 function RescheduleTaskButton({ taskIds }: { taskIds: string[] }) {
   const form = useForm<formType>();
-  const formRef = useRef<HTMLFormElement>(null);
   const [state, formAction, isPending] = useActionState(
     rescheduleTasks.bind(null, taskIds),
     {

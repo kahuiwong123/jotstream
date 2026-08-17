@@ -46,8 +46,11 @@ export default async function Page() {
     },
   });
 
+  if (overdueTasks.length == 0 && tasksDueToday.length == 0) {
+    return <h2 className="text-xl">No tasks due today.</h2>
+  }
+
   return (
-    <Suspense>
       <div className="space-y-6">
         {overdueTasks.length > 0 && (
           <div>
@@ -79,6 +82,5 @@ export default async function Page() {
           </div>
         )}
       </div>
-    </Suspense>
   );
 }

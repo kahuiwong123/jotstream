@@ -66,7 +66,7 @@ export default async function Layout({
     >
       <SidebarProvider defaultOpen={false}>
         <TooltipProvider>
-          <SessionProvider>
+          <SessionProvider refetchOnWindowFocus={false}>
             <AppSidebar />
             <div className="grid h-svh grid-cols-2 grid-rows-[auto_auto_1fr] overflow-hidden bg-white-main antialiased dark:bg-dark-main">
               <div className="col-span-2 row-start-1 flex w-screen items-center justify-between px-8 py-4">

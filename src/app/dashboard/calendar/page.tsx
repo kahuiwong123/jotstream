@@ -1,6 +1,9 @@
-import { addYears, eachDayOfInterval, format, startOfYear } from "date-fns";
+import CalendarCard from "@/components/dashboard/calendar/calendar-card";
+import CalendarHeader from "@/components/dashboard/calendar/calendar-header";
+import { addYears, eachDayOfInterval } from "date-fns";
 import { redirect } from "next/navigation";
 import { auth } from "../../../../auth";
+
 async function Page() {
   const session = await auth();
 
@@ -18,9 +21,16 @@ async function Page() {
 
   return (
     <div>
-      {days.map((day) => (
-        <div key={day.toISOString()}>{format(day, "MM/dd/yyyy")}</div>
-      ))}
+      <CalendarHeader days={days}/>
+      <div>
+        {days.map((day) => (
+          <CalendarCard
+            date={day}
+            userId={session.user?.id ?? ""}
+            key={day.toISOString()}
+          />
+        ))}
+      </div>
     </div>
   );
 }

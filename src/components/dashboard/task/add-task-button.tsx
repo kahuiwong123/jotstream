@@ -2,12 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { addTask } from "@/data/actions";
 import { useAuthStore } from "@/data/store/authStore";
@@ -18,6 +13,7 @@ import { IoChevronForwardOutline, IoCloseOutline } from "react-icons/io5";
 import { z } from "zod";
 import { SectionSelect } from "../section/section-select";
 import { PrioritySelect } from "./priority-select";
+import { useActionState, useEffect } from "react";
 
 const taskSchema = z.object({
   sectionId: z.string(),
@@ -32,9 +28,14 @@ type taskFields = z.infer<typeof taskSchema>;
 type AddTaskButtonProps = {
   sectionId?: string;
   setOpen?: (val: boolean) => void;
+  dueDate?: Date;
 };
 
-export const AddTaskButton = ({ sectionId, setOpen }: AddTaskButtonProps) => {
+export const AddTaskButton = ({
+  sectionId,
+  setOpen,
+  dueDate,
+}: AddTaskButtonProps) => {
   const userId = useAuthStore((state) => state.userId);
 
   const form = useForm<taskFields>({
@@ -44,16 +45,27 @@ export const AddTaskButton = ({ sectionId, setOpen }: AddTaskButtonProps) => {
       title: "",
       description: "",
       priority: 4,
+      dueDate: dueDate || undefined,
     },
-  });
-
-  const action: () => void = form.handleSubmit(async (data) => {
-    await addTask(data, userId);
   });
 
   const setActiveSectionId = useSectionStore(
     (state) => state.setActiveSectionId,
   );
+
+  const [state, formAction, isPending] = useActionState(
+    addTask.bind(null, userId),
+    { message: "" },
+  );
+
+  const handleSubmit = (data: FormData) => {
+    console.log("submitting");
+    formAction(data);
+    if (setOpen) {
+      setOpen(false);
+    }
+    form.reset()
+  };
 
   const closeButton = (
     <Button
@@ -79,11 +91,6 @@ export const AddTaskButton = ({ sectionId, setOpen }: AddTaskButtonProps) => {
       size={"icon"}
       disabled={!form.formState.isValid}
       className="rounded-lg bg-red-flag hover:bg-[#d6584f] dark:bg-red-flag dark:hover:bg-[#d6584f]"
-      onClick={() => {
-        if (setOpen) {
-          setOpen(false);
-        }
-      }}
     >
       <IoChevronForwardOutline className="size-6" />
     </Button>
@@ -93,7 +100,7 @@ export const AddTaskButton = ({ sectionId, setOpen }: AddTaskButtonProps) => {
     <Form {...form}>
       <form
         className="flex cursor-auto flex-col gap-2 divide-y p-2 shadow-sm transition-all duration-300 dark:border-[#707070] dark:border-transparent dark:bg-[#262626]"
-        action={action}
+        action={handleSubmit}
       >
         <div>
           <FormField
@@ -137,12 +144,21 @@ export const AddTaskButton = ({ sectionId, setOpen }: AddTaskButtonProps) => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <DatePicker
-                    variant="icon"
-                    value={field.value}
-                    onChange={field.onChange}
-                    className="border dark:border-[#3D3D3D] dark:bg-transparent"
-                  />
+                  <div>
+                    <DatePicker
+                      variant="icon"
+                      value={field.value}
+                      onChange={field.onChange}
+                      className="border dark:border-[#3D3D3D] dark:bg-transparent"
+                    />
+                    <input
+                      type="hidden"
+                      name="dueDate"
+                      value={
+                        field.value ? new Date(field.value).toISOString() : ""
+                      }
+                    />
+                  </div>
                 </FormControl>
               </FormItem>
             )}
@@ -154,12 +170,15 @@ export const AddTaskButton = ({ sectionId, setOpen }: AddTaskButtonProps) => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <PrioritySelect
-                    variant="dropdown"
-                    onValueChange={(val) => field.onChange(Number(val))}
-                    value={field.value}
-                    className="size-fit dark:border-[#3D3D3D] dark:bg-transparent"
-                  />
+                  <div>
+                    <PrioritySelect
+                      variant="dropdown"
+                      onValueChange={(val) => field.onChange(Number(val))}
+                      value={field.value}
+                      className="size-fit dark:border-[#3D3D3D] dark:bg-transparent"
+                    />
+                    <input type="hidden" name="priority" value={field.value} />
+                  </div>
                 </FormControl>
               </FormItem>
             )}
@@ -173,11 +192,19 @@ export const AddTaskButton = ({ sectionId, setOpen }: AddTaskButtonProps) => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <SectionSelect
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    className="space-x-2 border-none dark:bg-transparent"
-                  />
+                  <div>
+                    <SectionSelect
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      className="space-x-2 border-none dark:bg-transparent"
+                    />
+
+                    <input
+                      type="hidden"
+                      name="sectionId"
+                      defaultValue={field.value}
+                    />
+                  </div>
                 </FormControl>
               </FormItem>
             )}
