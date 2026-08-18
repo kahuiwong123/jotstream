@@ -20,7 +20,7 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { arrayMove, SortableContext } from "@dnd-kit/sortable";
-import { Task } from "@prisma/client";
+import { Task } from "~/generated/prisma/client";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
