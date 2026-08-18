@@ -1,7 +1,7 @@
 "use server";
 
 import bcrypt from "bcrypt";
-import { Prisma, User } from "@prisma/client";
+import { User } from "~/generated/prisma/client";
 import { signIn, signOut } from "../../auth";
 import { AuthError } from "next-auth";
 import prisma from "../../db/db";

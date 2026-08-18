@@ -2,7 +2,7 @@
 
 import { useAuthStore } from "@/data/store/authStore";
 import { useTaskStore } from "@/data/store/taskStore";
-import { Section, Task } from "@prisma/client";
+import { Section, Task } from "~/generated/prisma/client";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IoSearchSharp } from "react-icons/io5";

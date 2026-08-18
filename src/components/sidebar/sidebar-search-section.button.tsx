@@ -1,5 +1,5 @@
 import { useSectionStore } from "@/data/store/sectionStore";
-import { Section } from "@prisma/client";
+import { Section } from "~/generated/prisma/client";
 import { FaRegFolder } from "react-icons/fa";
 import { CommandItem } from "../ui/command";
 import { redirect } from "next/navigation";

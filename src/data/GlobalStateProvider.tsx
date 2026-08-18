@@ -2,7 +2,7 @@
 
 import { useSectionStore } from "@/data/store/sectionStore";
 import { useTaskStore } from "@/data/store/taskStore";
-import { Section, Task } from "@prisma/client";
+import { Section, Task } from "~/generated/prisma/client";
 import { useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { useAuthStore } from "./store/authStore";

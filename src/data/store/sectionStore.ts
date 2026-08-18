@@ -1,4 +1,4 @@
-import { Section } from "@prisma/client";
+import { Section } from "~/generated/prisma/client";
 import { create } from "zustand";
 
 type SectionStore = {

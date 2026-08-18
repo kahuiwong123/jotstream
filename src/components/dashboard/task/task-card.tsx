@@ -6,7 +6,7 @@ import { useSectionStore } from "@/data/store/sectionStore";
 import { useTaskStore } from "@/data/store/taskStore";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Task } from "@prisma/client";
+import { Task } from "~/generated/prisma/client";
 import clsx from "clsx";
 import React, { memo } from "react";
 import { DateString } from "./date-string";

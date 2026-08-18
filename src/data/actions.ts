@@ -1,6 +1,6 @@
 "use server";
 
-import { Section, Task } from "@prisma/client";
+import { Section, Task } from "~/generated/prisma/client";
 import { LexoRank } from "lexorank";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";

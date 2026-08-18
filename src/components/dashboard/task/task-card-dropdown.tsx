@@ -9,7 +9,7 @@ import {
   IoPencilOutline,
   IoRemoveCircleOutline,
   IoSwapHorizontalOutline,
-  IoTrashOutline
+  IoTrashOutline,
 } from "react-icons/io5";
 import { Button } from "../../ui/button";
 import { DatePicker } from "../../ui/date-picker";
@@ -33,7 +33,7 @@ import {
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
 import {
@@ -50,7 +50,7 @@ import {
 
 import { duplicateTask, removeTask, updateTask } from "@/data/actions";
 import { useTaskStore } from "@/data/store/taskStore";
-import { Task } from "@prisma/client";
+import { Task } from "~/generated/prisma/client";
 import { useShallow } from "zustand/react/shallow";
 import { EditTaskDialog } from "./edit-task-dialog";
 

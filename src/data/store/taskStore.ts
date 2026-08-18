@@ -1,4 +1,4 @@
-import { Task } from "@prisma/client";
+import { Task } from "~/generated/prisma/client";
 import { create } from "zustand";
 
 type TaskStore = {

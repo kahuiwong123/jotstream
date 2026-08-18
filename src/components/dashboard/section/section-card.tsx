@@ -7,7 +7,7 @@ import {
   useSortable
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Section, Task } from "@prisma/client";
+import { Section, Task } from "~/generated/prisma/client";
 import clsx from "clsx";
 import { memo, useState } from "react";
 import { IoAdd } from "react-icons/io5";

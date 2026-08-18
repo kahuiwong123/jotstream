@@ -2,7 +2,7 @@
 
 import { useSectionStore } from "@/data/store/sectionStore";
 import { useTaskStore } from "@/data/store/taskStore";
-import { Task } from "@prisma/client";
+import { Task } from "~/generated/prisma/client";
 import { FaRegFolder } from "react-icons/fa";
 import { DateString } from "../dashboard/task/date-string";
 import { EditTaskDialog } from "../dashboard/task/edit-task-dialog";

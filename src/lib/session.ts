@@ -1,6 +1,5 @@
 import "server-only";
 import { SignJWT, jwtVerify } from "jose";
-import { User } from "@prisma/client";
 import { cookies } from "next/headers";
 const secretKey = process.env.SESSION_SECRET;
 const encodedKey = new TextEncoder().encode(secretKey);
