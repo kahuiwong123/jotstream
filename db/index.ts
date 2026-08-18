@@ -1,6 +1,4 @@
-import { PrismaClient } from "../prisma/generated/client";
-
-const prisma = new PrismaClient();
+import prisma from "./db";
 
 async function main() {
   const tasks = await prisma.section.findMany({
