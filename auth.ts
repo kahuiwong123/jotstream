@@ -6,7 +6,7 @@ import bcrypt from "bcrypt";
 import { createAuthUser, getUser } from "@/data/authActions";
 import GoogleProvider from "next-auth/providers/google";
 import GitHub from "next-auth/providers/github";
-import prisma from "./db/db";
+import { prisma } from "./db/db";
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,

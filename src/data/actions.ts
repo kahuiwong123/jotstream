@@ -4,7 +4,7 @@ import { Section, Task } from "~/generated/prisma/client";
 import { LexoRank } from "lexorank";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import prisma from "../../db/db";
+import { prisma } from "../../db/db";
 import { Description } from "@radix-ui/react-dialog";
 
 const sectionSchema = z.object({
@@ -276,7 +276,7 @@ export const addTask = async (
     sectionId: taskData.sectionId.toString(),
   };
   const validate = taskSchema.safeParse(newTask);
-  console.log(validate.error?.flatten().fieldErrors)
+  console.log(validate.error?.flatten().fieldErrors);
   if (!validate.success) {
     return {
       message: "task schema validation failed.",

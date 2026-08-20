@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import isToday from "dayjs/plugin/isToday";
 import isTomorrow from "dayjs/plugin/isTomorrow";
-import prisma from "../../../../db/db";
+import { prisma } from "../../../../db/db";
 import TaskCard from "../task/task-card";
 import CalendarAddTaskButton from "./calendar-add-task-button";
 

@@ -7,12 +7,13 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IoSearchSharp } from "react-icons/io5";
 import { useDebounceCallback } from "usehooks-ts";
+import { Command, CommandGroup, CommandShortcut } from "../ui/command";
 import {
-  Command,
-  CommandGroup,
-  CommandShortcut
-} from "../ui/command";
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "../ui/dialog";
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
 import { Input } from "../ui/input";
 import { SidebarMenuButton } from "../ui/sidebar";
 import SideBarSearchSectionButton from "./sidebar-search-section.button";
@@ -30,10 +31,6 @@ function SidebarSearchButton() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
-
-  const [inputValue, setInputValue] = useState(
-    searchParams.get("query")?.toString() ?? "",
-  );
 
   const handleSearch = useDebounceCallback((term: string) => {
     const params = new URLSearchParams(searchParams);
@@ -64,7 +61,7 @@ function SidebarSearchButton() {
         return;
       }
       fetch(
-        `/api/search?id=${encodeURIComponent(userId)}&query=${encodeURIComponent(query)}`,
+        `/api/search?id=${encodeURIComponent(userId)}&query=${encodeURIComponent(query)}`, { cache: 'no-store' }
       )
         .then((res) => res.json())
         .then(setResults);
@@ -73,10 +70,11 @@ function SidebarSearchButton() {
 
   useEffect(() => {
     if (!open) {
-      setInputValue("");
-      handleSearch("");
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete("query");
+      replace(`${pathname}?${params.toString()}`);
     }
-  }, [handleSearch, open]);
+  }, [open]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -107,11 +105,10 @@ function SidebarSearchButton() {
             <Input
               placeholder="Search or type a command..."
               onChange={(e) => {
-                setInputValue(e.target.value);
                 handleSearch(e.target.value);
               }}
               className="rounded-xl pl-10"
-              value={inputValue}
+              defaultValue={searchParams.get("query")?.toString()}
             />
           </div>
           {results.sections.length > 0 && (

@@ -9,7 +9,7 @@ import { clsx } from "clsx";
 import { SessionProvider } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { auth } from "../../../auth";
-import prisma from "../../../db/db";
+import { prisma } from "../../../db/db";
 
 export default async function Layout({
   children,
@@ -34,16 +34,15 @@ export default async function Layout({
     now.getDate() + 1,
   );
 
-  const [sections, tasks] = await prisma.$transaction([
-    prisma.section.findMany({
-      where: { userId: id },
-      orderBy: { rank: "asc" },
-    }),
-    prisma.task.findMany({
-      where: { userId: id },
-      orderBy: { rank: "asc" },
-    }),
-  ]);
+  const sections = await prisma.section.findMany({
+    where: { userId: id },
+    orderBy: { rank: "asc" },
+  });
+
+  const tasks = await prisma.task.findMany({
+    where: { userId: id },
+    orderBy: { rank: "asc" },
+  });
 
   const tasksDueTodayOrTomorrow = await prisma.task.aggregate({
     where: {

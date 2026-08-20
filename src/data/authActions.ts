@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import { User } from "~/generated/prisma/client";
 import { signIn, signOut } from "../../auth";
 import { AuthError } from "next-auth";
-import prisma from "../../db/db";
+import { prisma } from "../../db/db";
 import { createSession, deleteSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { z } from "zod";
