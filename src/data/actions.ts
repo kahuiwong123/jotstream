@@ -209,6 +209,8 @@ export const moveSection = async (
     return { message: "one or both sections not found!" };
   }
 
+  console.log(oldSection.name, newSection.name)
+
   const movingDown = oldSection.rank < newSection.rank;
 
   let prevSection, nextSection;
@@ -255,6 +257,8 @@ export const moveSection = async (
     where: { id: oldSection.id },
     data: { rank: newRank },
   });
+
+  // revalidatePath("/dashboard")
 
   return { message: `${oldSection.name} moved!` };
 };

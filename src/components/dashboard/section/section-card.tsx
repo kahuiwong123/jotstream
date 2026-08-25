@@ -24,7 +24,7 @@ interface SectionCardProps {
 
 const SectionCard = memo(
   ({ index, section, tasks }: PropsWithChildren<SectionCardProps>) => {
-    const { ref, isDragging } = useSortable({
+    const { ref, isDragging, isDropTarget, handleRef } = useSortable({
       id: section.id,
       index,
       type: "section",
@@ -51,8 +51,9 @@ const SectionCard = memo(
             "animate-pulse !border-[#FF5858] transition delay-300",
           isDragging &&
             "scale-[1.03] shadow-[inset_0_0_1px_rgba(0,0,0,0.5),-1px_0_15px_0_rgba(34,33,81,0.01),0px_15px_15px_0_rgba(34,33,81,0.25)] backdrop-blur-[2px]",
+          isDropTarget && !isDragging && "brightness-95 dark:brightness-150",
         )}
-        ref={ref as any}
+        ref={ref}
       >
         {isEditing ? (
           <SectionCardEdit section={section} setIsEditing={setIsEditing} />
@@ -79,7 +80,7 @@ const SectionCard = memo(
           </div>
         )}
 
-        <ul id={section.id} className="grid gap-4">
+        <ul id={section.id} className="grid gap-4 ">
           {tasks.map((task, index) => (
             <TaskCard
               key={task.id}

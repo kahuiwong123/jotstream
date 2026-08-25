@@ -15,20 +15,23 @@ import { TaskCardDropDown } from "./task-card-dropdown";
 import { Feedback } from "@dnd-kit/dom";
 
 interface TaskCardProps {
-  index: number;
+  index?: number;
   task: Task;
-  group: string;
+  group?: string;
 }
 
 const TaskCard = memo(
   ({ index, task, group }: PropsWithChildren<TaskCardProps>) => {
+    const isDraggable = index !== undefined && group !== undefined;
     const { ref, isDragging } = useSortable({
       id: task.id,
-      index,
+      index: index ?? 0,
       type: "task",
       accept: "task",
       group,
       data: { group },
+      disabled: !isDraggable,
+      plugins: [Feedback.configure({ feedback: "clone" })],
     });
 
     const handleCompleteTask = (e: React.MouseEvent) => {
