@@ -65,7 +65,12 @@ export function AppSidebar() {
   );
 
   const taskMenuItems = [
-    { icon: IoFileTray, label: "Inbox", url: "/dashboard", badge: tasksCount || "" },
+    {
+      icon: IoFileTray,
+      label: "Inbox",
+      url: "/dashboard",
+      badge: tasksCount || "",
+    },
     {
       icon: IoToday,
       label: "Today",
@@ -98,9 +103,7 @@ export function AppSidebar() {
                 <SidebarAddTaskButton />
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <Suspense>
-                  <SidebarSearchButton />
-                </Suspense>
+                <SidebarSearchButton />
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
@@ -132,7 +135,7 @@ export function AppSidebar() {
                           className={clsx(
                             "space-x-1",
                             pathname === item.url &&
-                              "border !bg-[#FFFFFF] shadow-sm dark:!bg-[#1E1E1E] dark:border-none",
+                              "border !bg-[#FFFFFF] shadow-sm dark:border-none dark:!bg-[#1E1E1E]",
                           )}
                         >
                           {item.icon ? <item.icon size={20} /> : null}
@@ -201,7 +204,8 @@ export function AppSidebar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton className="flex h-fit items-center gap-2 rounded-xl">
-                  {session?.user?.image && session.user.image !== "profile image" ? (
+                  {session?.user?.image &&
+                  session.user.image !== "profile image" ? (
                     <Image
                       className="rounded-full"
                       alt="profile-image"

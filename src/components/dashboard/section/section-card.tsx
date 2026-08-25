@@ -2,14 +2,11 @@
 "use client";
 
 import { useSectionStore } from "@/data/store/sectionStore";
-import {
-  SortableContext,
-  useSortable
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import { useSortable } from "@dnd-kit/react/sortable";
+import { CollisionPriority } from "@dnd-kit/abstract";
 import { Section, Task } from "~/generated/prisma/client";
 import clsx from "clsx";
-import { memo, useState } from "react";
+import { memo, PropsWithChildren, useState } from "react";
 import { IoAdd } from "react-icons/io5";
 import { useShallow } from "zustand/react/shallow";
 import { Button } from "../../ui/button";
@@ -19,21 +16,20 @@ import TaskCard from "../task/task-card";
 import { SectionCardDropDown } from "./section-card-dropdown";
 import { SectionCardEdit } from "./section-card-edit";
 
+interface SectionCardProps {
+  index: number;
+  section: Section;
+  tasks: Task[];
+}
+
 const SectionCard = memo(
-  ({ section, tasks }: { section: Section; tasks: Task[] }) => {
-    const {
-      attributes,
-      listeners,
-      setNodeRef,
-      transform,
-      transition,
-      isDragging,
-    } = useSortable({
+  ({ index, section, tasks }: PropsWithChildren<SectionCardProps>) => {
+    const { ref, isDragging, isDropTarget, handleRef } = useSortable({
       id: section.id,
-      data: {
-        type: "section",
-        section,
-      },
+      index,
+      type: "section",
+      accept: ["section", "task"],
+      collisionPriority: CollisionPriority.Low,
     });
 
     const [isEditing, setIsEditing] = useState(false);
@@ -47,32 +43,17 @@ const SectionCard = memo(
         })),
       );
 
-    const style = {
-      transition,
-      transform: CSS.Translate.toString(transform),
-    };
-
-    if (isDragging) {
-      return (
-        <div
-          ref={setNodeRef}
-          style={style}
-          className="flex w-72 cursor-grabbing touch-none flex-col gap-4 rounded-lg bg-[#fcfcfc] p-4 opacity-60 shadow-2xl hover:shadow-lg dark:bg-[#202020] dark:hover:border-light-grey-hover"
-        />
-      );
-    }
-
     return (
       <section
-        data-section-id={section.id}
         className={clsx(
-          "section-card flex h-fit w-72 flex-col gap-4 rounded-lg border border-transparent bg-[#fcfcfc] p-4 shadow-md dark:bg-[#202020]",
-          highlightSectionId === section.id && "animate-pulse !border-[#FF5858] transition delay-300"
+          "section-card flex h-fit w-72 flex-col gap-4 rounded-lg border border-transparent bg-[#fcfcfc] p-4 shadow-md transition-all duration-300 ease-in-out dark:bg-[#202020]",
+          highlightSectionId === section.id &&
+            "animate-pulse !border-[#FF5858] transition delay-300",
+          isDragging &&
+            "scale-[1.03] shadow-[inset_0_0_1px_rgba(0,0,0,0.5),-1px_0_15px_0_rgba(34,33,81,0.01),0px_15px_15px_0_rgba(34,33,81,0.25)] backdrop-blur-[2px]",
+          isDropTarget && !isDragging && "brightness-95 dark:brightness-150",
         )}
-        ref={setNodeRef}
-        {...attributes}
-        {...listeners}
-        style={style}
+        ref={ref}
       >
         {isEditing ? (
           <SectionCardEdit section={section} setIsEditing={setIsEditing} />
@@ -98,11 +79,17 @@ const SectionCard = memo(
             />
           </div>
         )}
-        <SortableContext items={tasks.map((task) => task.id)}>
-          {tasks.map((task) => (
-            <TaskCard key={task.id} task={task} />
+
+        <ul id={section.id} className="grid gap-4 ">
+          {tasks.map((task, index) => (
+            <TaskCard
+              key={task.id}
+              index={index}
+              task={task}
+              group={section.id}
+            />
           ))}
-        </SortableContext>
+        </ul>
 
         {activeSectionId === section.id ? (
           <AddTaskButton sectionId={section.id} />

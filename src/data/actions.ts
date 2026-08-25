@@ -74,15 +74,16 @@ export const addSection = async (
     };
   }
   const lastSection = await prisma.section.findFirst({
-    select: {
-      rank: true,
-    },
     where: {
       userId: userId,
     },
 
     orderBy: {
       rank: "desc",
+    },
+
+    select: {
+      rank: true,
     },
   });
 
@@ -199,7 +200,6 @@ export const moveSection = async (
   oldId: string,
   newId: string,
 ): Promise<FormState> => {
-  // 1. Fetch both sections
   const [oldSection, newSection] = await prisma.$transaction([
     prisma.section.findUnique({ where: { id: oldId } }),
     prisma.section.findUnique({ where: { id: newId } }),
@@ -209,14 +209,14 @@ export const moveSection = async (
     return { message: "one or both sections not found!" };
   }
 
-  // 2. Determine direction (moving up or down)
+  console.log(oldSection.name, newSection.name)
+
   const movingDown = oldSection.rank < newSection.rank;
 
-  // 3. Find neighbors for the new position
-  // Only consider sections for the same user!
   let prevSection, nextSection;
+
   if (movingDown) {
-    // Insert after newSection
+    // move to back of lsit
     prevSection = newSection;
     nextSection = await prisma.section.findFirst({
       where: {
@@ -226,7 +226,7 @@ export const moveSection = async (
       orderBy: { rank: "asc" },
     });
   } else {
-    // Insert before newSection
+    // move to front of list
     prevSection = await prisma.section.findFirst({
       where: {
         userId: oldSection.userId,
@@ -239,12 +239,15 @@ export const moveSection = async (
 
   let newRank: string;
   if (prevSection && nextSection) {
+    // move between two sections
     newRank = LexoRank.parse(prevSection.rank)
       .between(LexoRank.parse(nextSection.rank))
       .toString();
-  } else if (prevSection) {
+  } else if (prevSection && !nextSection) {
+    // move to end of list
     newRank = LexoRank.parse(prevSection.rank).genNext().toString();
-  } else if (nextSection) {
+  } else if (!prevSection && nextSection) {
+    // move to beginning of list
     newRank = LexoRank.parse(nextSection.rank).genPrev().toString();
   } else {
     newRank = LexoRank.middle().toString();
@@ -255,7 +258,7 @@ export const moveSection = async (
     data: { rank: newRank },
   });
 
-  // revalidatePath("/dashboard");
+  // revalidatePath("/dashboard")
 
   return { message: `${oldSection.name} moved!` };
 };
@@ -302,7 +305,9 @@ export const addTask = async (
   await prisma.task.create({
     data: { ...newTask, rank: rank, userId: userId },
   });
+
   revalidatePath("/dashboard");
+
   return {
     message: `task added!`,
   };
@@ -388,6 +393,7 @@ export const updateTask = async (
       },
     });
 
+    // if task is moved to a different section, recalculate rank
     newRank = lastTask
       ? LexoRank.parse(lastTask.rank).genNext().toString()
       : LexoRank.middle().toString();
@@ -409,19 +415,40 @@ export const updateTask = async (
 export const moveTask = async (
   oldId: string,
   newId: string,
-  moveToEmptySection?: boolean,
+  moveToSection: boolean,
+  movingDown?: boolean,
 ): Promise<FormState> => {
-  if (moveToEmptySection) {
-    await prisma.task.update({
-      where: { id: oldId },
-      data: { rank: LexoRank.middle().toString(), sectionId: newId },
+  if (moveToSection) {
+    const lastTask = await prisma.task.findFirst({
+      where: {
+        sectionId: newId,
+      },
+
+      orderBy: {
+        rank: "desc",
+      },
+
+      select: {
+        rank: true,
+      },
     });
 
-    // revalidatePath("/dashboard");
+    let newRank: string;
+
+    if (lastTask) {
+      newRank = LexoRank.parse(lastTask.rank).genNext().toString();
+    } else {
+      newRank = LexoRank.middle().toString();
+    }
+
+    await prisma.task.update({
+      where: { id: oldId },
+      data: { rank: newRank, sectionId: newId },
+    });
 
     return { message: `moved task ${oldId} to section ${newId}` };
   }
-  // 1. Fetch both sections
+
   const [oldTask, newTask] = await prisma.$transaction([
     prisma.task.findUnique({ where: { id: oldId } }),
     prisma.task.findUnique({ where: { id: newId } }),
@@ -431,29 +458,35 @@ export const moveTask = async (
     return { message: "one or both tasks not found!" };
   }
 
-  // 2. Determine direction (moving up or down)
-  const movingDown = oldTask.rank < newTask.rank;
+  let prevTask = await prisma.task.findFirst({
+    where: {
+      sectionId: newTask.sectionId,
+      rank: { lt: newTask.rank },
+    },
 
-  // 3. Find neighbors for the new position
-  // Only consider sections for the same user!
-  let prevTask, nextTask;
-  if (movingDown) {
-    // Insert after newSection
+    orderBy: {
+      rank: "desc",
+    },
+  });
+
+  let nextTask = await prisma.task.findFirst({
+    where: {
+      sectionId: newTask.sectionId,
+      rank: { gt: newTask.rank },
+    },
+
+    orderBy: {
+      rank: "asc",
+    },
+  });
+
+  let movingD =
+    oldTask.sectionId === newTask.sectionId
+      ? oldTask.rank < newTask.rank
+      : movingDown;
+  if (movingD) {
     prevTask = newTask;
-    nextTask = await prisma.task.findFirst({
-      where: {
-        rank: { gt: newTask.rank },
-      },
-      orderBy: { rank: "asc" },
-    });
   } else {
-    // Insert before newSection
-    prevTask = await prisma.task.findFirst({
-      where: {
-        rank: { lt: newTask.rank },
-      },
-      orderBy: { rank: "desc" },
-    });
     nextTask = newTask;
   }
 
@@ -462,10 +495,10 @@ export const moveTask = async (
     newRank = LexoRank.parse(prevTask.rank)
       .between(LexoRank.parse(nextTask.rank))
       .toString();
-  } else if (prevTask) {
-    newRank = LexoRank.parse(prevTask.rank).genNext().toString();
-  } else if (nextTask) {
-    newRank = LexoRank.parse(nextTask.rank).genPrev().toString();
+  } else if (prevTask && !nextTask) {
+    newRank = LexoRank.parse(prevTask.rank).genNext().toString(); // end of list
+  } else if (!prevTask && nextTask) {
+    newRank = LexoRank.parse(nextTask.rank).genPrev().toString(); // beginning of list
   } else {
     newRank = LexoRank.middle().toString();
   }
@@ -474,8 +507,6 @@ export const moveTask = async (
     where: { id: oldTask.id },
     data: { rank: newRank, sectionId: newTask.sectionId },
   });
-
-  // revalidatePath("/dashboard");
 
   return { message: `${oldTask.title} moved!` };
 };
