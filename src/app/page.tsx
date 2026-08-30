@@ -51,9 +51,17 @@ export default function LoginPage() {
 
   return (
     <div className="relative flex h-screen flex-col items-center justify-center bg-gradient-to-r from-[#FF5858] to-red-400 dark:bg-dark-main">
-      <div className="size-full md:h-fit md:w-2/5 md:rounded-xl bg-white p-8 shadow-xl dark:bg-white">
-        <div className="flex flex-col items-center mb-4 md:mb-0">
-          <Image src={logo} width={200} height={200} alt="jotstream-logo" />
+      <div className="size-full bg-white p-8 shadow-xl dark:bg-white md:h-fit md:w-2/5 md:rounded-xl">
+        <div className="mb-4 flex flex-col items-center md:mb-0">
+          <Image
+            src={logo}
+            style={{
+              width: "50%",
+              height: "auto",
+            }}
+            alt="jotstream-logo"
+            loading="eager"
+          />
         </div>
         <Form {...form}>
           <form action={formAction} className="flex flex-col gap-6">

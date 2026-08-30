@@ -93,7 +93,7 @@ export function AppSidebar() {
       variant="inset"
     >
       <SidebarHeader className="flex flex-col items-start">
-        <Image src={logo} height={200} width={200} alt="jotstream-logo" />
+        <Image src={logo} width={200} height={200} alt="jotstream-logo" style={{ width: 'auto', height: 'auto' }} />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
@@ -204,8 +204,7 @@ export function AppSidebar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton className="flex h-fit items-center gap-2 rounded-xl">
-                  {session?.user?.image &&
-                  session.user.image !== "profile image" ? (
+                  {session?.user?.image ? (
                     <Image
                       className="rounded-full"
                       alt="profile-image"
