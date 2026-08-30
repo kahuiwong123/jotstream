@@ -62,8 +62,8 @@ export function DatePicker({
       </PopoverTrigger>
       <PopoverContent className="flex w-auto flex-col space-y-2 p-2 focus-visible:ring-0 focus-visible:ring-offset-0">
         <Select
-          onValueChange={(value) => {
-            onChange(addDays(new Date(), parseInt(value)));
+          onValueChange={(val) => {
+            onChange(addDays(new Date(), parseInt(val)));
             if (mode === "reschedule") {
               setOpen(false);
             }
@@ -89,7 +89,6 @@ export function DatePicker({
                 setOpen(false);
               }
             }}
-            fromDate={new Date()}
           />
         </div>
       </PopoverContent>

@@ -40,6 +40,21 @@ type taskUpdateProps = {
   description?: string | null;
 };
 
+export const findTasksDue = async (userId: string, dueDate: Date) => {
+  const tasksDue = await prisma.task.findMany({
+    where: {
+      userId: userId,
+      dueDate: dueDate,
+    },
+
+    orderBy: {
+      rank: "asc",
+    },
+  });
+
+  return tasksDue;
+};
+
 export const findAllSections = async (userId?: string) => {
   const sections = await prisma.section.findMany({
     where: {
@@ -209,7 +224,7 @@ export const moveSection = async (
     return { message: "one or both sections not found!" };
   }
 
-  console.log(oldSection.name, newSection.name)
+  console.log(oldSection.name, newSection.name);
 
   const movingDown = oldSection.rank < newSection.rank;
 

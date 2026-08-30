@@ -1,53 +1,73 @@
+"use client";
+
 import dayjs from "dayjs";
 import isToday from "dayjs/plugin/isToday";
 import isTomorrow from "dayjs/plugin/isTomorrow";
-import { prisma } from "../../../../db/db";
+import { AddTaskButton } from "../task/add-task-button";
+import { useDateStore } from "@/data/store/dateStore";
+import { Button } from "@/components/ui/button";
+import { IoAdd } from "react-icons/io5";
+import { useShallow } from "zustand/react/shallow";
+import { useAuthStore } from "@/data/store/authStore";
+import { useEffect, useState } from "react";
+import { findTasksDue } from "@/data/actions";
 import TaskCard from "../task/task-card";
-import CalendarAddTaskButton from "./calendar-add-task-button";
+import { Task } from "~/generated/prisma/client";
+import { useTaskStore } from "@/data/store/taskStore";
 
 dayjs.extend(isToday);
 dayjs.extend(isTomorrow);
 
-async function CalendarCard({ date, userId }: { date: Date; userId: string }) {
-  const startOfToday = new Date(
-    date.getFullYear(),
-    date.getMonth(),
-    date.getDate(),
+function CalendarCard({ date }: { date: Date }) {
+  const { activeDate, setActiveDate } = useDateStore(
+    useShallow((state) => ({
+      activeDate: state.activeDate,
+      setActiveDate: state.setActiveDate,
+    })),
   );
-  const startOfTomorrow = new Date(
-    date.getFullYear(),
-    date.getMonth(),
-    date.getDate() + 1,
+
+  const tasksDue = useTaskStore(
+    useShallow((state) =>
+      state.tasks.filter(
+        (task) => task.dueDate && dayjs(task.dueDate).isSame(date, "day"),
+      ),
+    ),
   );
+
   let todayOrTomorrow = "";
   if (dayjs(date).isToday()) {
-    todayOrTomorrow = "Today .";
+    todayOrTomorrow = "Today";
   } else if (dayjs(date).isTomorrow()) {
-    todayOrTomorrow = "Tomorrow .";
+    todayOrTomorrow = "Tomorrow";
   }
-
-  const tasksDue = await prisma.task.findMany({
-    where: {
-      userId: userId,
-      dueDate: {
-        gte: startOfToday,
-        lt: startOfTomorrow,
-      },
-    },
-  });
 
   return (
     <div>
-      <h2>
-        {dayjs(date).format("MMM D")} . {todayOrTomorrow}{" "}
-        {dayjs(date).format("dddd")}
+      <h2 className="border-b border-b-gray-500 p-3">
+        {dayjs(date).format("MMM D . dddd")}
+        {todayOrTomorrow && (
+          <span className="font-semibold"> . {todayOrTomorrow}</span>
+        )}
       </h2>
-      <div className="space-y-4">
+
+      <ul className="my-3 grid gap-3">
         {tasksDue.map((task) => (
-          <TaskCard task={task} key={task.id} />
+          <TaskCard key={task.id} task={task} />
         ))}
-      </div>
-      <CalendarAddTaskButton date={date} />
+      </ul>
+
+      {activeDate === date ? (
+        <AddTaskButton dueDate={activeDate} />
+      ) : (
+        <Button
+          variant="ghost"
+          className="flex justify-start gap-2 px-2"
+          onClick={() => setActiveDate(date)}
+        >
+          <IoAdd className="size-6" />
+          <p>Add Task</p>
+        </Button>
+      )}
     </div>
   );
 }

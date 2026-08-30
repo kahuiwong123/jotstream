@@ -14,6 +14,7 @@ import { z } from "zod";
 import { SectionSelect } from "../section/section-select";
 import { PrioritySelect } from "./priority-select";
 import { useActionState, useEffect } from "react";
+import { useDateStore } from "@/data/store/dateStore";
 
 const taskSchema = z.object({
   sectionId: z.string(),
@@ -25,11 +26,12 @@ const taskSchema = z.object({
 
 type taskFields = z.infer<typeof taskSchema>;
 
-type AddTaskButtonProps = {
+interface AddTaskButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   sectionId?: string;
   setOpen?: (val: boolean) => void;
   dueDate?: Date;
-};
+}
 
 export const AddTaskButton = ({
   sectionId,
@@ -53,18 +55,19 @@ export const AddTaskButton = ({
     (state) => state.setActiveSectionId,
   );
 
+  const setActiveDate = useDateStore((state) => state.setActiveDate)
+
   const [state, formAction, isPending] = useActionState(
     addTask.bind(null, userId),
     { message: "" },
   );
 
   const handleSubmit = (data: FormData) => {
-    console.log("submitting");
     formAction(data);
     if (setOpen) {
       setOpen(false);
     }
-    form.reset()
+    form.reset();
   };
 
   const closeButton = (
@@ -78,6 +81,7 @@ export const AddTaskButton = ({
           setOpen(false);
         }
         setActiveSectionId(null);
+        setActiveDate(null)
       }}
     >
       <IoCloseOutline className="size-6" />
@@ -99,7 +103,7 @@ export const AddTaskButton = ({
   return (
     <Form {...form}>
       <form
-        className="flex cursor-auto flex-col gap-2 divide-y p-2 shadow-sm transition-all duration-300 dark:border-[#707070] dark:border-transparent dark:bg-[#262626]"
+        className="flex cursor-auto rounded-xl flex-col gap-2 divide-y p-2 shadow-sm transition-all duration-300 dark:border-[#707070] dark:border-transparent dark:bg-[#262626]"
         action={handleSubmit}
       >
         <div>
